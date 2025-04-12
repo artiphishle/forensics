@@ -1,34 +1,32 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import cytoscape, { ElementsDefinition, EventObject, NodeSingular } from 'cytoscape';
-import cytoscapeKlay from 'cytoscape-klay';
-
-function filterElementsByPackage(
-  allElements: cytoscape.ElementsDefinition,
-  packagePrefix: string
-): cytoscape.ElementsDefinition {
-  const pkgPrefix = packagePrefix.endsWith('.') ? packagePrefix : packagePrefix + '.';
-
-  const allowedNodes = allElements.nodes.filter(node => {
-    return node.data.id?.startsWith(pkgPrefix);
-  });
-
-  const allowedNodeIds = new Set(allowedNodes.map(node => node.data.id));
-
-  const allowedEdges = allElements.edges.filter(
-    edge => allowedNodeIds.has(edge.data.source) && allowedNodeIds.has(edge.data.target)
-  );
-
-  return {
-    nodes: allowedNodes,
-    edges: allowedEdges,
-  };
-}
 
 export default function Cytograph({ elements, currentPath, setCurrentPath }: ICytograph) {
-  console.log('currentPath', currentPath);
+  console.log('[Packages] currentPath', currentPath);
+  console.log('[Packages] nodes/edges', elements.nodes.length, elements.edges.length);
   const cyRef = useRef<HTMLDivElement>(null);
-  const [filteredElements, setFilteredElements] = useState(elements);
+  const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
+
+  function filterElementsByPackage(
+    allElements: cytoscape.ElementsDefinition,
+    packagePrefix: string
+  ): cytoscape.ElementsDefinition {
+    const pkgPrefix = packagePrefix.endsWith('.') ? packagePrefix : packagePrefix + '.';
+    const allowedNodes = allElements.nodes.filter(node => {
+      return node.data.id!.startsWith(pkgPrefix);
+    });
+
+    const allowedNodeIds = new Set(allowedNodes.map(node => node.data.id));
+    const allowedEdges = allElements.edges.filter(
+      edge => allowedNodeIds.has(edge.data.source) && allowedNodeIds.has(edge.data.target)
+    );
+
+    return {
+      nodes: allowedNodes,
+      edges: allowedEdges,
+    };
+  }
 
   function hasChildren(node: NodeSingular) {
     return elements.nodes.some(elm => {
@@ -36,150 +34,115 @@ export default function Cytograph({ elements, currentPath, setCurrentPath }: ICy
     });
   }
 
+  // 1. Apply node filter when path changes
   useEffect(() => {
-    setFilteredElements(
-      currentPath ? filterElementsByPackage(elements, currentPath.replace(/\//g, '.')) : elements
-    );
+    if (!currentPath) return;
+    setFilteredElements(filterElementsByPackage(elements, currentPath.replace(/\//g, '.')));
   }, [currentPath]);
 
+  // 2. Show nodes after node filter has been applied
   useEffect(() => {
-    if (!cyRef.current) return;
-
-    console.log('filteredElements', filteredElements);
-
-    cytoscape.use(cytoscapeKlay as any);
+    if (!cyRef.current || !filteredElements) return;
+    console.log(
+      'nodes',
+      filteredElements.nodes.filter(x => !!x.data)
+    );
 
     const cy = cytoscape({
       container: cyRef.current,
       elements: filteredElements,
-      selectionType: 'single',
+      selectionType: 'additive',
       userPanningEnabled: true,
       style: [
+        // Nodes
         {
           selector: 'node',
           style: {
-            label: 'data(label)',
-            'background-color': '#0074D9',
+            'background-color': '#e9e9e9',
+            label: 'data(id)',
+            shape: 'cut-rectangle',
             'text-valign': 'center',
-            color: '#fff',
-            'text-outline-color': '#0074D9',
-            'text-outline-width': 2,
+            'text-halign': 'center',
             width: 'label',
             height: 'label',
-            padding: '40px',
-            'font-size': 18,
-            shape: 'roundrectangle',
+            padding: '24px',
+            'border-width': 2,
+            'border-color': '#9a9a9a',
           },
         },
         {
-          selector: 'node:selected',
+          selector: 'node:parent',
           style: {
-            'background-color': '#0041a6',
-            color: '#fff',
+            'background-opacity': 0,
+            'border-opacity': 0,
+            label: '', // hide label if needed
+            padding: '0',
+            shape: 'rectangle', // optional, but more neutral
+            width: 1,
+            height: 1,
           },
         },
+        {
+          selector: 'node.is-parent',
+          style: { 'background-color': 'green' },
+        },
+        // Selected nodes
+        {
+          selector: 'node:selected',
+          style: {
+            'background-color': '#44ffee',
+            'border-color': '#00bbaa',
+            'border-width': 2,
+          },
+        },
+        {
+          selector: '.hushed',
+          style: {
+            opacity: 0.3,
+          },
+        },
+        {
+          selector: 'node.packageCycle',
+          style: {
+            'border-color': '#ff4500',
+            'border-width': 3,
+            'background-color': '#ffe4e1',
+          },
+        },
+
+        // Edges
         {
           selector: 'edge',
           style: {
             width: 2,
-            'line-color': '#ccc',
-            'target-arrow-color': '#ccc',
+            'line-color': '#a9a9a9',
+            'target-arrow-color': '#a8a8a8',
             'target-arrow-shape': 'triangle',
             'curve-style': 'bezier',
           },
         },
+        // Edges Error: Cycling Dependencies
         {
-          selector: 'node.highlight',
-          style: { 'background-color': '#aac0f6', 'border-color': '#aac0f6' },
-        },
-        {
-          selector: 'node.hushed',
+          selector: 'edge.errorCycling',
           style: {
-            opacity: 0.25,
-            'border-opacity': 0.25,
-          },
-        },
-        {
-          selector: 'edge.highlight-ingoer',
-          style: {
-            'line-color': '#afb8a2',
-            'target-arrow-color': '#b1baa4',
-            'z-index': 1,
-          },
-        },
-        {
-          selector: 'edge.highlight-outgoer',
-          style: {
-            'line-color': '#143ea6',
-            'target-arrow-color': '#1441bb',
-            'z-index': 1,
-          },
-        },
-        {
-          selector: 'edge.hushed',
-          style: {
-            'line-color': '#cfcfcf',
-            'target-arrow-color': '#cfcfcf',
-            opacity: 0.15,
-            'z-index': 0,
+            'line-color': '#FC0000',
+            'target-arrow-color': '#FC0000',
           },
         },
       ],
+
       layout: {
-        name: 'klay',
-        nodeDimensionsIncludeLabels: false, // Boolean which changes whether label dimensions are included when calculating node dimensions
-        fit: true, // Whether to fit
-        padding: 20, // Padding on fit
-        animate: false, // Whether to transition the node positions
-        animationDuration: 500, // Duration of animation in ms if enabled
-        animationEasing: undefined, // Easing of animation if enabled
-        ready: undefined, // Callback on layoutready
-        stop: undefined, // Callback on layoutstop
-        klay: {
-          // Following descriptions taken from http://layout.rtsys.informatik.uni-kiel.de:9444/Providedlayout.html?algorithm=de.cau.cs.kieler.klay.layered
-          addUnnecessaryBendpoints: false, // Adds bend points even if an edge does not change direction.
-          aspectRatio: 0.8, // The aimed aspect ratio of the drawing, that is the quotient of width by height
-          borderSpacing: 20, // Minimal amount of space to be left to the border
-          compactComponents: false, // Tries to further compact components (disconnected sub-graphs).
-          crossingMinimization: 'LAYER_SWEEP', // Strategy for crossing minimization.
-          /* LAYER_SWEEP The layer sweep algorithm iterates multiple times over the layers, trying to find node orderings that minimize the number of crossings. The algorithm uses randomization to increase the odds of finding a good result. To improve its results, consider increasing the Thoroughness option, which influences the number of iterations done. The Randomization seed also influences results.
-    INTERACTIVE Orders the nodes of each layer by comparing their positions before the layout algorithm was started. The idea is that the relative order of nodes as it was before layout was applied is not changed. This of course requires valid positions for all nodes to have been set on the input graph before calling the layout algorithm. The interactive layer sweep algorithm uses the Interactive Reference Point option to determine which reference point of nodes are used to compare positions. */
-          cycleBreaking: 'GREEDY', // Strategy for cycle breaking. Cycle breaking looks for cycles in the graph and determines which edges to reverse to break the cycles. Reversed edges will end up pointing to the opposite direction of regular edges (that is, reversed edges will point left if edges usually point right).
-          /* GREEDY This algorithm reverses edges greedily. The algorithm tries to avoid edges that have the Priority property set.
-    INTERACTIVE The interactive algorithm tries to reverse edges that already pointed leftwards in the input graph. This requires node and port coordinates to have been set to sensible values.*/
-          direction: 'UNDEFINED', // Overall direction of edges: horizontal (right / left) or vertical (down / up)
-          /* UNDEFINED, RIGHT, LEFT, DOWN, UP */
-          edgeRouting: 'SPLINES', // Defines how edges are routed (POLYLINE, ORTHOGONAL, SPLINES)
-          edgeSpacingFactor: 0.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
-          feedbackEdges: false, // Whether feedback edges should be highlighted by routing around the nodes.
-          fixedAlignment: 'NONE', // Tells the BK node placer to use a certain alignment instead of taking the optimal result.  This option should usually be left alone.
-          /* NONE Chooses the smallest layout from the four possible candidates.
-    LEFTUP Chooses the left-up candidate from the four possible candidates.
-    RIGHTUP Chooses the right-up candidate from the four possible candidates.
-    LEFTDOWN Chooses the left-down candidate from the four possible candidates.
-    RIGHTDOWN Chooses the right-down candidate from the four possible candidates.
-    BALANCED Creates a balanced layout from the four possible candidates. */
-          inLayerSpacingFactor: 1.0, // Factor by which the usual spacing is multiplied to determine the in-layer spacing between objects.
-          layoutHierarchy: false, // Whether the selected layouter should consider the full hierarchy
-          linearSegmentsDeflectionDampening: 0.3, // Dampens the movement of nodes to keep the diagram from getting too large.
-          mergeEdges: false, // Edges that have no ports are merged so they touch the connected nodes at the same points.
-          mergeHierarchyCrossingEdges: true, // If hierarchical layout is active, hierarchy-crossing edges use as few hierarchical ports as possible.
-          nodeLayering: 'NETWORK_SIMPLEX', // Strategy for node layering.
-          /* NETWORK_SIMPLEX This algorithm tries to minimize the length of edges. This is the most computationally intensive algorithm. The number of iterations after which it aborts if it hasn't found a result yet can be set with the Maximal Iterations option.
-    LONGEST_PATH A very simple algorithm that distributes nodes along their longest path to a sink node.
-    INTERACTIVE Distributes the nodes into layers by comparing their positions before the layout algorithm was started. The idea is that the relative horizontal order of nodes as it was before layout was applied is not changed. This of course requires valid positions for all nodes to have been set on the input graph before calling the layout algorithm. The interactive node layering algorithm uses the Interactive Reference Point option to determine which reference point of nodes are used to compare positions. */
-          nodePlacement: 'BRANDES_KOEPF', // Strategy for Node Placement
-          /* BRANDES_KOEPF Minimizes the number of edge bends at the expense of diagram size: diagrams drawn with this algorithm are usually higher than diagrams drawn with other algorithms.
-    LINEAR_SEGMENTS Computes a balanced placement.
-    INTERACTIVE Tries to keep the preset y coordinates of nodes from the original layout. For dummy nodes, a guess is made to infer their coordinates. Requires the other interactive phase implementations to have run as well.
-    SIMPLE Minimizes the area at the expense of... well, pretty much everything else. */
-          randomizationSeed: 1, // Seed used for pseudo-random number generators to control the layout algorithm; 0 means a new seed is generated
-          routeSelfLoopInside: false, // Whether a self-loop is routed around or inside its node.
-          separateConnectedComponents: true, // Whether each connected component should be processed separately
-          spacing: 20, // Overall setting for the minimal amount of space to be left between objects
-          thoroughness: 7, // How much effort should be spent to produce a nice layout..
-        },
-      } as any,
+        avoidOverlap: true,
+        name: 'concentric',
+        fit: true,
+      },
+    });
+
+    cy.ready(() => {
+      console.log('[Packages] Cytoscape "ready"');
+      cy.nodes()
+        .filter(node => !!(node.data as any).isParent)
+        .addClass('is-parent');
     });
 
     cy.on('mouseover', 'node', event => {
@@ -200,7 +163,6 @@ export default function Cytograph({ elements, currentPath, setCurrentPath }: ICy
       node.outgoers().removeClass('highlight-outgoer');
       node.incomers().removeClass('highlight-ingoer');
     });
-
     // highlighting on edge hover (highlight single dependency with its source component and target component)
     let highlightDelay: any;
     cy.on('mouseover', 'edge', event => {
@@ -220,22 +182,15 @@ export default function Cytograph({ elements, currentPath, setCurrentPath }: ICy
     });
     cy.on('tap', 'node', event => {
       const node = event.target;
-      console.log('is selectable: ', node.selectable(), node.selected());
-
-      cy.nodes().unselect(); // clear others
-      node.select(); // 💥 triggers `:selected` styling
     });
     cy.on('dblclick', 'node', (evt: EventObject) => {
       const node: NodeSingular = evt.target;
       node.data().id.startsWith();
       if (hasChildren(node)) setCurrentPath(node.id().replace(/\./g, '/'));
     });
-
-    /*
     return () => {
       cy.destroy();
     };
-    */
   }, [filteredElements]);
 
   return <div ref={cyRef} style={{ flex: 1 }} />;

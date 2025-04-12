@@ -1,7 +1,7 @@
 'use server';
 import fs from 'fs';
 import path from 'path';
-import { parseJavaFile } from './parseJavaFile';
+import { parseJavaFile } from './java/parseJavaFile';
 import type { IFile } from '@/types/types';
 
 /**
@@ -27,5 +27,6 @@ export async function getAllFilesRecursive(
     }
   }
 
+  console.log(results);
   return results;
 }
