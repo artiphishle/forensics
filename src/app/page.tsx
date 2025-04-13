@@ -6,21 +6,17 @@ import Cytoscape from '@/components/views/PackageView';
 import { getJson } from '@/hooks/getJson';
 import Header from '@/components/Header';
 import Main from '@/components/Main';
-import { getAllFilesRecursive } from '@/utils/getAllFilesRecursive';
+import Loader from '@/components/Loader';
 
 export default function Home() {
-  // const initialCurrentPackage = process.env.NEXT_PUBLIC_CURRENT_PACKAGE || '';
-  // const [graph, setGraph] = useState<ICytoscapeGraph | null>(null);
-  const [weightedGraph, setWeightedGraph] = useState<ElementsDefinition | null>(null);
-  const [currentPackage, setCurrentPackage] = useState<string | null>(null);
+  const [packageGraph, setPackageGraph] = useState<ElementsDefinition | null>(null);
+  const [currentPackage, setCurrentPackage] = useState<string>('');
 
   useEffect(() => {
-    getJson<string>('/api/getEntryPoint').then(setCurrentPackage);
-    // getJson<ICytoscapeGraph>('/api/fs/getCytoscapeGraph').then(setGraph);
-    getJson<ElementsDefinition>('/api/fs/getWeightedCytoscapeGraph').then(setWeightedGraph);
+    getJson<ElementsDefinition>('/api/fs/getWeightedCytoscapeGraph').then(setPackageGraph);
   }, []);
 
-  if (!weightedGraph || !currentPackage) return;
+  if (!packageGraph) return <Loader />;
 
   return (
     <>
@@ -32,7 +28,7 @@ export default function Home() {
       </Header>
       <Main>
         <Cytoscape
-          elements={weightedGraph}
+          elements={packageGraph}
           currentPackage={currentPackage}
           setCurrentPackage={setCurrentPackage}
         />
