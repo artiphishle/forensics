@@ -10,9 +10,13 @@ export default function Cytograph({ elements, currentPackage, setCurrentPackage 
     allElements: cytoscape.ElementsDefinition,
     packagePrefix: string
   ): cytoscape.ElementsDefinition {
+    // PackageView entrypoint, no prefix
+    if (!packagePrefix) return allElements;
+
+    // Active filtering (subpackage view)
     const pkgPrefix = packagePrefix.endsWith('.') ? packagePrefix : packagePrefix + '.';
     const allowedNodes = allElements.nodes.filter(node => {
-      return node.data.id!.startsWith(pkgPrefix);
+      return (node.data.id as string).startsWith(pkgPrefix);
     });
 
     const allowedNodeIds = new Set(allowedNodes.map(node => node.data.id));
@@ -34,14 +38,13 @@ export default function Cytograph({ elements, currentPackage, setCurrentPackage 
 
   // 1. Apply node filter when path changes
   useEffect(() => {
-    if (!currentPackage) return;
     setFilteredElements(filterElementsByPackage(elements, currentPackage.replace(/\//g, '.')));
   }, [currentPackage]);
 
   // 2. Show nodes after node filter has been applied
   useEffect(() => {
     if (!cyRef.current || !filteredElements) return;
-    console.log('[Packages] currentPackage', currentPackage);
+    console.log('[Packages] currentPackage', currentPackage || '[root]');
 
     const cy = cytoscape({
       container: cyRef.current,
