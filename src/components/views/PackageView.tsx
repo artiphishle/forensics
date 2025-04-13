@@ -1,34 +1,14 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import cytoscape, { ElementsDefinition, EventObject, NodeSingular } from 'cytoscape';
+import { useSettings } from '@/contexts/SettingsContext';
+import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
+import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 
 export default function Cytograph({ elements, currentPackage, setCurrentPackage }: ICytograph) {
   const cyRef = useRef<HTMLDivElement>(null);
+  const { showSubPackages } = useSettings();
   const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
-
-  function filterElementsByPackage(
-    allElements: cytoscape.ElementsDefinition,
-    packagePrefix: string
-  ): cytoscape.ElementsDefinition {
-    // PackageView entrypoint, no prefix
-    if (!packagePrefix) return allElements;
-
-    // Active filtering (subpackage view)
-    const pkgPrefix = packagePrefix.endsWith('.') ? packagePrefix : packagePrefix + '.';
-    const allowedNodes = allElements.nodes.filter(node => {
-      return (node.data.id as string).startsWith(pkgPrefix);
-    });
-
-    const allowedNodeIds = new Set(allowedNodes.map(node => node.data.id));
-    const allowedEdges = allElements.edges.filter(
-      edge => allowedNodeIds.has(edge.data.source) && allowedNodeIds.has(edge.data.target)
-    );
-
-    return {
-      nodes: allowedNodes,
-      edges: allowedEdges,
-    };
-  }
 
   function hasChildren(node: NodeSingular) {
     return elements.nodes.some(elm => {
@@ -38,8 +18,11 @@ export default function Cytograph({ elements, currentPackage, setCurrentPackage 
 
   // 1. Apply node filter when path changes
   useEffect(() => {
-    setFilteredElements(filterElementsByPackage(elements, currentPackage.replace(/\//g, '.')));
-  }, [currentPackage]);
+    console.log('showSubPackages', showSubPackages);
+    const afterPkgFilter = filterByPackagePrefix(elements, currentPackage.replace(/\//g, '.'));
+    setFilteredElements(showSubPackages ? afterPkgFilter : filterSubPackages(afterPkgFilter));
+    // );
+  }, [currentPackage, showSubPackages]);
 
   // 2. Show nodes after node filter has been applied
   useEffect(() => {

@@ -11,7 +11,10 @@ export default function Settings() {
       <Switch
         id="switch-show-subs"
         label={t('settings.showSubPackages')}
-        onToggle={() => toggleShowSubPackages()}
+        onToggle={() => {
+          console.log('every day Im toggeling');
+          toggleShowSubPackages();
+        }}
         value={showSubPackages}
       />
     </div>
