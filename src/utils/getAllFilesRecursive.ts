@@ -27,6 +27,5 @@ export async function getAllFilesRecursive(
     }
   }
 
-  console.log(results);
   return results;
 }

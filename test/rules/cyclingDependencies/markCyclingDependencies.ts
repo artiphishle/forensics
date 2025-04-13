@@ -1,4 +1,5 @@
-import { markCyclingDependencies } from '@/utils/cytoscape/rules/markCyclingDependencies';
+import { markCyclicPackages } from '@/utils/cytoscape/rules/markCyclicPackages';
+import { getAllFilesRecursive } from '@/utils/getAllFilesRecursive';
 import { ElementsDefinition } from 'cytoscape';
 
 const elements: ElementsDefinition = {
@@ -16,6 +17,7 @@ const elements: ElementsDefinition = {
   ],
 };
 
-const marked = markCyclingDependencies(elements);
-
-marked.edges.forEach(e => console.log(e));
+getAllFilesRecursive(process.env.NEXT_PUBLIC_PROJECT_PATH || '').then(files => {
+  const marked = markCyclicPackages(elements, files);
+  marked.edges.forEach(e => console.log(e));
+});

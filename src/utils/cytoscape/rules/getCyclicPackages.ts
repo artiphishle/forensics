@@ -61,6 +61,5 @@ export function getCyclicPackages(files: { package: string; imports: string[] }[
     }
   }
 
-  console.log(sccs.flat());
   return new Set(sccs.flat());
 }

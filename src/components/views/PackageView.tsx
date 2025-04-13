@@ -2,9 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import cytoscape, { ElementsDefinition, EventObject, NodeSingular } from 'cytoscape';
 
-export default function Cytograph({ elements, currentPath, setCurrentPath }: ICytograph) {
-  console.log('[Packages] currentPath', currentPath);
-  console.log('[Packages] nodes/edges', elements.nodes.length, elements.edges.length);
+export default function Cytograph({ elements, currentPackage, setCurrentPackage }: ICytograph) {
   const cyRef = useRef<HTMLDivElement>(null);
   const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
 
@@ -36,13 +34,14 @@ export default function Cytograph({ elements, currentPath, setCurrentPath }: ICy
 
   // 1. Apply node filter when path changes
   useEffect(() => {
-    if (!currentPath) return;
-    setFilteredElements(filterElementsByPackage(elements, currentPath.replace(/\//g, '.')));
-  }, [currentPath]);
+    if (!currentPackage) return;
+    setFilteredElements(filterElementsByPackage(elements, currentPackage.replace(/\//g, '.')));
+  }, [currentPackage]);
 
   // 2. Show nodes after node filter has been applied
   useEffect(() => {
     if (!cyRef.current || !filteredElements) return;
+    console.log('[Packages] currentPackage', currentPackage);
     console.log(
       'nodes',
       filteredElements.nodes.filter(x => !!x.data)
@@ -144,7 +143,6 @@ export default function Cytograph({ elements, currentPath, setCurrentPath }: ICy
         .filter(node => !!(node.data as any).isParent)
         .addClass('is-parent');
     });
-
     cy.on('mouseover', 'node', event => {
       const node = event.target;
       cy.elements()
@@ -186,7 +184,7 @@ export default function Cytograph({ elements, currentPath, setCurrentPath }: ICy
     cy.on('dblclick', 'node', (evt: EventObject) => {
       const node: NodeSingular = evt.target;
       node.data().id.startsWith();
-      if (hasChildren(node)) setCurrentPath(node.id().replace(/\./g, '/'));
+      if (hasChildren(node)) setCurrentPackage(node.id().replace(/\./g, '/'));
     });
     return () => {
       cy.destroy();
@@ -197,7 +195,7 @@ export default function Cytograph({ elements, currentPath, setCurrentPath }: ICy
 }
 
 interface ICytograph {
-  readonly currentPath: string;
-  readonly setCurrentPath: (path: string) => void;
+  readonly currentPackage: string;
+  readonly setCurrentPackage: (path: string) => void;
   readonly elements: ElementsDefinition;
 }

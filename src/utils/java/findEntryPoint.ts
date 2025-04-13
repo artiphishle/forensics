@@ -12,7 +12,9 @@ export function findEntryPoint(files: JavaParsedFile[]): JavaParsedFile | null {
         m.parameters[0].includes('String[]') &&
         m.visibility === 'public'
     );
+    if (mainMethod) console.log('[findEntryPoint] entrypoint', file.path);
 
+    // This will only return the first found entry point, there might be more
     if (mainMethod) return file;
   }
 

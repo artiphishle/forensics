@@ -1,5 +1,5 @@
 import { generateSequenceFromProject } from '@/utils/mermaid/generateSequenceFromProject';
-import MermaidView from '@/components/MermaidView';
+import MermaidView from '@/components/views/SequenceView';
 import Header from '@/components/Header';
 import Main from '@/components/Main';
 
