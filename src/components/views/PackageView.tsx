@@ -42,10 +42,6 @@ export default function Cytograph({ elements, currentPackage, setCurrentPackage 
   useEffect(() => {
     if (!cyRef.current || !filteredElements) return;
     console.log('[Packages] currentPackage', currentPackage);
-    console.log(
-      'nodes',
-      filteredElements.nodes.filter(x => !!x.data)
-    );
 
     const cy = cytoscape({
       container: cyRef.current,

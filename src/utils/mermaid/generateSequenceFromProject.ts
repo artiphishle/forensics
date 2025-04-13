@@ -1,6 +1,3 @@
-// @todo Static output for Adam over all project ;)
-// filter & search default eigenes package (andere ausblenden)
-
 import { getAllFilesRecursive } from '@/utils/getAllFilesRecursive';
 import { findEntryPoint } from '@/utils/java/findEntryPoint';
 
