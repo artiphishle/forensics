@@ -1,6 +1,6 @@
 'use server';
 import { NextResponse } from 'next/server';
-import { getAllFilesRecursive } from '@/server/getAllFilesRecursive';
+import { getAllFilesRecursive } from '@/utils/getAllFilesRecursive';
 import type { IFile } from '@/types/types';
 
 /**

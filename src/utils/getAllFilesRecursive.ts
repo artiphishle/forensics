@@ -1,7 +1,7 @@
 'use server';
 import fs from 'fs';
 import path from 'path';
-import { parseJavaFile } from './parseJavaFile';
+import { parseJavaFile } from './java/parseJavaFile';
 import type { IFile } from '@/types/types';
 
 /**
