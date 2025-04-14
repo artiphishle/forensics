@@ -1,7 +1,7 @@
 'use server';
 import fs from 'fs';
 import path from 'path';
-import type { IFile, JavaFileMetadata, MethodCall, MethodDefinition } from '@/types/types';
+import type { IFile, IMethodCall, IMethodDefinition } from '@/types/types';
 
 /**
  * Extracts the package declaration from Java code.
@@ -34,10 +34,10 @@ function extractClassName(content: string, fileName: string): string {
 /**
  * Extracts the method definitions from file content
  */
-function extractMethodDefinitions(content: string): MethodDefinition[] {
+function extractMethodDefinitions(content: string): IMethodDefinition[] {
   const methodRegex =
     /(?:(public|protected|private)\s+)?(?:static\s+)?([\w<>[\]]+)\s+(\w+)\s*\(([^)]*)\)\s*\{/g;
-  const methods: MethodDefinition[] = [];
+  const methods: IMethodDefinition[] = [];
 
   let match;
   while ((match = methodRegex.exec(content)) !== null) {
@@ -63,9 +63,9 @@ function extractMethodDefinitions(content: string): MethodDefinition[] {
 /**
  * Extract method calls from file content
  */
-function extractMethodCalls(content: string): MethodCall[] {
+function extractMethodCalls(content: string): IMethodCall[] {
   const callRegex = /(\b\w+)\.(\w+)\s*\(/g;
-  const calls: MethodCall[] = [];
+  const calls: IMethodCall[] = [];
 
   let match;
   while ((match = callRegex.exec(content)) !== null) {
