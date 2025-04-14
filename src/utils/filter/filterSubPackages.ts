@@ -20,7 +20,6 @@ function filterPackages(packages: string[]): string[] {
 export function filterSubPackages(elements: ElementsDefinition): ElementsDefinition {
   // 1. Extract all node packages
   const allPackages = elements.nodes.map(node => node.data.id as string);
-  console.log('all', allPackages.length);
 
   // 2. Filter to top-level packages
   const allowedPackages = filterPackages(allPackages);
@@ -36,7 +35,6 @@ export function filterSubPackages(elements: ElementsDefinition): ElementsDefinit
     edge => allowedNodeIds.has(edge.data.source) && allowedNodeIds.has(edge.data.target)
   );
 
-  console.log(filteredNodes.length);
   return {
     nodes: filteredNodes,
     edges: filteredEdges,

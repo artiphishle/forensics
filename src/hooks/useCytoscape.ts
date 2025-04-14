@@ -5,6 +5,7 @@ import cytoscape, { ElementsDefinition, NodeSingular, EventObject, Core } from '
 import { useSettings } from '@/contexts/SettingsContext';
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
+import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
 
 export function useCytograph(
   elements: ElementsDefinition,
@@ -14,7 +15,7 @@ export function useCytograph(
   const cyRef = useRef<HTMLDivElement>(null);
   const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
   const [cyInstance, setCyInstance] = useState<Core | null>(null);
-  const { showSubPackages } = useSettings();
+  const { showSubPackages, showVendorPackages } = useSettings();
 
   function hasChildren(node: NodeSingular) {
     return elements.nodes.some(elm => {
@@ -22,11 +23,19 @@ export function useCytograph(
     });
   }
 
-  // Filter elements by current package & subpackage toggle
+  // Handle package filtering
   useEffect(() => {
+    // 1. current package prefix
     const afterPkgFilter = filterByPackagePrefix(elements, currentPackage.replace(/\//g, '.'));
-    setFilteredElements(showSubPackages ? afterPkgFilter : filterSubPackages(afterPkgFilter));
-  }, [currentPackage, showSubPackages]);
+    // 2. show/hide sub packages
+    const afterSubPkgFilter = showSubPackages ? afterPkgFilter : filterSubPackages(afterPkgFilter);
+    // 3. show/hide vendor packages
+    const afterVendorPkgFilter = showVendorPackages
+      ? afterSubPkgFilter
+      : filterVendorPackages(afterSubPkgFilter);
+
+    setFilteredElements(afterVendorPkgFilter);
+  }, [currentPackage, showSubPackages, showVendorPackages]);
 
   // Setup Cytoscape when filteredElements change
   useEffect(() => {
@@ -171,6 +180,5 @@ export function useCytograph(
     };
   }, [filteredElements]);
 
-  console.log('cyref', cyRef, cyInstance);
   return { cyRef, cyInstance };
 }

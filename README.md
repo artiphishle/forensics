@@ -24,6 +24,19 @@ cp .env.tpl .env
 pnpm run dev
 ```
 
+## Test
+
+```bash
+# Run tests
+pnpm test
+
+# Print Coverage to stdout
+pnpm test:cov
+
+# Generate HTML Coverage to 'test/coverage/index.html'
+pnpm test:cov:html
+```
+
 ## Contributing
 
 The list of open source tools to visualize code structure is rather short. Structure101 is now part of Sonar. Don't let paid tools dominate software craft. Join us and contribute to open-source!
