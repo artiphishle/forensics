@@ -8,23 +8,35 @@ const SettingsContext = createContext<ISettingsContext | null>(null);
 // Settings provider
 export const SettingsProvider = ({ children }: PropsWithChildren) => {
   const [showSubPackages, setShowSubPackages] = useState(getShowSubPackages());
-  const toggleShowSubPackages = () => {
-    setShowSubPackages(prev => !prev);
-  };
+  const [showVendorPackages, setShowVendorPackages] = useState(getShowSubPackages());
+
+  const toggleShowSubPackages = () => setShowSubPackages(prev => !prev);
+  const toggleShowVendorPackages = () => setShowVendorPackages(prev => !prev);
 
   return (
-    <SettingsContext value={{ showSubPackages, toggleShowSubPackages }}>{children}</SettingsContext>
+    <SettingsContext
+      value={{
+        showSubPackages,
+        toggleShowSubPackages,
+        showVendorPackages,
+        toggleShowVendorPackages,
+      }}
+    >
+      {children}
+    </SettingsContext>
   );
 };
 
 // Hook to read/update settings
 export function useSettings() {
   const context = use(SettingsContext);
-  if (!context) throw new Error('ThemeSwitcher must be used within a ThemeProvider');
+  if (!context) throw new Error('useSettings() must be used within a SettingsProvider');
   return context;
 }
 
 interface ISettingsContext {
   showSubPackages: boolean;
+  showVendorPackages: boolean;
   toggleShowSubPackages: () => void;
+  toggleShowVendorPackages: () => void;
 }

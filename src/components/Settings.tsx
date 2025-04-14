@@ -3,7 +3,8 @@ import Switch from '@/components/Switch';
 import { useSettings } from '@/contexts/SettingsContext';
 
 export default function Settings() {
-  const { showSubPackages, toggleShowSubPackages } = useSettings();
+  const { showSubPackages, toggleShowSubPackages, showVendorPackages, toggleShowVendorPackages } =
+    useSettings();
 
   return (
     <div className="bg-background p-4">
@@ -12,10 +13,17 @@ export default function Settings() {
         id="switch-show-subs"
         label={t('settings.showSubPackages')}
         onToggle={() => {
-          console.log('every day Im toggeling');
           toggleShowSubPackages();
         }}
         value={showSubPackages}
+      />
+      <Switch
+        id="switch-show-vendor"
+        label={t('settings.showVendorPackages')}
+        onToggle={() => {
+          toggleShowVendorPackages();
+        }}
+        value={showVendorPackages}
       />
     </div>
   );

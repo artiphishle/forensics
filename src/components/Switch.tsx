@@ -6,7 +6,10 @@ export default function RadixSwitch({ id, label, value, onToggle }: ISwitch) {
   return (
     <form>
       <div className="flex items-center">
-        <label className="pr-[15px] text-[15px] leading-none text-white" htmlFor={id}>
+        <label
+          className="pr-[15px] text-[15px] leading-none text-foreground whitespace-nowrap"
+          htmlFor={id}
+        >
           {label}
         </label>
         <Switch.Root
