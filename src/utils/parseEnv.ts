@@ -30,5 +30,6 @@ export const getShowVendorPackages = () => {
     'NEXT_PUBLIC_SETTINGS_SHOW_VENDORPACKAGES',
     process.env.NEXT_PUBLIC_SETTINGS_SHOW_VENDORPACKAGES
   );
+
   return env === true ? true : false;
 };

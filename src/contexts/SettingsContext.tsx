@@ -1,6 +1,6 @@
 'use client';
 import React, { createContext, use, useState, type PropsWithChildren } from 'react';
-import { getShowSubPackages } from '@/utils/parseEnv';
+import { getShowSubPackages, getShowVendorPackages } from '@/utils/parseEnv';
 
 // Settings context
 const SettingsContext = createContext<ISettingsContext | null>(null);
@@ -8,7 +8,7 @@ const SettingsContext = createContext<ISettingsContext | null>(null);
 // Settings provider
 export const SettingsProvider = ({ children }: PropsWithChildren) => {
   const [showSubPackages, setShowSubPackages] = useState(getShowSubPackages());
-  const [showVendorPackages, setShowVendorPackages] = useState(getShowSubPackages());
+  const [showVendorPackages, setShowVendorPackages] = useState(getShowVendorPackages());
 
   const toggleShowSubPackages = () => setShowSubPackages(prev => !prev);
   const toggleShowVendorPackages = () => setShowVendorPackages(prev => !prev);

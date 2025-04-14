@@ -1,11 +1,9 @@
-import * as React from 'react';
 import { Switch } from 'radix-ui';
 
 export default function RadixSwitch({ id, label, value, onToggle }: ISwitch) {
-  console.log('value', value);
   return (
     <form>
-      <div className="flex items-center">
+      <div className="flex items-center justify-between">
         <label
           className="pr-[15px] text-[15px] leading-none text-foreground whitespace-nowrap"
           htmlFor={id}

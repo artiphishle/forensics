@@ -3,11 +3,14 @@
  * @test
  */
 
-// utils
+// Environment
 export * from './utils/parseEnv.spec';
 
-// utils/cytoscape/rules
+// Filtering
+export * from './utils/filter/filterVendorPackages.spec';
+
+// Rules
 export * from './utils/cytoscape/rules/markCyclicPackages';
 
-// utils/java
+// Java
 export * from './utils/java/extractJavaPackageFromImport.spec';

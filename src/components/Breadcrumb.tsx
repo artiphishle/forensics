@@ -17,7 +17,7 @@ export default function Breadcrumb({ path, onNavigate }: BreadcrumbProps) {
 
       {parts.map((part, index) => {
         const currentPath = parts.length ? parts.slice(0, index + 1).join('.') : '';
-        console.log('current', currentPath);
+
         return (
           <div key={index} className="flex items-center">
             <ChevronRight className="h-4 w-4 text-gray-400" />
