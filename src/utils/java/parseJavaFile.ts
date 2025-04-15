@@ -91,12 +91,14 @@ export async function parseJavaFile(fullPath: string, projectRoot: string) {
   const calls = extractMethodCalls(content);
   const relativePath = path.relative(projectRoot, fullPath);
 
-  return {
+  const file: IFile = {
     className,
     package: pkg,
     imports,
     methods,
     calls,
     path: relativePath,
-  } as IFile;
+  };
+
+  return file;
 }

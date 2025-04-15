@@ -4,6 +4,7 @@ const en: ILanguage = {
   'settings.title': 'Settings',
   'settings.showSubPackages': 'Show Subs',
   'settings.showVendorPackages': 'Show Vendor',
+  'settings.audit': 'Audit',
 };
 
 export default en;
