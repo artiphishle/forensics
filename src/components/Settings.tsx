@@ -2,6 +2,7 @@ import { t } from '@/i18n/i18n';
 import Separator from '@/components/Separator';
 import Switch from '@/components/Switch';
 import { useSettings } from '@/contexts/SettingsContext';
+import { Download } from 'lucide-react';
 
 export default function Settings() {
   const { showSubPackages, toggleShowSubPackages, showVendorPackages, toggleShowVendorPackages } =
@@ -9,9 +10,7 @@ export default function Settings() {
 
   return (
     <div className="bg-background p-4">
-      <h1 className="font-bold text-xl text-foreground mb-4">{t('settings.title')}</h1>
-
-      <Separator />
+      <h1>{t('settings.title')}</h1>
 
       {/* Whether to show sub packages */}
       <Switch
@@ -32,7 +31,17 @@ export default function Settings() {
         }}
         value={showVendorPackages}
       />
+
       <Separator />
+
+      {/* Audit Download */}
+      <h1>{t('settings.audit')}</h1>
+      <a className="flex items-center gap-2" href="/api/audit/json" download>
+        <Download /> JSON
+      </a>
+      <a className="flex items-center gap-2" href="/api/audit/xml" download>
+        <Download /> XML
+      </a>
     </div>
   );
 }

@@ -13,6 +13,7 @@
     "test:cov:html": "c8 --report-dir=./test/coverage --reporter=html tsx --test"
   },
   "dependencies": {
+    "ankh-hooks": "^1.4.16",
     "cytoscape": "^3.31.2",
     "cytoscape-klay": "^3.1.4",
     "fp-ts": "^2.16.9",
@@ -21,7 +22,8 @@
     "next": "15.3.0",
     "radix-ui": "^1.2.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
