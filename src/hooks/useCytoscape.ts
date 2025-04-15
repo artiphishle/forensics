@@ -78,8 +78,9 @@ export function useCytograph(
         {
           selector: 'node:selected',
           style: {
-            'background-color': '#44ffee',
-            'border-color': '#00bbaa',
+            'background-color': '#024a71',
+            'border-color': '#024a71',
+            color: '#fff',
             'border-width': 2,
           },
         },

@@ -42,6 +42,12 @@ h1 {
   color: var(--text-foreground);
   margin-bottom: var(--mb-4);
 }
+
+h2 {
+  font-weight: bold;
+  font-size: var(--text-l);
+}
+
 button {
   color: #fff;
 }
