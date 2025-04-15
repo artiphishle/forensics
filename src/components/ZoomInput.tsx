@@ -24,7 +24,7 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
   if (zoom === null) return;
 
   return (
-    <div className="p-4 flex items-center gap-2 text-black bg-gray-100 border-t border-t-gray-200">
+    <div className="p-4 flex items-center justify-center gap-2 text-foreground bg-background border-t border-t-gray-200 dark:border-t-gray-800">
       <label
         htmlFor="zoom"
         className="text-sm text-gray-600"
