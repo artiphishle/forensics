@@ -9,11 +9,10 @@ export default function Header({ children, title }: IHeader) {
     <header className="flex flex-row items-center justify-between bg-sky-900 p-4 gap-4">
       <div className="flex flex-row items-center justify-start">
         <Popover />
-        {title && <strong className="mx-4 text-background">{title}</strong>}
+        <h1 className="ml-4">{projectName}</h1>
+        <span className="ml-2 text-background opacity-20">&#47;</span>
+        {title && <strong className="mx-2 text-background">{title}</strong>}
         {children}
-      </div>
-      <div>
-        <h1>{projectName}</h1>
       </div>
     </header>
   );
