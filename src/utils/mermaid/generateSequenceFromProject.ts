@@ -3,7 +3,7 @@ import { findEntryPoint } from '@/utils/java/findEntryPoint';
 
 export async function generateSequenceFromProject(
   projectRoot: string = process.env.NEXT_PUBLIC_PROJECT_PATH || ''
-): Promise<string> {
+) {
   const parsed = await getAllFilesRecursive(projectRoot);
   const entry = findEntryPoint(parsed);
 

@@ -1,5 +1,5 @@
+'use client';
 import { t } from '@/i18n/i18n';
-import Separator from '@/components/Separator';
 import Switch from '@/components/Switch';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Download } from 'lucide-react';
