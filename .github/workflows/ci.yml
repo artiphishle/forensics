@@ -18,12 +18,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '22.14.0'
-          cache: 'pnpm'
+          cache: 'npm'
 
-      - name: 📦 Enable Corepack and Activate PNPM from package.json
+      - name: 📦 Install PNPM manually
         run: |
-          corepack enable
-          corepack use
+          npm install -g pnpm@10.7.1
           pnpm -v
 
       - name: 📥 Install dependencies
