@@ -14,6 +14,7 @@ export async function getAudit() {
   }
 
   const timeStart = Date.now();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const language = useLanguageDetection(projectPath);
 
   // 1. Build audit object

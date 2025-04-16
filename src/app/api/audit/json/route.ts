@@ -1,8 +1,5 @@
 'use server';
-import { getAllFilesRecursive } from '@/utils/getAllFilesRecursive';
-import { ILanguageDetectionResult, useLanguageDetection } from 'ankh-hooks';
 import { NextResponse } from 'next/server';
-import type { IFile } from '@/types/types';
 import { getAudit } from '@/utils/getAudit';
 
 /**
@@ -20,16 +17,4 @@ export async function GET() {
       'Content-Disposition': `attachment; filename="${filename}"`,
     },
   });
-}
-
-interface IAuditMeta {
-  timeEnd: number;
-  timeStart: number;
-  language: ILanguageDetectionResult;
-  projectName: string;
-}
-
-interface IAudit {
-  meta: IAuditMeta;
-  files: IFile[];
 }
