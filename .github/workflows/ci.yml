@@ -14,16 +14,22 @@ jobs:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
 
-      - name: 🔧 Setup Node.js
+      - name: 🔧 Setup Node.js 22
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '22.14.0'
           cache: 'pnpm'
 
-      - name: 📦 Install pnpm
+      - name: 📦 Setup PNPM
         uses: pnpm/action-setup@v2
         with:
           version: 8
+          run_install: false
+
+      - name: 🧪 Show versions
+        run: |
+          node -v
+          pnpm -v
 
       - name: 📥 Install dependencies
         run: pnpm install
@@ -34,6 +40,5 @@ jobs:
       - name: 🎨 Format check
         run: pnpm format:check
 
-      - name: 🧪 Test
+      - name: ✅ Test
         run: pnpm test
-

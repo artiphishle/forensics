@@ -6,7 +6,7 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
   const [zoomToFit, setZoomToFit] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!cyInstance || zoom !== null) return;
+    if (!cyInstance) return;
     setZoomToFit(cyInstance.zoom());
   }, [cyInstance]);
 
@@ -19,7 +19,7 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
     if (!cyInstance || zoom === null) return;
     cyInstance.zoom(zoom);
     cyInstance.center();
-  }, [zoom]);
+  }, [zoom, cyInstance]);
 
   if (zoom === null) return;
 
@@ -28,7 +28,7 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
       <label
         htmlFor="zoom"
         className="text-sm text-gray-600"
-        onDoubleClick={e => {
+        onDoubleClick={() => {
           setZoom(zoomToFit);
         }}
       >

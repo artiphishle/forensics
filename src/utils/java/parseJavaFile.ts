@@ -41,7 +41,7 @@ function extractMethodDefinitions(content: string): IMethodDefinition[] {
 
   let match;
   while ((match = methodRegex.exec(content)) !== null) {
-    const visibility = (match[1] as any) || 'default';
+    const visibility = (match[1] as 'default' | 'public' | 'protected' | 'private') || 'default';
     const returnType = match[2];
     const name = match[3];
     const params = match[4]

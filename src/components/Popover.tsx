@@ -12,6 +12,7 @@ export default function Popover() {
       <RadixPopover.Anchor />
       <RadixPopover.Portal>
         <RadixPopover.Content className="flex flex-col bg-background text-foreground">
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a className="border-b border-b-gray-200 p-2" href="/">
             {t('nav.packages')}
           </a>

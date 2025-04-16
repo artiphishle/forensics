@@ -1,7 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import cytoscape, { ElementsDefinition, NodeSingular, EventObject, Core } from 'cytoscape';
+import cytoscape, {
+  ElementsDefinition,
+  NodeSingular,
+  EventObject,
+  Core,
+  type NodeDataDefinition,
+} from 'cytoscape';
 import { useSettings } from '@/contexts/SettingsContext';
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
@@ -13,16 +19,9 @@ export function useCytograph(
   setCurrentPackage: (path: string) => void
 ) {
   const cyRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
   const [cyInstance, setCyInstance] = useState<Core | null>(null);
   const { showSubPackages, showVendorPackages } = useSettings();
-
-  function hasChildren(node: NodeSingular) {
-    return elements.nodes.some(elm => {
-      return elm.data.id?.startsWith(`${node.data().id}.`);
-    });
-  }
 
   // Handle package filtering
   useEffect(() => {
@@ -36,7 +35,7 @@ export function useCytograph(
       : filterVendorPackages(afterSubPkgFilter);
 
     setFilteredElements(afterVendorPkgFilter);
-  }, [currentPackage, showSubPackages, showVendorPackages]);
+  }, [elements, currentPackage, showSubPackages, showVendorPackages]);
 
   useEffect(() => {
     if (!cyRef.current || !cyInstance) return;
@@ -60,6 +59,12 @@ export function useCytograph(
   // Setup Cytoscape when filteredElements change
   useEffect(() => {
     if (!cyRef.current || !filteredElements) return;
+
+    function hasChildren(node: NodeSingular) {
+      return elements.nodes.some(elm => {
+        return elm.data.id?.startsWith(`${node.data().id}.`);
+      });
+    }
 
     const cy = cytoscape({
       container: cyRef.current,
@@ -145,7 +150,7 @@ export function useCytograph(
 
     cy.ready(() => {
       cy.nodes()
-        .filter(node => !!(node.data as any).isParent)
+        .filter(node => !!(node.data as NodeDataDefinition).isParent)
         .addClass('is-parent');
     });
 
@@ -170,7 +175,7 @@ export function useCytograph(
       node.incomers().removeClass('highlight-ingoer');
     });
 
-    let highlightDelay: any;
+    let highlightDelay: ReturnType<typeof setTimeout>;
     cy.on('mouseover', 'edge', event => {
       const edge = event.target;
       edge.addClass('highlight-dependency');
@@ -199,7 +204,7 @@ export function useCytograph(
       cy.destroy();
       setCyInstance(null);
     };
-  }, [filteredElements]);
+  }, [elements, filteredElements, setCurrentPackage]);
 
   return { cyRef, cyInstance };
 }
