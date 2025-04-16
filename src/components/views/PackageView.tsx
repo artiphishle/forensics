@@ -14,7 +14,7 @@ export default function Cytograph({ elements, currentPackage, setCurrentPackage 
 
   return (
     <div className="flex flex-col w-full flex-1 gap-2">
-      <div ref={cyRef} className="" style={{ height: `calc(100% - 65px)` }} />
+      <div ref={cyRef} className="h-[calc(100%-65px)]" />
       <ZoomInput cyInstance={cyInstance} />
     </div>
   );
