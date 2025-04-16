@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       ankh-hooks:
-        specifier: ^1.4.16
-        version: 1.4.16
+        specifier: ^1.4.17
+        version: 1.4.17
       cytoscape:
         specifier: ^3.31.2
         version: 3.31.2
@@ -1615,8 +1615,8 @@ packages:
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
 
-  ankh-hooks@1.4.16:
-    resolution: {integrity: sha512-1rpm/PpFIlhBE04f29P7UcUbnzF4D61V6OQ1vgj5sWDGouAJf1uALeGkBL/PeZVy3ZiNolplBgQDsg84fq6Lxw==}
+  ankh-hooks@1.4.17:
+    resolution: {integrity: sha512-5D9+/9hLnvi9LtpValpgib4xgpzSixX0IHImx9H1SPdSmoNKpZgCgHYADcPV5DWxykWMCRu3PR3sC+YvjQH44A==}
     engines: {node: ^22.14.0}
 
   ansi-regex@5.0.1:
@@ -5099,7 +5099,7 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  ankh-hooks@1.4.16:
+  ankh-hooks@1.4.17:
     dependencies:
       '@types/react': 18.3.20
       '@types/react-dom': 18.3.6(@types/react@18.3.20)

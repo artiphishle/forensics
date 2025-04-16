@@ -13,6 +13,7 @@ export function useCytograph(
   setCurrentPackage: (path: string) => void
 ) {
   const cyRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
   const [cyInstance, setCyInstance] = useState<Core | null>(null);
   const { showSubPackages, showVendorPackages } = useSettings();
@@ -36,6 +37,25 @@ export function useCytograph(
 
     setFilteredElements(afterVendorPkgFilter);
   }, [currentPackage, showSubPackages, showVendorPackages]);
+
+  useEffect(() => {
+    if (!cyRef.current || !cyInstance) return;
+
+    const handleResize = () => {
+      cyInstance.fit();
+    };
+
+    const observer = new ResizeObserver(() => {
+      // Simple debounce using requestAnimationFrame
+      requestAnimationFrame(handleResize);
+    });
+
+    observer.observe(cyRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [cyRef, cyInstance]);
 
   // Setup Cytoscape when filteredElements change
   useEffect(() => {
