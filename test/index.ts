@@ -10,7 +10,8 @@ export * from './utils/parseEnv.spec';
 export * from './utils/filter/filterVendorPackages.spec';
 
 // Rules
-export * from './utils/cytoscape/rules/markCyclicPackages';
+export * from './utils/cytoscape/rules/markCyclicPackages.spec';
 
 // Java
+export * from './utils/java/getIntrinsicPackagesRecursive.spec';
 export * from './utils/java/extractJavaPackageFromImport.spec';

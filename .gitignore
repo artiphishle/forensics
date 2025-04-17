@@ -33,6 +33,9 @@ yarn-error.log*
 # env file
 .env
 
+# Java
+target/
+
 # vercel
 .vercel
 

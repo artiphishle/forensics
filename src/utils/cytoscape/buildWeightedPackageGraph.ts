@@ -1,7 +1,5 @@
-import { extractJavaPackageFromImport } from '@/utils/java/extractJavaPackageFromImport';
-import { getNodesFromSet } from '@/utils/cytoscape/getNodesFromSet';
 import { getEdgesFromMap } from '@/utils/cytoscape/getEdgesFromMap';
-import type { EdgeDefinition, ElementsDefinition } from 'cytoscape';
+import type { NodeDefinition, EdgeDefinition, ElementsDefinition } from 'cytoscape';
 import type { IFile } from '@/types/types';
 import { assignPackageHierarchy } from '../java/assignPackageHierarchy';
 
@@ -9,21 +7,27 @@ import { assignPackageHierarchy } from '../java/assignPackageHierarchy';
  * Builds a weighted dependency graph based on package-level imports
  */
 export function buildWeightedPackageGraph(files: IFile[]) {
-  const cyPkgNodesSet = new Set<string>();
+  const cyPkgNodesMap = new Map<string, NodeDefinition>();
   const cyPkgEdgesMap = new Map<string, EdgeDefinition['data']>(); // key = "source>target"
 
   for (const file of files) {
     const sourcePkg = file.package || 'undefined';
-    cyPkgNodesSet.add(extractJavaPackageFromImport(sourcePkg));
+    if (!cyPkgNodesMap.has(sourcePkg))
+      cyPkgNodesMap.set(sourcePkg, {
+        data: { id: sourcePkg, label: sourcePkg, ...file, isIntrinsic: true },
+      });
 
-    const packageImportedSet = new Set<string>();
     for (const imp of file.imports) {
-      const pkgFromImport = extractJavaPackageFromImport(imp);
-      if (pkgFromImport !== sourcePkg) packageImportedSet.add(pkgFromImport);
-    }
-
-    for (const targetPkg of packageImportedSet) {
-      cyPkgNodesSet.add(targetPkg);
+      const targetPkg = imp.pkg;
+      if (!cyPkgNodesMap.has(targetPkg))
+        cyPkgNodesMap.set(targetPkg, {
+          data: {
+            id: targetPkg,
+            label: targetPkg,
+            ...file,
+            isIntrinsic: imp.isIntrinsic,
+          },
+        });
 
       const key = `${sourcePkg}>${targetPkg}`;
       if (cyPkgEdgesMap.has(key)) cyPkgEdgesMap.get(key)!.weight += 1;
@@ -32,7 +36,7 @@ export function buildWeightedPackageGraph(files: IFile[]) {
   }
 
   return {
-    nodes: assignPackageHierarchy(getNodesFromSet(cyPkgNodesSet)),
+    nodes: assignPackageHierarchy(Array.from(cyPkgNodesMap.values())),
     edges: getEdgesFromMap(cyPkgEdgesMap),
   } as ElementsDefinition;
 }

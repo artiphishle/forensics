@@ -1,7 +1,9 @@
 'use server';
 import fs from 'fs';
 import path from 'path';
+import { getIntrinsicPackagesRecursive } from '@/utils/java/getIntrinsicPackagesRecursive';
 import type { IFile, IMethodCall, IMethodDefinition } from '@/types/types';
+import { extractJavaPackageFromImport } from './extractJavaPackageFromImport';
 
 /**
  * Extracts the package declaration from Java code.
@@ -83,10 +85,18 @@ function extractMethodCalls(content: string): IMethodCall[] {
 export async function parseJavaFile(fullPath: string, projectRoot: string) {
   const content = fs.readFileSync(fullPath, 'utf-8');
   const fileName = path.basename(fullPath, '.java');
+  const intrinsicPackages = await getIntrinsicPackagesRecursive();
 
   const className = extractClassName(content, fileName);
   const pkg = extractPackageName(content);
-  const imports = extractImports(content);
+  const imports = extractImports(content).map(imp => {
+    const pkgFromImport = extractJavaPackageFromImport(imp);
+    return {
+      name: imp,
+      pkg: pkgFromImport,
+      isIntrinsic: intrinsicPackages.includes(pkgFromImport),
+    };
+  });
   const methods = extractMethodDefinitions(content);
   const calls = extractMethodCalls(content);
   const relativePath = path.relative(projectRoot, fullPath);
