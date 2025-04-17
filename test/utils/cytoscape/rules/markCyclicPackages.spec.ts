@@ -11,7 +11,7 @@ describe('[markCyclicPackages]', () => {
       {
         className: 'App',
         package: 'com.example.myapp',
-        imports: ['com.example.myapp.a.A'],
+        imports: [{ name: 'com.example.myapp.a.A', pkg: 'com.example.myapp.a', isIntrinsic: true }],
         methods: [], // Mock
         calls: [], // Mock
         path: 'src/main/java/com/example/myapp/App.java',
@@ -19,7 +19,11 @@ describe('[markCyclicPackages]', () => {
       {
         className: 'A',
         package: 'com.example.myapp.a',
-        imports: ['com.example.myapp.b.B', 'com.example.myapp.c.C', 'com.example.myapp.d.D'],
+        imports: [
+          { name: 'com.example.myapp.b.B', pkg: 'com.example.myapp.b', isIntrinsic: true },
+          { name: 'com.example.myapp.c.C', pkg: 'com.example.myapp.c', isIntrinsic: true },
+          { name: 'com.example.myapp.d.D', pkg: 'com.example.myapp.d', isIntrinsic: true },
+        ],
         methods: [],
         calls: [], // Mock
         path: 'src/main/java/com/example/myapp/a/A.java',
@@ -27,7 +31,7 @@ describe('[markCyclicPackages]', () => {
       {
         className: 'B',
         package: 'com.example.myapp.b',
-        imports: ['com.example.myapp.a.A'],
+        imports: [{ name: 'com.example.myapp.a.A', pkg: 'com.example.myapp.a', isIntrinsic: true }],
         methods: [],
         calls: [], // Mock
         path: 'src/main/java/com/example/myapp/b/B.java',
@@ -51,7 +55,14 @@ describe('[markCyclicPackages]', () => {
       {
         className: 'AppTest',
         package: 'com.example.myapp',
-        imports: ['junit.framework.Test', 'junit.framework.TestCase', 'junit.framework.TestSuite'],
+        imports: [
+          {
+            name: 'junit.framework.Test',
+            pkg: 'junit.framework',
+          },
+          { name: 'junit.framework.TestCase', pkg: 'junit.framework' },
+          { name: 'junit.framework.TestSuite', pkg: 'junit.framework' },
+        ],
         methods: [], // Mock
         calls: [],
         path: 'src/test/java/com/example/myapp/AppTest.java',
@@ -65,6 +76,7 @@ describe('[markCyclicPackages]', () => {
             label: 'myapp',
             isParent: true,
             packageCycle: false,
+            isIntrinsic: true,
           },
           classes: '',
         },
@@ -73,6 +85,7 @@ describe('[markCyclicPackages]', () => {
             id: 'com.example.myapp.a',
             label: 'a',
             packageCycle: true,
+            isIntrinsic: true,
           },
           classes: 'packageCycle',
         },
@@ -81,6 +94,7 @@ describe('[markCyclicPackages]', () => {
             id: 'com.example.myapp.b',
             label: 'b',
             packageCycle: true,
+            isIntrinsic: true,
           },
           classes: 'packageCycle',
         },
@@ -89,6 +103,7 @@ describe('[markCyclicPackages]', () => {
             id: 'com.example.myapp.c',
             label: 'c',
             packageCycle: false,
+            isIntrinsic: true,
           },
           classes: '',
         },
@@ -97,6 +112,7 @@ describe('[markCyclicPackages]', () => {
             id: 'com.example.myapp.d',
             label: 'd',
             packageCycle: false,
+            isIntrinsic: true,
           },
           classes: '',
         },
@@ -105,6 +121,7 @@ describe('[markCyclicPackages]', () => {
             id: 'junit.framework',
             label: 'framework',
             packageCycle: false,
+            isIntrinsic: true,
           },
           classes: '',
         },

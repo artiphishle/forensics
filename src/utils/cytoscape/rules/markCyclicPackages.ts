@@ -1,11 +1,10 @@
-import { extractJavaPackageFromImport } from '@/utils/java/extractJavaPackageFromImport';
 import type { ElementsDefinition } from 'cytoscape';
-import type { IFile } from '@/types/types';
+import type { IFile, IJavaImport } from '@/types/types';
 
 /**
  * Finds cyclic packages using Tarjan's algorithm
  */
-function getCyclicPackages(files: { package: string; imports: string[] }[]): Set<string> {
+function getCyclicPackages(files: { package: string; imports: IJavaImport[] }[]): Set<string> {
   const graph = new Map<string, Set<string>>();
 
   for (const file of files) {
@@ -13,10 +12,7 @@ function getCyclicPackages(files: { package: string; imports: string[] }[]): Set
     if (!graph.has(fromPkg)) graph.set(fromPkg, new Set());
 
     for (const imp of file.imports) {
-      const toPkg = extractJavaPackageFromImport(imp);
-      if (toPkg !== fromPkg) {
-        graph.get(fromPkg)!.add(toPkg);
-      }
+      if (imp.pkg !== fromPkg) graph.get(fromPkg)!.add(imp.pkg);
     }
   }
 
@@ -77,6 +73,7 @@ export function markCyclicPackages(elements: ElementsDefinition, files: IFile[])
   const nodes = elements.nodes.map(node => {
     const pkg = node.data.id as string;
     const isCyclic = cyclicPackages.has(pkg);
+
     return {
       ...node,
       classes: isCyclic ? 'packageCycle' : '',
