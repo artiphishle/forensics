@@ -5,6 +5,7 @@ import type { ElementsDefinition } from 'cytoscape';
  */
 export function filterVendorPackages(elements: ElementsDefinition): ElementsDefinition {
   const vendorPrefixes = [
+    'lombok',
     'java.',
     'javax.',
     'jakarta.',

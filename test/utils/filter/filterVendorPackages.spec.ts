@@ -7,6 +7,7 @@ describe('[filterVendorPackages]', () => {
   test('filter vendor packages by known prefixes', () => {
     const elements: ElementsDefinition = {
       nodes: [
+        { data: { id: 'lombok' } },
         { data: { id: 'com.myapp.service' } },
         { data: { id: 'org.springframework.context' } },
         { data: { id: 'java.util' } },
