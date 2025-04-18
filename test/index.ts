@@ -13,5 +13,6 @@ export * from './utils/filter/filterVendorPackages.spec';
 export * from './utils/cytoscape/rules/markCyclicPackages.spec';
 
 // Java
+export * from './utils/getParsedFileStructure.spec';
 export * from './utils/java/getIntrinsicPackagesRecursive.spec';
 export * from './utils/java/extractJavaPackageFromImport.spec';

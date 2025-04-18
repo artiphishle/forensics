@@ -39,7 +39,7 @@ body {
 h1 {
   font-weight: bold;
   font-size: var(--text-xl);
-  color: var(--background);
+  color: var(--foreground);
   margin-bottom: var(--mb-4);
 }
 
