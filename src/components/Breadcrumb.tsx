@@ -7,7 +7,7 @@ export default function Breadcrumb({ path, onNavigate }: BreadcrumbProps) {
 
   return (
     <nav className="flex items-center space-x-1 text-sm">
-      <Link href="#" onClick={() => onNavigate('')} className="flex items-center text-background">
+      <Link href="#" onClick={() => onNavigate('')} className="flex items-center text-foreground">
         <Home className="h-4 w-4 mr-1" />
       </Link>
 
@@ -16,8 +16,8 @@ export default function Breadcrumb({ path, onNavigate }: BreadcrumbProps) {
 
         return (
           <div key={index} className="flex items-center">
-            <ChevronRight className="h-4 w-4 text-background opacity-20" />
-            <Link href="#" onClick={() => onNavigate(currentPath)} className="ml-1 text-background">
+            <ChevronRight className="h-4 w-4 text-foreground opacity-20" />
+            <Link href="#" onClick={() => onNavigate(currentPath)} className="ml-1 text-foreground">
               {part}
             </Link>
           </div>

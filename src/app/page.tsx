@@ -13,7 +13,7 @@ export default function Home() {
   const [currentPackage, setCurrentPackage] = useState<string>('');
 
   useEffect(() => {
-    getJson<ElementsDefinition>('/api/fs/getWeightedCytoscapeGraph').then(setPackageGraph);
+    getJson<ElementsDefinition>('/api/fs/getGraph').then(setPackageGraph);
   }, []);
 
   if (!packageGraph) return <Loader />;

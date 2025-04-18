@@ -7,7 +7,7 @@ export default function Popover() {
   return (
     <RadixPopover.Root>
       <RadixPopover.Trigger>
-        <MenuIcon />
+        <MenuIcon className="text-foreground" />
       </RadixPopover.Trigger>
       <RadixPopover.Anchor />
       <RadixPopover.Portal>

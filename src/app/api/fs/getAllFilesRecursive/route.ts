@@ -1,9 +1,9 @@
 'use server';
-import { getAllFilesRecursive } from '@/utils/getAllFilesRecursive';
+import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const files = await getAllFilesRecursive();
+  const files = await getParsedFileStructure();
 
   return NextResponse.json(files);
 }

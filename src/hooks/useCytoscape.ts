@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useRef, useState } from 'react';
 import cytoscape, {
   ElementsDefinition,
@@ -7,6 +6,7 @@ import cytoscape, {
   EventObject,
   Core,
   type NodeDataDefinition,
+  NodeDefinition,
 } from 'cytoscape';
 import { useSettings } from '@/contexts/SettingsContext';
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
@@ -34,7 +34,19 @@ export function useCytograph(
       ? afterSubPkgFilter
       : filterVendorPackages(afterSubPkgFilter);
 
-    setFilteredElements(afterVendorPkgFilter);
+    // 4. Shorten label by currentPackage if !showSubPackages
+    const finalElements = {
+      nodes: afterVendorPkgFilter.nodes.map(node => {
+        const label =
+          showSubPackages || !currentPackage.length
+            ? node.data.id!
+            : node.data.id!.slice(currentPackage.length + 1);
+        return { data: { ...node.data, label } } as NodeDefinition;
+      }),
+      edges: afterVendorPkgFilter.edges,
+    };
+
+    setFilteredElements(finalElements);
   }, [elements, currentPackage, showSubPackages, showVendorPackages]);
 
   useEffect(() => {
@@ -76,7 +88,7 @@ export function useCytograph(
           selector: 'node',
           style: {
             'background-color': '#e9e9e9',
-            label: 'data(id)',
+            label: 'data(label)',
             shape: 'cut-rectangle',
             'text-valign': 'center',
             'text-halign': 'center',
