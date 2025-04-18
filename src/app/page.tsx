@@ -37,9 +37,3 @@ export default function Home() {
     </>
   );
 }
-
-interface ICytograph {
-  readonly currentPackage: string;
-  readonly setCurrentPackage: (path: string) => void;
-  readonly elements: ElementsDefinition;
-}
