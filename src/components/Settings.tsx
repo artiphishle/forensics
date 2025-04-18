@@ -9,7 +9,7 @@ export default function Settings() {
     useSettings();
 
   return (
-    <div className="p-4 md:pt-14 border-r bg-gray-100 dark:bg-gray-800 border-r-gray-200 dark:border-r-gray-800">
+    <div className="p-4 md:pt-14 border-r bg-gray-100 dark:bg-emerald-950 border-r-gray-200 dark:border-r-gray-800">
       {/* Audit Download */}
       <div className="flex flex-row items-center">
         <Download size={8} className="mr-1" />
