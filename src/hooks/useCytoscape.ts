@@ -14,7 +14,7 @@ import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
 
 export function useCytograph(
-  elements: ElementsDefinition,
+  elements: ElementsDefinition | null,
   currentPackage: string,
   setCurrentPackage: (path: string) => void
 ) {
@@ -25,6 +25,8 @@ export function useCytograph(
 
   // Handle package filtering
   useEffect(() => {
+    if (!elements) return;
+
     // 1. current package prefix
     const afterPkgFilter = filterByPackagePrefix(elements, currentPackage.replace(/\//g, '.'));
     // 2. show/hide sub packages
@@ -71,11 +73,6 @@ export function useCytograph(
   useEffect(() => {
     if (!cyRef.current || !filteredElements) return;
 
-    function hasChildren(node: NodeSingular) {
-      return elements.nodes.some(elm => {
-        return elm.data.id?.startsWith(`${node.data().id}.`);
-      });
-    }
     function getMaxEdgeWeight() {
       return (
         filteredElements?.edges.reduce((max, edge) => {
@@ -280,6 +277,12 @@ export function useCytograph(
 
     cy.on('dblclick', 'node', (evt: EventObject) => {
       const node: NodeSingular = evt.target;
+
+      function hasChildren(node: NodeSingular) {
+        return elements!.nodes.some(elm => {
+          return elm.data.id?.startsWith(`${node.data().id}.`);
+        });
+      }
       if (hasChildren(node)) {
         setCurrentPackage(node.id().replace(/\./g, '/'));
       }

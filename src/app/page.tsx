@@ -1,16 +1,18 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { ElementsDefinition } from 'cytoscape';
 import Breadcrumb from '@/components/Breadcrumb';
-import Cytoscape from '@/components/views/PackageView';
-import { getJson } from '@/hooks/getJson';
+import ZoomInput from '@/components/ZoomInput';
 import Header from '@/components/Header';
 import Main from '@/components/Main';
 import Loader from '@/components/Loader';
+import { getJson } from '@/hooks/getJson';
+import { useCytograph } from '@/hooks/useCytoscape';
+import type { ElementsDefinition } from 'cytoscape';
 
 export default function Home() {
   const [packageGraph, setPackageGraph] = useState<ElementsDefinition | null>(null);
   const [currentPackage, setCurrentPackage] = useState<string>('');
+  const { cyRef, cyInstance } = useCytograph(packageGraph, currentPackage, setCurrentPackage);
 
   useEffect(() => {
     getJson<ElementsDefinition>('/api/fs/getGraph').then(setPackageGraph);
@@ -27,12 +29,17 @@ export default function Home() {
         />
       </Header>
       <Main>
-        <Cytoscape
-          elements={packageGraph}
-          currentPackage={currentPackage}
-          setCurrentPackage={setCurrentPackage}
-        />
+        <div className="flex flex-col w-full flex-1 gap-2">
+          <div ref={cyRef} className="h-[calc(100%-65px)]" />
+          <ZoomInput cyInstance={cyInstance} />
+        </div>
       </Main>
     </>
   );
+}
+
+interface ICytograph {
+  readonly currentPackage: string;
+  readonly setCurrentPackage: (path: string) => void;
+  readonly elements: ElementsDefinition;
 }
