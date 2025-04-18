@@ -4,7 +4,6 @@ import type { EdgeDataDefinition, EdgeDefinition, NodeDataDefinition } from 'cyt
  * General
  */
 export type TUniquePackageName = string;
-export type TUuidV4 = string;
 
 /**
  * File System
