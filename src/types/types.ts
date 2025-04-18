@@ -1,3 +1,5 @@
+import type { EdgeDataDefinition, EdgeDefinition, NodeDataDefinition } from 'cytoscape';
+
 /**
  * General
  */
@@ -34,4 +36,19 @@ export interface IJavaImport {
   readonly name: string;
   readonly pkg: string;
   readonly isIntrinsic?: boolean;
+}
+
+/**
+ * Cytoscape
+ */
+export interface IPkgNodeData extends NodeDataDefinition {
+  readonly path: string;
+  readonly isIntrinsic?: boolean;
+}
+export interface IPkgEdgeData extends EdgeDataDefinition {
+  weight: number;
+}
+export interface IRawElementsDefinition {
+  readonly nodes: { data: IPkgNodeData }[];
+  readonly edges: Map<string, EdgeDefinition>;
 }

@@ -1,11 +1,6 @@
-import type {
-  EdgeDefinition,
-  ElementsDefinition,
-  EdgeDataDefinition,
-  NodeDataDefinition,
-} from 'cytoscape';
+import type { EdgeDefinition, ElementsDefinition } from 'cytoscape';
 import type { IDirectory } from '@/utils/getParsedFileStructure';
-import type { IFile } from '@/types/types';
+import type { IFile, IPkgEdgeData, IPkgNodeData, IRawElementsDefinition } from '@/types/types';
 
 /**
  * Builds a weighted dependency graph based on package-level imports
@@ -75,16 +70,4 @@ export function buildGraph(dir: IDirectory) {
   };
 
   return elements;
-}
-
-interface IPkgNodeData extends NodeDataDefinition {
-  readonly path: string;
-  readonly isIntrinsic?: boolean;
-}
-interface IPkgEdgeData extends EdgeDataDefinition {
-  weight: number;
-}
-interface IRawElementsDefinition {
-  readonly nodes: { data: IPkgNodeData }[];
-  readonly edges: Map<string, EdgeDefinition>;
 }

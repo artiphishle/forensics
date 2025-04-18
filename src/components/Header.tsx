@@ -6,7 +6,7 @@ export default function Header({ children, title }: IHeader) {
   const projectName = projectPath.split('/').pop();
 
   return (
-    <header className="flex flex-row items-center justify-between bg-sky-100 dark:bg-sky-900 p-4 gap-4">
+    <header className="flex flex-row items-center justify-between bg-sky-100 dark:bg-black border border-gray-100 dark:border-gray-800 p-2 gap-4">
       <div className="flex flex-row items-center justify-start">
         <Popover />
         <h1 className="ml-4 text-foreground">{projectName}</h1>
