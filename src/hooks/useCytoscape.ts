@@ -42,7 +42,7 @@ export function useCytograph(
         const label = !currentPackage.length
           ? node.data.id!
           : node.data.id!.slice(currentPackage.length + 1);
-        return { data: { ...node.data, label } } as NodeDefinition;
+        return { classes: node.classes || '', data: { ...node.data, label } } as NodeDefinition;
       }),
       edges: afterVendorPkgFilter.edges,
     };

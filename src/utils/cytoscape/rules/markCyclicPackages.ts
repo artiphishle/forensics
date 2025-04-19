@@ -1,10 +1,25 @@
 import type { ElementsDefinition } from 'cytoscape';
-import type { IFile, IJavaImport } from '@/types/types';
+import type { IDirectory, IFile } from '@/types/types';
 
 /**
  * Finds cyclic packages using Tarjan's algorithm
  */
-function getCyclicPackages(files: { package: string; imports: IJavaImport[] }[]): Set<string> {
+export function getCyclicPackages(root: IDirectory): Set<string> {
+  const files: IFile[] = [];
+
+  function collectFiles(dir: IDirectory) {
+    for (const key in dir) {
+      const entry = dir[key];
+      if ('path' in entry && 'package' in entry) {
+        files.push(entry as IFile);
+      } else {
+        collectFiles(entry as IDirectory);
+      }
+    }
+  }
+
+  collectFiles(root);
+
   const graph = new Map<string, Set<string>>();
 
   for (const file of files) {
@@ -31,7 +46,7 @@ function getCyclicPackages(files: { package: string; imports: IJavaImport[] }[])
     stack.push(pkg);
     onStack.add(pkg);
 
-    const neighbors = graph.get(pkg) || [];
+    const neighbors = graph.get(pkg) || new Set();
     for (const neighbor of neighbors) {
       if (!indexes.has(neighbor)) {
         strongConnect(neighbor);
@@ -68,8 +83,8 @@ function getCyclicPackages(files: { package: string; imports: IJavaImport[] }[])
 /**
  * Marks cyclic packages
  */
-export function markCyclicPackages(elements: ElementsDefinition, files: IFile[]) {
-  const cyclicPackages = getCyclicPackages(files); // returns Set<string> of cyclic packages
+export function markCyclicPackages(elements: ElementsDefinition, files: IDirectory) {
+  const cyclicPackages = getCyclicPackages(files);
   const nodes = elements.nodes.map(node => {
     const pkg = node.data.id as string;
     const isCyclic = cyclicPackages.has(pkg);
