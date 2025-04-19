@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import test, { describe } from 'node:test';
 import { getAudit } from '@/utils/getAudit';
 import { resolve } from 'node:path';
-import { IFile } from '@/types/types';
+import type { IFile } from '@/types/types';
 
 describe('[getAudit]', () => {
   // Test: Audit output contains 'App.java' which is matched correctly, also audit.meta is correct
