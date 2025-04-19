@@ -16,6 +16,9 @@ export interface IFile {
   readonly package: string;
   readonly path: string; // relative path from project root
 }
+export interface IDirectory {
+  [k: string]: IDirectory | IFile;
+}
 
 /**
  * Java Parser
