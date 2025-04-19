@@ -5,7 +5,7 @@ import ZoomInput from '@/components/ZoomInput';
 import Header from '@/components/Header';
 import Main from '@/components/Main';
 import Loader from '@/components/Loader';
-import { getJson } from '@/hooks/getJson';
+import { getJson } from '@/utils/getJson';
 import { useCytograph } from '@/hooks/useCytoscape';
 import type { ElementsDefinition } from 'cytoscape';
 
