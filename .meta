@@ -1,0 +1,5 @@
+{
+  "projects": {
+    "packages/forensics-docs": "git@github.com:artiphishle/forensics-docs.git"
+  }
+}
