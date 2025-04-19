@@ -1,7 +1,7 @@
 'use server';
 import { useLanguageDetection, type ILanguageDetectionResult } from 'ankh-hooks';
-import { getAllFilesRecursive } from '@/utils/getAllFilesRecursive';
-import type { IFile } from '@/types/types';
+import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
+import type { IDirectory } from '@/types/types';
 
 /**
  * Returns audit for JSON or XML exports
@@ -25,7 +25,7 @@ export async function getAudit() {
       timeStart,
       timeEnd: Infinity,
     },
-    files: await getAllFilesRecursive(projectPath),
+    files: await getParsedFileStructure(),
   };
 
   audit.meta!.timeEnd = Date.now();
@@ -35,12 +35,12 @@ export async function getAudit() {
 
 interface IAuditMeta {
   timeEnd: number;
-  timeStart: number;
-  language: ILanguageDetectionResult;
-  projectName: string;
+  readonly timeStart: number;
+  readonly language: ILanguageDetectionResult;
+  readonly projectName: string;
 }
 
 export interface IAudit {
-  meta: IAuditMeta;
-  files: IFile[];
+  readonly meta: IAuditMeta;
+  readonly files: IDirectory;
 }

@@ -2,72 +2,122 @@ import assert from 'node:assert';
 import test, { describe } from 'node:test';
 import { markCyclicPackages } from '@/utils/cytoscape/rules/markCyclicPackages';
 import type { ElementsDefinition } from 'cytoscape';
-import type { IFile } from '@/types/types';
+import type { IDirectory, IFile } from '@/types/types';
 
 describe('[markCyclicPackages]', () => {
-  // Find & mark package cycle: A-B-A
-  test('Marks package cycle: A-B-A ', () => {
-    const files: IFile[] = [
-      {
-        className: 'App',
-        package: 'com.example.myapp',
-        imports: [{ name: 'com.example.myapp.a.A', pkg: 'com.example.myapp.a', isIntrinsic: true }],
-        methods: [], // Mock
-        calls: [], // Mock
-        path: 'src/main/java/com/example/myapp/App.java',
-      },
-      {
-        className: 'A',
-        package: 'com.example.myapp.a',
-        imports: [
-          { name: 'com.example.myapp.b.B', pkg: 'com.example.myapp.b', isIntrinsic: true },
-          { name: 'com.example.myapp.c.C', pkg: 'com.example.myapp.c', isIntrinsic: true },
-          { name: 'com.example.myapp.d.D', pkg: 'com.example.myapp.d', isIntrinsic: true },
-        ],
-        methods: [],
-        calls: [], // Mock
-        path: 'src/main/java/com/example/myapp/a/A.java',
-      },
-      {
-        className: 'B',
-        package: 'com.example.myapp.b',
-        imports: [{ name: 'com.example.myapp.a.A', pkg: 'com.example.myapp.a', isIntrinsic: true }],
-        methods: [],
-        calls: [], // Mock
-        path: 'src/main/java/com/example/myapp/b/B.java',
-      },
-      {
-        className: 'C',
-        package: 'com.example.myapp.c',
-        imports: [],
-        methods: [],
-        calls: [], // Mock
-        path: 'src/main/java/com/example/myapp/c/C.java',
-      },
-      {
-        className: 'D',
-        package: 'com.example.myapp.d',
-        imports: [],
-        methods: [],
-        calls: [], // Mock
-        path: 'src/main/java/com/example/myapp/d/D.java',
-      },
-      {
-        className: 'AppTest',
-        package: 'com.example.myapp',
-        imports: [
-          {
-            name: 'junit.framework.Test',
-            pkg: 'junit.framework',
+  test('Marks package cycle: A-B-A using nested directory structure', () => {
+    const directory: IDirectory = {
+      src: {
+        main: {
+          java: {
+            com: {
+              example: {
+                myapp: {
+                  'App.java': {
+                    className: 'App',
+                    package: 'com.example.myapp',
+                    imports: [
+                      {
+                        name: 'com.example.myapp.a.A',
+                        pkg: 'com.example.myapp.a',
+                        isIntrinsic: true,
+                      },
+                    ],
+                    methods: [],
+                    calls: [],
+                    path: 'src/main/java/com/example/myapp/App.java',
+                  } as IFile,
+                  a: {
+                    'A.java': {
+                      className: 'A',
+                      package: 'com.example.myapp.a',
+                      imports: [
+                        {
+                          name: 'com.example.myapp.b.B',
+                          pkg: 'com.example.myapp.b',
+                          isIntrinsic: true,
+                        },
+                        {
+                          name: 'com.example.myapp.c.C',
+                          pkg: 'com.example.myapp.c',
+                          isIntrinsic: true,
+                        },
+                        {
+                          name: 'com.example.myapp.d.D',
+                          pkg: 'com.example.myapp.d',
+                          isIntrinsic: true,
+                        },
+                      ],
+                      methods: [],
+                      calls: [],
+                      path: 'src/main/java/com/example/myapp/a/A.java',
+                    } as IFile,
+                  },
+                  b: {
+                    'B.java': {
+                      className: 'B',
+                      package: 'com.example.myapp.b',
+                      imports: [
+                        {
+                          name: 'com.example.myapp.a.A',
+                          pkg: 'com.example.myapp.a',
+                          isIntrinsic: true,
+                        },
+                      ],
+                      methods: [],
+                      calls: [],
+                      path: 'src/main/java/com/example/myapp/b/B.java',
+                    } as IFile,
+                  },
+                  c: {
+                    'C.java': {
+                      className: 'C',
+                      package: 'com.example.myapp.c',
+                      imports: [],
+                      methods: [],
+                      calls: [],
+                      path: 'src/main/java/com/example/myapp/c/C.java',
+                    } as IFile,
+                  },
+                  d: {
+                    'D.java': {
+                      className: 'D',
+                      package: 'com.example.myapp.d',
+                      imports: [],
+                      methods: [],
+                      calls: [],
+                      path: 'src/main/java/com/example/myapp/d/D.java',
+                    } as IFile,
+                  },
+                },
+              },
+            },
           },
-          { name: 'junit.framework.TestCase', pkg: 'junit.framework' },
-          { name: 'junit.framework.TestSuite', pkg: 'junit.framework' },
-        ],
-        methods: [], // Mock
-        calls: [],
-        path: 'src/test/java/com/example/myapp/AppTest.java',
+        },
+        test: {
+          java: {
+            com: {
+              example: {
+                myapp: {
+                  'AppTest.java': {
+                    className: 'AppTest',
+                    package: 'com.example.myapp',
+                    imports: [
+                      { name: 'junit.framework.Test', pkg: 'junit.framework' },
+                      { name: 'junit.framework.TestCase', pkg: 'junit.framework' },
+                      { name: 'junit.framework.TestSuite', pkg: 'junit.framework' },
+                    ],
+                    methods: [],
+                    calls: [],
+                    path: 'src/test/java/com/example/myapp/AppTest.java',
+                  } as IFile,
+                },
+              },
+            },
+          },
+        },
       },
-    ];
+    };
     const elements: ElementsDefinition = {
       nodes: [
         {
@@ -84,19 +134,19 @@ describe('[markCyclicPackages]', () => {
           data: {
             id: 'com.example.myapp.a',
             label: 'a',
-            packageCycle: true,
+            packageCycle: false,
             isIntrinsic: true,
           },
-          classes: 'packageCycle',
+          classes: '',
         },
         {
           data: {
             id: 'com.example.myapp.b',
             label: 'b',
-            packageCycle: true,
+            packageCycle: false,
             isIntrinsic: true,
           },
-          classes: 'packageCycle',
+          classes: '',
         },
         {
           data: {
@@ -132,7 +182,7 @@ describe('[markCyclicPackages]', () => {
             source: 'com.example.myapp',
             target: 'com.example.myapp.a',
             weight: 1,
-            id: '549de6bc-7fe5-4331-b3f1-6370ce8e4709',
+            id: 'edge1',
           },
         },
         {
@@ -140,7 +190,7 @@ describe('[markCyclicPackages]', () => {
             source: 'com.example.myapp.a',
             target: 'com.example.myapp.b',
             weight: 1,
-            id: '862d3125-32af-462d-8d4f-bff99c2494cd',
+            id: 'edge2',
           },
         },
         {
@@ -148,7 +198,7 @@ describe('[markCyclicPackages]', () => {
             source: 'com.example.myapp.a',
             target: 'com.example.myapp.c',
             weight: 1,
-            id: '399ca9a9-820c-4da4-b95c-4d2ad1f8f93a',
+            id: 'edge3',
           },
         },
         {
@@ -156,7 +206,7 @@ describe('[markCyclicPackages]', () => {
             source: 'com.example.myapp.a',
             target: 'com.example.myapp.d',
             weight: 1,
-            id: '0eab813f-0796-4c92-b92e-74857089040a',
+            id: 'edge4',
           },
         },
         {
@@ -164,7 +214,7 @@ describe('[markCyclicPackages]', () => {
             source: 'com.example.myapp.b',
             target: 'com.example.myapp.a',
             weight: 1,
-            id: '0581b6fc-eed8-4212-9ca6-e07c3f3ac42d',
+            id: 'edge5',
           },
         },
         {
@@ -172,14 +222,16 @@ describe('[markCyclicPackages]', () => {
             source: 'com.example.myapp',
             target: 'junit.framework',
             weight: 1,
-            id: '9057bf48-5ca6-48cd-b6ac-e79fce19dab2',
+            id: 'edge6',
           },
         },
       ],
     };
-
-    const result = markCyclicPackages(elements, files);
+    const result = markCyclicPackages(elements, directory);
     const cyclic = result.nodes.filter(n => n.classes.includes('packageCycle'));
-    assert.strictEqual(cyclic.length, 2);
+    assert.deepStrictEqual(
+      cyclic.map(n => n.data.id).sort(),
+      ['com.example.myapp.a', 'com.example.myapp.b'].sort()
+    );
   });
 });

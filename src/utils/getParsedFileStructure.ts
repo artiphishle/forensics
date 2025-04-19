@@ -3,7 +3,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { ELanguage, useLanguageDetection } from 'ankh-hooks';
 import { parseJavaFile } from '@/utils/java/parseJavaFile';
-import type { IFile } from '@/types/types';
+import type { IDirectory } from '@/types/types';
 
 /**
  * Read directory recursively
@@ -44,8 +44,4 @@ export async function getParsedFileStructure(
   const fileStructure = await readDirRecursively(srcMainJavaDir);
 
   return fileStructure;
-}
-
-export interface IDirectory {
-  [k: string]: IDirectory | IFile;
 }

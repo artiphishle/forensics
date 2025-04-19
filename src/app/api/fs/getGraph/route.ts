@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import { buildGraph } from '@/utils/cytoscape/buildGraph';
 import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
+import { markCyclicPackages } from '@/utils/cytoscape/rules/markCyclicPackages';
 
 export async function GET() {
   const projectPath = process.env.NEXT_PUBLIC_PROJECT_PATH;
@@ -10,7 +11,7 @@ export async function GET() {
   }
   const files = await getParsedFileStructure();
   const graph = buildGraph(files);
-  // const graphWithCyclingDepsMarked = markCyclicPackages(graph, files);
+  const graphWithCyclicDepsMarked = markCyclicPackages(graph, files);
 
-  return NextResponse.json(graph);
+  return NextResponse.json(graphWithCyclicDepsMarked);
 }
