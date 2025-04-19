@@ -1,7 +1,7 @@
-import { filterSubPackages } from '@/utils/filter/filterSubPackages';
-import { ElementsDefinition } from 'cytoscape';
 import assert from 'node:assert';
 import test, { describe } from 'node:test';
+import { filterSubPackages } from '@/utils/filter/filterSubPackages';
+import type { ElementsDefinition } from 'cytoscape';
 
 describe('[filterSubPackages]', () => {
   // Test: Containing packages filtered corectly
