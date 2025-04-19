@@ -24,6 +24,12 @@ cp .env.tpl .env
 pnpm run dev
 ```
 
+## Documentation
+
+Find the official documentation at Github Pages here:
+
+[artiphishle.github.io/forensics-docs](https://artiphishle.github.io/forensics-docs/)
+
 ## Test
 
 ```bash
