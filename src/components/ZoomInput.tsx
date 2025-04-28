@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { Core } from 'cytoscape';
 
 export default function ZoomInput({ cyInstance }: IZoomInput) {
-  const [zoom, setZoom] = useState<number | null>(null);
-  const [zoomToFit, setZoomToFit] = useState<number | null>(null);
+  const [zoom, setZoom] = useState<number>(() => cyInstance?.zoom() ?? 1);
+  const [zoomToFit, setZoomToFit] = useState<number>(() => cyInstance?.zoom() ?? 1);
 
   useEffect(() => {
     if (!cyInstance) return;
@@ -21,8 +21,6 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
     cyInstance.zoom(zoom);
     cyInstance.center();
   }, [zoom, cyInstance]);
-
-  if (zoom === null) return;
 
   return (
     <div className="p-4 flex items-center justify-center gap-2 text-foreground bg-background dark:bg-gray-950 border-t border-t-gray-200 dark:border-t-gray-800">
