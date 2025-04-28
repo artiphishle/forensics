@@ -1,8 +1,8 @@
-import { findEntryPoint } from '@/utils/java/findEntryPoint';
-import assert from 'node:assert';
 import { resolve } from 'node:path';
-import test, { describe } from 'node:test';
+import { describe, it } from 'node:test';
+import { expect } from 'testosterone/src/matchers';
 import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
+import { findEntryPoint } from '@/utils/java/findEntryPoint';
 import type { IDirectory, IFile } from '@/types/types';
 
 function collectFilesFromDirectory(dir: IDirectory): IFile[] {
@@ -25,13 +25,13 @@ function collectFilesFromDirectory(dir: IDirectory): IFile[] {
 
 describe('[findEntryPoint]', () => {
   // Test: Finds first public static void main
-  test('Finds first public static void main', async () => {
+  it('Finds first public static void main', async () => {
     process.env.NEXT_PUBLIC_PROJECT_PATH = resolve(process.cwd(), 'examples/java/my-app');
 
     const parsedFileStructure = await getParsedFileStructure();
     const files = collectFilesFromDirectory(parsedFileStructure);
     const entryPoint = findEntryPoint(files);
 
-    assert.strictEqual(entryPoint?.className, 'App');
+    expect(entryPoint?.className).toBe('App');
   });
 });

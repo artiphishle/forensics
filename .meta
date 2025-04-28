@@ -1,5 +1,6 @@
 {
   "projects": {
-    "packages/forensics-docs": "git@github.com:artiphishle/forensics-docs.git"
+    "packages/forensics-docs": "git@github.com:artiphishle/forensics-docs.git",
+    "packages/testosterone": "git@github.com:artiphishle/testosterone.git"
   }
 }

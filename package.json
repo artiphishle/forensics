@@ -1,5 +1,6 @@
 {
   "name": "forensics",
+  "type": "module",
   "engines": {
     "node": ">=22.14.0",
     "npm": ">=10.9.2",
@@ -13,7 +14,7 @@
     "lint": "next lint",
     "format:check": "prettier --check .",
     "format:write": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml,yaml,mjs,cjs,html,css,scss,mdx}\"",
-    "test": "tsx --test test/index.ts",
+    "test": "testosterone",
     "test:cov": "c8 --reporter=text --reporter=text-summary tsx --test",
     "test:cov:html": "c8 --report-dir=./test/coverage --reporter=html tsx --test"
   },
@@ -37,6 +38,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "ankh-test": "link:../../Library/pnpm/global/5/node_modules/ankh-test",
     "autoprefixer": "^10.4.21",
     "c8": "^10.1.3",
     "eslint": "^9",
@@ -45,7 +47,9 @@
     "prettier": "^3.5.3",
     "tailwindcss": "^4.1.3",
     "tailwindcss-cli": "^0.1.2",
+    "testosterone": "workspace:*",
     "tsx": "^4.19.3",
     "typescript": "^5"
-  }
+  },
+  "packageManager": "pnpm@10.8.1"
 }

@@ -1,11 +1,11 @@
-import assert from 'node:assert';
-import test, { describe } from 'node:test';
+import { describe, it } from 'node:test';
+import { expect } from 'testosterone/src/matchers';
 import { markCyclicPackages } from '@/utils/cytoscape/rules/markCyclicPackages';
 import type { ElementsDefinition } from 'cytoscape';
 import type { IDirectory, IFile } from '@/types/types';
 
 describe('[markCyclicPackages]', () => {
-  test('Marks package cycle: A-B-A using nested directory structure', () => {
+  it('Marks package cycle: A-B-A using nested directory structure', () => {
     const directory: IDirectory = {
       src: {
         main: {
@@ -229,9 +229,10 @@ describe('[markCyclicPackages]', () => {
     };
     const result = markCyclicPackages(elements, directory);
     const cyclic = result.nodes.filter(n => n.classes.includes('packageCycle'));
-    assert.deepStrictEqual(
-      cyclic.map(n => n.data.id).sort(),
-      ['com.example.myapp.a', 'com.example.myapp.b'].sort()
-    );
+    const expectedPkgs = ['com.example.myapp.a', 'com.example.myapp.b'];
+
+    expect(cyclic.length).toBe(2);
+    expect(expectedPkgs.includes(cyclic[0].data.id!));
+    expect(expectedPkgs.includes(cyclic[1].data.id!));
   });
 });

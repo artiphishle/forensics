@@ -1,14 +1,17 @@
-import { getParsedFileStructure, IDirectory } from '@/utils/getParsedFileStructure';
-import assert from 'node:assert';
+import { describe, it } from 'node:test';
+import { expect } from 'testosterone/src/matchers';
+import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
 import { resolve } from 'node:path';
-import test, { describe } from 'node:test';
+import type { IDirectory } from '@/types/types';
 
 describe('[getParsedFileStructure]', () => {
   // Test reading a Java project structure recursively
-  test('Reads .java project structure correctly', async () => {
-    const parsedFileStructure = await getParsedFileStructure(
-      resolve(process.cwd(), 'examples/java/my-app')
-    );
+  it('reads .java project structure correctly', async () => {
+    process.env.NEXT_PUBLIC_PROJECT_PATH = resolve(process.cwd(), 'examples/java/my-app');
+    const projectPath = process.env.NEXT_PUBLIC_PROJECT_PATH;
+    if (!projectPath) throw new Error('no project env');
+
+    const parsedFileStructure = await getParsedFileStructure(projectPath);
     const comExampleMyapp = ((parsedFileStructure.com as IDirectory).example as IDirectory)
       .myapp as IDirectory;
     const comExampleMyappA = comExampleMyapp.a as IDirectory;
@@ -16,10 +19,10 @@ describe('[getParsedFileStructure]', () => {
     const comExampleMyappC = comExampleMyapp.c as IDirectory;
     const comExampleMyappD = comExampleMyapp.d as IDirectory;
 
-    assert.strictEqual(comExampleMyapp['App.java'].className, 'App');
-    assert.strictEqual(comExampleMyappA['A.java'].className, 'A');
-    assert.strictEqual(comExampleMyappB['B.java'].className, 'B');
-    assert.strictEqual(comExampleMyappC['C.java'].className, 'C');
-    assert.strictEqual(comExampleMyappD['D.java'].className, 'D');
+    expect(comExampleMyapp['App.java'].className).toBe('App');
+    expect(comExampleMyappA['A.java'].className).toBe('A');
+    expect(comExampleMyappB['B.java'].className).toBe('B');
+    expect(comExampleMyappC['C.java'].className).toBe('C');
+    expect(comExampleMyappD['D.java'].className).toBe('D');
   });
 });

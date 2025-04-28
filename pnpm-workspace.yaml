@@ -1,2 +1,6 @@
 packages:
-  - 'packages/*'
+  - packages/*
+
+hoistPattern:
+  - react
+  - react-dom

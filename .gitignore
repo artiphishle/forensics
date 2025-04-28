@@ -47,3 +47,5 @@ target/
 *.tsbuildinfo
 next-env.d.ts
 /packages/forensics-docs/
+/packages/testosterone/
+/packages/testosterone/
