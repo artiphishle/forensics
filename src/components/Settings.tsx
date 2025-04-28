@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { t } from '@/i18n/i18n';
 import Switch from '@/components/Switch';
 import { useSettings } from '@/contexts/SettingsContext';

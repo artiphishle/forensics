@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { t } from '@/i18n/i18n';
 import { MenuIcon } from 'lucide-react';
 import { Popover as RadixPopover } from 'radix-ui';

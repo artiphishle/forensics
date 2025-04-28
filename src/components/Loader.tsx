@@ -1,3 +1,4 @@
+import React from 'react';
 import { LucideLoader } from 'lucide-react';
 
 export default function Loader() {

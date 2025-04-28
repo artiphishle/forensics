@@ -1,3 +1,4 @@
+import React from 'react';
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { expect } from 'testosterone/src/matchers';

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Switch } from 'radix-ui';
 
 export default function RadixSwitch({ id, label, value, onToggle }: ISwitch) {
