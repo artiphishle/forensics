@@ -47,7 +47,7 @@
     "prettier": "^3.5.3",
     "tailwindcss": "^4.1.3",
     "tailwindcss-cli": "^0.1.2",
-    "testosterone": "workspace:*",
+    "@artiphishle/testosterone": "workspace:*",
     "tsx": "^4.19.3",
     "typescript": "^5"
   },
