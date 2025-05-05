@@ -165,8 +165,8 @@ export function useCytograph(
           },
         },
         {
-          selector: 'node.is-parent',
-          style: { 'background-color': 'green' },
+          selector: 'node.drill-into',
+          style: { 'font-weight': 'bold' },
         },
         {
           selector: 'node:selected',
