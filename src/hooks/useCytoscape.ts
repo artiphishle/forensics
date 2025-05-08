@@ -13,6 +13,7 @@ import { getStyle } from '@/themes/basic/style';
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
+import { hasChildren } from '@/utils/cytoscape/hasChildren';
 
 export function useCytograph(
   elements: ElementsDefinition | null,
@@ -72,7 +73,7 @@ export function useCytograph(
 
   // Setup Cytoscape when filteredElements change
   useEffect(() => {
-    if (!cyRef.current || !filteredElements) return;
+    if (!cyRef.current || !elements || !filteredElements) return;
 
     const cy = cytoscape({
       style: getStyle(filteredElements),
@@ -136,17 +137,17 @@ export function useCytograph(
       edge.target().removeClass('highlight-dependency');
     });
 
-    cy.on('dblclick', 'node', (evt: EventObject) => {
-      const node: NodeSingular = evt.target;
+    cy.nodes().forEach(node => {
+      const rawNode = filteredElements.nodes.find(
+        elm => elm.data.id === node.data().id
+      ) as NodeDefinition;
 
-      function hasChildren(node: NodeSingular) {
-        return elements!.nodes.some(elm => {
-          return elm.data.id?.startsWith(`${node.data().id}.`);
-        });
-      }
-      if (hasChildren(node)) {
+      if (!hasChildren(rawNode, elements.nodes)) return;
+
+      node.addClass('isParent');
+      node.addListener('dblclick', () => {
         setCurrentPackage(node.id().replace(/\./g, '/'));
-      }
+      });
     });
 
     return () => {

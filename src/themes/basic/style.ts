@@ -43,15 +43,7 @@ export function getStyle(filteredElements: ElementsDefinition) {
       },
     },
     {
-      selector: 'node:parent',
-      style: {
-        'background-opacity': 0,
-        'border-opacity': 0,
-        padding: '0',
-      },
-    },
-    {
-      selector: 'node.drill-into',
+      selector: 'node.isParent',
       style: { 'font-weight': 'bold' },
     },
     {
