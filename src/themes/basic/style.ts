@@ -1,18 +1,36 @@
-import type { ElementsDefinition, StylesheetJson } from 'cytoscape';
 import { getWeightBuckets } from '@/utils/cytoscape/getWeightBuckets';
-import { Style } from 'cytoscape';
+import type { ElementsDefinition, StylesheetJson } from 'cytoscape';
 
 export function getStyle(filteredElements: ElementsDefinition) {
   const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  console.log('ColorMode:', isDark ? 'dark' : 'light');
+
+  const dark = {
+    bg: '#191919',
+    edge: '#393939',
+    weightXs: '#393939',
+    weightMd: '#494949',
+    weightXl: '#595959',
+  };
+  const light = {
+    bg: '#e9e9e9',
+    edge: '#b9b9b9',
+    weightXs: '#c8c8c8',
+    weightMd: '#b8b8b8',
+    weightXl: '#a8a8a8',
+  };
+  const colors = isDark ? dark : light;
+  const colorsInverted = isDark ? light : dark;
+
   const { thresholds } = getWeightBuckets(3, 'linear', filteredElements);
 
   const style: StylesheetJson = [
     {
       selector: 'node',
       style: {
-        'background-color': isDark ? '#191919' : '#e9e9e9',
-        'border-color': isDark ? '#191919' : '#e9e9e9',
-        color: isDark ? '#e9e9e9' : '#191919',
+        'background-color': colors.bg,
+        'border-color': colors.bg,
+        color: colorsInverted.bg,
         label: 'data(label)',
         shape: 'cut-rectangle',
         'text-valign': 'center',
@@ -60,27 +78,29 @@ export function getStyle(filteredElements: ElementsDefinition) {
       selector: 'edge',
       style: {
         'curve-style': 'bezier',
-        'line-color': isDark ? '#393939' : '#b9b9b9',
-        color: isDark ? '#fff' : '#000',
+        'line-color': colors.edge,
         'text-margin-x': -20, // Label placement: Shift x
         'text-margin-y': -5, // Label placement: Shift y
 
         // Arrow
         'arrow-scale': 2,
-        'target-arrow-color': isDark ? '#393939' : '#d8d8d8',
+        'target-arrow-color': colors.edge,
         'target-arrow-shape': 'triangle',
       },
     },
     { selector: 'edge[weight <= 1]', style: { label: '' } },
     {
       selector: `edge[weight > 1][weight <= ${thresholds[0]}]`,
-      style: { width: 1, backgroundColor: isDark ? '#393939' : '#c8c8c8' },
+      style: { width: 1, backgroundColor: colors.weightXs },
     },
     {
       selector: `edge[weight > ${thresholds[0]}][weight <= ${thresholds[1]}]`,
-      style: { width: 4, 'arrow-scale': 2, backgroundColor: isDark ? '#393939' : '#b8b8b8' },
+      style: { width: 4, 'arrow-scale': 2, backgroundColor: colors.weightMd },
     },
-    { selector: `edge[weight > ${thresholds[1]}]`, style: { width: 8 } },
+    {
+      selector: `edge[weight > ${thresholds[1]}]`,
+      style: { backgroundColor: colors.weightXl, width: 8 },
+    },
     {
       selector: 'edge.errorCycling',
       style: {
