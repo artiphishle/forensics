@@ -1,6 +1,11 @@
 import type { EdgeDefinition, ElementsDefinition } from 'cytoscape';
-import type { IDirectory } from '@/utils/getParsedFileStructure';
-import type { IFile, IPkgEdgeData, IPkgNodeData, IRawElementsDefinition } from '@/types/types';
+import type {
+  IDirectory,
+  IFile,
+  IPkgEdgeData,
+  IPkgNodeData,
+  IRawElementsDefinition,
+} from '@/types/types';
 
 /**
  * Builds a weighted dependency graph based on package-level imports
@@ -29,9 +34,9 @@ export function buildGraph(dir: IDirectory) {
       }
       // 2. Add file imports with cummulative weight as edges (package perspective)
       else {
-        const target = (dirOrFile as IFile).package;
-        const sources = (dirOrFile as IFile).imports.map(imp => imp.pkg);
-        sources.forEach(source => {
+        const source = (dirOrFile as IFile).package;
+        const targets = (dirOrFile as IFile).imports.map(imp => imp.pkg);
+        targets.forEach(target => {
           const edgeId = `${source}->${target}`;
           const isExistingEdge = !!edges.get(edgeId);
           const weight: IPkgEdgeData['weight'] = isExistingEdge
