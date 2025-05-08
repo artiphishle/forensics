@@ -61,8 +61,6 @@ export function buildGraph(dir: IDirectory) {
       // Node already defined while handling 'src/main/java' dir (no vendor package)
       if (rawElements.nodes.find(node => node.data.id === maybeNode)) return;
 
-      console.log('vendor node', maybeNode);
-
       // Add vendor node: 'isIntrinsic' is not set (vendor package)
       rawElements.nodes.push({ data: { id: maybeNode, label: maybeNode, path: maybeNode } });
     });
