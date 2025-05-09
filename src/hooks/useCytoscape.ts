@@ -1,12 +1,10 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import cytoscape, {
-  EventObject,
   Core,
   type ElementsDefinition,
   type NodeDataDefinition,
   type NodeDefinition,
-  NodeSingular,
 } from 'cytoscape';
 import { useSettings } from '@/contexts/SettingsContext';
 import { getStyle } from '@/themes/basic/style';
