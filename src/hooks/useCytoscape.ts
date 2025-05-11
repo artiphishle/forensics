@@ -99,6 +99,12 @@ export function useCytograph(
     // Interactions
     cy.on('mouseover', 'node', event => {
       const node = event.target;
+      const rawNode = filteredElements.nodes.find(
+        elm => elm.data.id === node.data().id
+      ) as NodeDefinition;
+
+      if (hasChildren(rawNode, elements.nodes)) document.body.style.cursor = 'pointer';
+
       cy.elements()
         .subtract(node.outgoers())
         .subtract(node.incomers())
@@ -111,6 +117,8 @@ export function useCytograph(
 
     cy.on('mouseout', 'node', event => {
       const node = event.target;
+      document.body.style.cursor = 'default';
+
       cy.elements().removeClass('hushed');
       node.removeClass('highlight');
       node.outgoers().removeClass('highlight-outgoer');
