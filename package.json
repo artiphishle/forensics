@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "docs:deploy": "pnpm --filter forensics-docs run deploy",
     "start": "next start",
     "lint": "next lint",
     "format:check": "prettier --check .",
