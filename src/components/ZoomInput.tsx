@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Core } from 'cytoscape';
+import { CircleDotDashedIcon } from 'lucide-react';
 
 export default function ZoomInput({ cyInstance }: IZoomInput) {
   const [zoom, setZoom] = useState<number>(() => cyInstance?.zoom() ?? 1);
@@ -20,20 +21,14 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
   useEffect(() => {
     if (!cyInstance || zoom === null) return;
     cyInstance.zoom(zoom);
-    cyInstance.center();
   }, [zoom, cyInstance]);
 
   return (
     <div className="p-4 flex items-center justify-center gap-2 text-foreground bg-background dark:bg-gray-950 border-t border-t-gray-200 dark:border-t-gray-800">
-      <label
-        htmlFor="zoom"
-        className="text-sm text-gray-600"
-        onDoubleClick={() => {
-          setZoom(zoomToFit);
-        }}
-      >
-        Zoom
-      </label>
+      <label htmlFor="zoom">Zoom:</label>
+      <button title="Zoom to fit" onClick={() => setZoom(zoomToFit)}>
+        <CircleDotDashedIcon className="text-foreground dark:text-background cursor-pointer" />
+      </button>
       <input
         id="zoom"
         type="range"
