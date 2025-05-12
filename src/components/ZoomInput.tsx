@@ -20,7 +20,6 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
   useEffect(() => {
     if (!cyInstance || zoom === null) return;
     cyInstance.zoom(zoom);
-    cyInstance.center();
   }, [zoom, cyInstance]);
 
   return (
