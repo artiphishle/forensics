@@ -12,6 +12,7 @@ import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
 import { hasChildren } from '@/utils/cytoscape/hasChildren';
+import { filterEmptyPackages } from '@/utils/filter/filterEmptyPackages';
 
 export function useCytograph(
   elements: ElementsDefinition | null,
@@ -35,8 +36,13 @@ export function useCytograph(
     const afterVendorPkgFilter = showVendorPackages
       ? afterSubPkgFilter
       : filterVendorPackages(afterSubPkgFilter);
-
-    // 4. Shorten label by currentPackage
+    // 4. Update currentPath if only one package inside
+    const nonEmptyCurrentPackage = filterEmptyPackages(currentPackage, afterVendorPkgFilter);
+    if (nonEmptyCurrentPackage !== currentPackage) {
+      setCurrentPackage(nonEmptyCurrentPackage);
+      return;
+    }
+    // 5. Shorten label by currentPackage
     const finalElements = {
       nodes: afterVendorPkgFilter.nodes.map(node => {
         const label = !currentPackage.length
