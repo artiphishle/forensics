@@ -2,8 +2,8 @@
 import fs from 'fs';
 import path from 'path';
 import { getIntrinsicPackagesRecursive } from '@/utils/java/getIntrinsicPackagesRecursive';
-import type { IFile, IMethodCall, IMethodDefinition } from '@/types/types';
 import { extractJavaPackageFromImport } from './extractJavaPackageFromImport';
+import type { IFile, IMethodCall, IMethodDefinition } from '@/types/types';
 
 /**
  * Extracts the package declaration from Java code.
