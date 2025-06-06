@@ -1,5 +1,5 @@
 import { describe, it } from 'node:test';
-import { expect } from 'testosterone/src/matchers';
+import { expect } from '@artiphishle/testosterone/src/matchers';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import type { ElementsDefinition } from 'cytoscape';
 

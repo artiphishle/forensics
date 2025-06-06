@@ -1,8 +1,8 @@
 import React from 'react';
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
-import { expect } from 'testosterone/src/matchers';
-import { render } from 'testosterone/src/react/render';
+import { expect } from '@artiphishle/testosterone/src/matchers';
+import { render } from '@artiphishle/testosterone/src/react/render';
 import Loader from '@/components/Loader';
 
 describe('Components', () => {
