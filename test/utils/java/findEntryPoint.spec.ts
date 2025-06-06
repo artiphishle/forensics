@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
-import { expect } from 'testosterone/src/matchers';
+import { expect } from '@artiphishle/testosterone/src/matchers';
 import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
 import { findEntryPoint } from '@/utils/java/findEntryPoint';
 import type { IDirectory, IFile } from '@/types/types';

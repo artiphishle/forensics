@@ -2,7 +2,7 @@ import { hasChildren } from '@/utils/cytoscape/hasChildren';
 import { NodeDefinition } from 'cytoscape';
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
-import { expect } from 'testosterone/src/matchers';
+import { expect } from '@artiphishle/testosterone/src/matchers';
 
 describe('[hasChildren]', () => {
   it('returns correct children count of a node', async () => {

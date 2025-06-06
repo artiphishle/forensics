@@ -1,12 +1,13 @@
 import { describe, it } from 'node:test';
-import { expect } from 'testosterone/src/matchers';
+import { expect } from '@artiphishle/testosterone/src/matchers';
 import { getAudit } from '@/utils/getAudit';
 import { resolve } from 'node:path';
 import type { IFile } from '@/types/types';
+import { ELanguage } from 'ankh-hooks';
 
 describe('[getAudit]', () => {
   // Test: Audit output contains 'App.java' which is matched correctly, also audit.meta is correct
-  it('genrates correct Audit (App.java & meta property)', async () => {
+  it('generates correct Audit (App.java & meta property)', async () => {
     process.env.NEXT_PUBLIC_PROJECT_PATH = resolve(process.cwd(), 'examples/java/my-app');
 
     const audit = await getAudit();
@@ -34,7 +35,7 @@ describe('[getAudit]', () => {
         },
       ],
       package: 'com.example.myapp',
-      path: 'App.java',
+      path: 'examples/java/my-app/src/main/java/com/example/myapp/App.java',
     };
     const auditAppJava = (audit as any).files.com.example.myapp['App.java'] as IFile;
 
@@ -57,7 +58,7 @@ describe('[getAudit]', () => {
     expect(auditAppJava.path).toBe(appJava.path);
 
     // audit.meta
-    expect(audit.meta.language.language).toBe('java');
+    expect(audit.meta.language.language).toBe(ELanguage.Java);
     expect(audit.meta.projectName).toBe('my-app');
     expect(typeof audit.meta.timeStart).toBe('number');
     expect(typeof audit.meta.timeEnd).toBe('number');

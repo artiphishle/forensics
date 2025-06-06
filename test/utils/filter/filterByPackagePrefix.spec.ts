@@ -1,5 +1,5 @@
 import { describe, it } from 'node:test';
-import { expect } from 'testosterone/src/matchers';
+import { expect } from '@artiphishle/testosterone/src/matchers';
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 
 describe('[filterByPackagePrefix]', () => {
