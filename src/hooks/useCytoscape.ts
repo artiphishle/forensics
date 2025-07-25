@@ -48,34 +48,34 @@ export function useCytograph(
         const label = !currentPackage.length
           ? node.data.id!
           : node.data.id!.slice(currentPackage.length + 1);
-        return { classes: node.classes || '', data: { ...node.data, label } } as NodeDefinition;
+        return {
+          group: 'nodes',
+          classes: node.classes || '',
+          data: { ...node.data, label },
+        } as NodeDefinition;
       }),
       edges: afterVendorPkgFilter.edges,
     };
 
     setFilteredElements(finalElements);
-  }, [elements, currentPackage, showSubPackages, showVendorPackages]);
+  }, [elements, currentPackage, setCurrentPackage, showSubPackages, showVendorPackages]);
 
+  // Handle resize events
   useEffect(() => {
     if (!cyRef.current || !cyInstance) return;
-
     const handleResize = () => {
       cyInstance.fit();
     };
-
     const observer = new ResizeObserver(() => {
-      // Simple debounce using requestAnimationFrame
       requestAnimationFrame(handleResize);
     });
-
     observer.observe(cyRef.current);
-
     return () => {
       observer.disconnect();
     };
   }, [cyRef, cyInstance]);
 
-  // Setup Cytoscape when filteredElements change
+  // Setup Cytoscape, events, and interactions
   useEffect(() => {
     if (!cyRef.current || !elements || !filteredElements) return;
 
@@ -96,6 +96,43 @@ export function useCytograph(
 
     setCyInstance(cy);
 
+    /**
+     * Central function to update highlights based on the current selection.
+     * This handles nodes, edges, and summarization for multi-selection.
+     */
+    const updateHighlights = () => {
+      const selectedNodes = cy.nodes(':selected');
+      const allElements = cy.elements();
+
+      // First, reset the state by removing all related classes from all elements.
+      allElements.removeClass('hushed highlight highlight-outgoer highlight-incomer');
+
+      // If nothing is selected, leave the graph in its default, fully visible state.
+      if (selectedNodes.empty()) return;
+
+      // The .neighborhood() method gets neighbor nodes AND the edges connecting to them.
+      // We union this with the selected nodes to get the full set of elements to keep visible.
+      const unhushedCollection = selectedNodes.union(selectedNodes.neighborhood());
+
+      // "Hush" all elements (nodes and edges) that are NOT in our unhushed collection.
+      allElements.difference(unhushedCollection).addClass('hushed');
+
+      // --- Apply Specific Highlights ---
+
+      // 1. Highlight the selected nodes themselves.
+      selectedNodes.addClass('highlight');
+
+      // 2. Highlight outgoing elements. .outgoers() returns both the outgoing EDGES and their target NODES
+      selectedNodes.outgoers().addClass('highlight-outgoer');
+
+      // 3. Highlight incoming elements. .incomers() returns both the incoming EDGES and their source NODES
+      selectedNodes.incomers().addClass('highlight-incomer');
+    };
+
+    // Add listeners to run our highlight logic whenever the selection changes.
+    cy.on('select', 'node', updateHighlights);
+    cy.on('unselect', 'node', updateHighlights);
+
     cy.ready(() => {
       cy.nodes()
         .filter(node => !!(node.data as NodeDataDefinition).isParent)
@@ -111,6 +148,7 @@ export function useCytograph(
 
       if (hasChildren(rawNode, elements.nodes)) document.body.style.cursor = 'pointer';
 
+      // Temporarily highlight hovered node and its direct connections
       cy.elements()
         .subtract(node.outgoers())
         .subtract(node.incomers())
@@ -118,17 +156,13 @@ export function useCytograph(
         .addClass('hushed');
       node.addClass('highlight');
       node.outgoers().addClass('highlight-outgoer');
-      node.incomers().addClass('highlight-ingoer');
+      node.incomers().addClass('highlight-incomer');
     });
 
-    cy.on('mouseout', 'node', event => {
-      const node = event.target;
+    cy.on('mouseout', 'node', () => {
       document.body.style.cursor = 'default';
-
-      cy.elements().removeClass('hushed');
-      node.removeClass('highlight');
-      node.outgoers().removeClass('highlight-outgoer');
-      node.incomers().removeClass('highlight-ingoer');
+      // On mouseout, we restore the view to reflect the persistent selection state.
+      updateHighlights();
     });
 
     let highlightDelay: ReturnType<typeof setTimeout>;

@@ -57,7 +57,7 @@ export function getStyle(filteredElements: ElementsDefinition) {
     },
     {
       selector: '.hushed',
-      style: { opacity: 0.3 },
+      style: { opacity: 0 },
     },
     {
       selector: 'node.packageCycle',
