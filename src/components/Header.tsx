@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 
 export default function Header({ children, title }: IHeader) {
   const projectPath = process.env.NEXT_PUBLIC_PROJECT_PATH || '{Unknown}';
-  const projectName = projectPath.split('/').pop();
+  const projectName = projectPath.split(/[\\/]/).pop(); // Backslash for Windows paths
 
   return (
     <header className="flex flex-row items-center justify-between bg-sky-100 dark:bg-black border border-gray-100 dark:border-gray-800 p-2 gap-4">
