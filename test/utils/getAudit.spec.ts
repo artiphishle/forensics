@@ -2,8 +2,8 @@ import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
 import { getAudit } from '@/utils/getAudit';
 import { resolve } from 'node:path';
+import { ELanguage } from '@/utils/detectLanguage';
 import type { IFile } from '@/types/types';
-import { ELanguage } from 'ankh-hooks';
 
 describe('[getAudit]', () => {
   // Test: Audit output contains 'App.java' which is matched correctly, also audit.meta is correct
@@ -31,7 +31,7 @@ describe('[getAudit]', () => {
           name: 'main',
           parameters: ['String[] args'],
           returnType: 'void',
-          visibility: 'public' as 'public',
+          visibility: 'public',
         },
       ],
       package: 'com.example.myapp',
@@ -52,7 +52,9 @@ describe('[getAudit]', () => {
     expect(auditAppJava.methods[0].name).toBe(appJava.methods[0].name);
     expect(auditAppJava.methods[0].parameters[0]).toBe(appJava.methods[0].parameters[0]);
     expect(auditAppJava.methods[0].returnType).toBe(appJava.methods[0].returnType);
-    expect(auditAppJava.methods[0].visibility).toBe(appJava.methods[0].visibility);
+    expect(auditAppJava.methods[0].visibility).toBe(
+      appJava.methods[0].visibility as 'public' | 'private' | 'protected'
+    );
 
     expect(auditAppJava.package).toBe(appJava.package);
     expect(auditAppJava.path).toBe(appJava.path);

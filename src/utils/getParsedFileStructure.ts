@@ -1,7 +1,7 @@
 'use server';
 import { existsSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { ELanguage, useLanguageDetection } from 'ankh-hooks';
+import { ELanguage, detectLanguage } from '@/utils/detectLanguage';
 import { parseJavaFile } from '@/utils/java/parseJavaFile';
 import { parseFile as parseTypeScriptFile } from '@/utils/typescript/parseFile';
 import type { IDirectory } from '@/types/types';
@@ -76,9 +76,9 @@ export async function getParsedFileStructure(
   dir: string = process.env.NEXT_PUBLIC_PROJECT_PATH || ''
 ) {
   // 1. Detect language & filter non-supported
-  console.log('Language', useLanguageDetection(dir));
-  const detectedLanguage = useLanguageDetection(dir).language;
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  console.log('Language', detectLanguage(dir));
+  const detectedLanguage = detectLanguage(dir).language;
+
   if (![ELanguage.Java, ELanguage.TypeScript].includes(detectedLanguage))
     throw new Error("Supported language is 'Java' & 'TypeScript'. More to follow.");
 

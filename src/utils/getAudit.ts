@@ -1,6 +1,6 @@
 'use server';
-import { useLanguageDetection, type ILanguageDetectionResult } from 'ankh-hooks';
 import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
+import { detectLanguage, type ILanguageDetectionResult } from './detectLanguage';
 import type { IDirectory } from '@/types/types';
 
 /**
@@ -14,8 +14,8 @@ export async function getAudit() {
   }
 
   const timeStart = Date.now();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const language = useLanguageDetection(projectPath);
+
+  const language = detectLanguage(projectPath);
 
   // 1. Build audit object
   const audit: Partial<IAudit> = {
