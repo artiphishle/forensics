@@ -1,9 +1,10 @@
 'use server';
 import { existsSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { ELanguage, detectLanguage } from '@/utils/detectLanguage';
+import { detectLanguage } from '@/utils/detectLanguage';
 import { parseJavaFile } from '@/utils/java/parseJavaFile';
 import { parseFile as parseTypeScriptFile } from '@/utils/typescript/parseFile';
+import { ELanguage } from '@/utils/detectLanguage.types';
 import type { IDirectory } from '@/types/types';
 
 /**
@@ -76,8 +77,7 @@ export async function getParsedFileStructure(
   dir: string = process.env.NEXT_PUBLIC_PROJECT_PATH || ''
 ) {
   // 1. Detect language & filter non-supported
-  console.log('Language', detectLanguage(dir));
-  const detectedLanguage = detectLanguage(dir).language;
+  const detectedLanguage = (await detectLanguage(dir)).language;
 
   if (![ELanguage.Java, ELanguage.TypeScript].includes(detectedLanguage))
     throw new Error("Supported language is 'Java' & 'TypeScript'. More to follow.");

@@ -1,6 +1,7 @@
 'use server';
 import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
-import { detectLanguage, type ILanguageDetectionResult } from './detectLanguage';
+import { detectLanguage } from './detectLanguage';
+import type { ILanguageDetectionResult } from './detectLanguage.types';
 import type { IDirectory } from '@/types/types';
 
 /**
@@ -15,7 +16,7 @@ export async function getAudit() {
 
   const timeStart = Date.now();
 
-  const language = detectLanguage(projectPath);
+  const language = await detectLanguage(projectPath);
 
   // 1. Build audit object
   const audit: Partial<IAudit> = {

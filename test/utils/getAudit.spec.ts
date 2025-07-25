@@ -2,7 +2,7 @@ import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
 import { getAudit } from '@/utils/getAudit';
 import { resolve } from 'node:path';
-import { ELanguage } from '@/utils/detectLanguage';
+import { ELanguage } from '@/utils/detectLanguage.types';
 import type { IFile } from '@/types/types';
 
 describe('[getAudit]', () => {

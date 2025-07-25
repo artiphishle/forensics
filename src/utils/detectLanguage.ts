@@ -1,8 +1,9 @@
 'use server';
 import fs from 'fs';
 import path from 'path';
+import { ELanguage, ILanguageDetectionResult } from './detectLanguage.types';
 
-export function detectLanguage(directoryPath: string): ILanguageDetectionResult {
+export async function detectLanguage(directoryPath: string): Promise<ILanguageDetectionResult> {
   // Check if directory exists
   if (!fs.existsSync(directoryPath) || !fs.statSync(directoryPath).isDirectory()) {
     throw new Error(`Directory does not exist: ${directoryPath}`);
@@ -90,17 +91,17 @@ export function detectLanguage(directoryPath: string): ILanguageDetectionResult 
   };
 }
 
-export function isJavaScriptRoot(directoryPath: string): boolean {
+export async function isJavaScriptRoot(directoryPath: string): Promise<boolean> {
   const files = fs.readdirSync(directoryPath);
   return files.includes('package.json') && !files.includes('tsconfig.json');
 }
 
-export function isTypeScriptRoot(directoryPath: string): boolean {
+export async function isTypeScriptRoot(directoryPath: string): Promise<boolean> {
   const files = fs.readdirSync(directoryPath);
   return files.includes('tsconfig.json') && files.includes('package.json');
 }
 
-export function isJavaRoot(directoryPath: string): boolean {
+export async function isJavaRoot(directoryPath: string): Promise<boolean> {
   const files = fs.readdirSync(directoryPath);
   return (
     files.includes('pom.xml') ||
@@ -108,17 +109,4 @@ export function isJavaRoot(directoryPath: string): boolean {
     files.includes('build.gradle') ||
     files.includes('build.gradle.kts')
   );
-}
-
-export enum ELanguage {
-  JavaScript = 'javascript',
-  TypeScript = 'typescript',
-  Java = 'java',
-  Unknown = 'unknown',
-}
-
-export interface ILanguageDetectionResult {
-  language: ELanguage;
-  confidence: number;
-  indicators: string[];
 }
