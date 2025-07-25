@@ -15,20 +15,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🔧 Setup Bun
-        # Offizielle Action, um Bun in der CI-Umgebung zu installieren.
-        # Ersetzt setup-node und die manuelle pnpm-Installation.
         uses: oven-sh/setup-bun@v1
 
       - name: 📥 Install dependencies
         run: bun install
 
       - name: 🧹 Lint
-        # 'bun run' wird verwendet, um Skripte aus der package.json auszuführen.
         run: bun run lint
 
       - name: 🎨 Format check
         run: bun run format:check
 
       - name: ✅ Test
-        # 'bun test' ist ein eingebauter Befehl und benötigt kein 'run'.
         run: bun test
