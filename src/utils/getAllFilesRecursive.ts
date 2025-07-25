@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { parseJavaFile } from './java/parseJavaFile';
 import { parseFile as parseTypeScriptFile } from './typescript/parseFile';
+import { ELanguage } from '@/utils/detectLanguage';
 import type { IFile } from '@/types/types';
-import { ELanguage } from 'ankh-hooks';
 
 /**
  * Recursively gets all .java or .ts/.tsx file paths and parses them.

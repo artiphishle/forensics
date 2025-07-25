@@ -1,4 +1,4 @@
-import { ElementsDefinition } from 'cytoscape';
+import { EdgeDefinition, ElementsDefinition } from 'cytoscape';
 
 /**
  * Filters sub packages to only show top level packages
@@ -50,7 +50,7 @@ export function filterSubPackages(
   const visibleNodeIds = new Set(filteredNodes.map(n => n.data.id));
 
   // Step 4: Lift and aggregate edges (summing weights)
-  const edgeMap = new Map<string, any>();
+  const edgeMap = new Map<string, EdgeDefinition>();
 
   for (const edge of elements.edges) {
     const rawSource = edge.data.source;
@@ -79,8 +79,11 @@ export function filterSubPackages(
         },
       });
     } else {
+      const edge = edgeMap.get(key);
+      if (!edge) throw new Error(`Edge not found with key: '${key}'`);
+
       // Sum weight
-      edgeMap.get(key).data.weight += edge.data.weight ?? 1;
+      edge.data.weight += edge.data.weight || 1;
     }
   }
 
