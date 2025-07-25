@@ -77,7 +77,6 @@ export async function getParsedFileStructure(
   dir: string = process.env.NEXT_PUBLIC_PROJECT_PATH || ''
 ) {
   // 1. Detect language & filter non-supported
-  console.log('Language', detectLanguage(dir));
   const detectedLanguage = (await detectLanguage(dir)).language;
 
   if (![ELanguage.Java, ELanguage.TypeScript].includes(detectedLanguage))
