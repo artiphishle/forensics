@@ -79,6 +79,8 @@ export function useCytograph(
   useEffect(() => {
     if (!cyRef.current || !elements || !filteredElements) return;
 
+    console.log(filteredElements);
+
     const cy = cytoscape({
       style: getStyle(filteredElements),
       container: cyRef.current,
