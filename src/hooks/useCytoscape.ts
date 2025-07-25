@@ -1,5 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { layout as concentricLayout } from '@/themes/basic/layouts/concentric.layout';
+import { layout as gridLayout } from '@/themes/basic/layouts/grid.layout';
+import { layout as circleLayout } from '@/themes/basic/layouts/circle.layout';
+
 import cytoscape, {
   Core,
   type ElementsDefinition,
@@ -14,6 +18,12 @@ import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
 import { hasChildren } from '@/utils/cytoscape/hasChildren';
 import { filterEmptyPackages } from '@/utils/filter/filterEmptyPackages';
 
+const Layout = {
+  circle: circleLayout,
+  concentric: concentricLayout,
+  grid: gridLayout,
+};
+
 export function useCytograph(
   elements: ElementsDefinition | null,
   currentPackage: string,
@@ -23,6 +33,7 @@ export function useCytograph(
   const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
   const [cyInstance, setCyInstance] = useState<Core | null>(null);
   const { showSubPackages, showVendorPackages } = useSettings();
+  const [layout] = useState(process.env.NEXT_PUBLIC_SETTINGS_LAYOUT || 'grid');
 
   // Handle package filtering
   useEffect(() => {
@@ -79,9 +90,12 @@ export function useCytograph(
   useEffect(() => {
     if (!cyRef.current || !elements || !filteredElements) return;
 
-    console.log(filteredElements);
+    filteredElements.nodes.forEach(n => {
+      console.log(n.data.id?.split('.')[3]);
+    });
 
     const cy = cytoscape({
+      layout: Layout[layout as 'circle' | 'concentric' | 'grid'],
       style: getStyle(filteredElements),
       container: cyRef.current,
       elements: filteredElements,
@@ -89,11 +103,6 @@ export function useCytograph(
       userPanningEnabled: true,
       minZoom: 0.01,
       maxZoom: 2,
-      layout: {
-        avoidOverlap: true,
-        name: 'concentric',
-        fit: true,
-      },
     });
 
     setCyInstance(cy);
