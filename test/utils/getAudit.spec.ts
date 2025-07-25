@@ -37,7 +37,9 @@ describe('[getAudit]', () => {
       package: 'com.example.myapp',
       path: 'examples/java/my-app/src/main/java/com/example/myapp/App.java',
     };
-    const auditAppJava = (audit as any).files.com.example.myapp['App.java'] as IFile;
+    // any ok. Avoid cyclic type: Java package nesting can contain unknown length of sub packages
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const auditAppJava = (audit.files.com as any).example.myapp['App.java'] as IFile;
 
     // audit.files > File 'App.java'
     expect(auditAppJava.className).toBe(appJava.className);
