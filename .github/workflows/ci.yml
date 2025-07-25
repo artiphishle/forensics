@@ -12,23 +12,24 @@ jobs:
 
     steps:
       - name: ⬇️ Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: 🔧 Setup Bun
-        # Offizielle Action, um Bun in der CI-Umgebung zu installieren.
-        # Ersetzt setup-node und die manuelle pnpm-Installation.
-        uses: oven-sh/setup-bun@v1
+      - name: 🔧 Setup Node.js 22
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
+
+      - name: 📦 Install PNPM
+        run: npm install -g pnpm@10.7.1
 
       - name: 📥 Install dependencies
-        run: bun install
+        run: pnpm install
 
       - name: 🧹 Lint
-        # 'bun run' wird verwendet, um Skripte aus der package.json auszuführen.
-        run: bun run lint
+        run: pnpm lint
 
       - name: 🎨 Format check
-        run: bun run format:check
+        run: pnpm format:check
 
       - name: ✅ Test
-        # 'bun test' ist ein eingebauter Befehl und benötigt kein 'run'.
-        run: bun test
+        run: pnpm test
