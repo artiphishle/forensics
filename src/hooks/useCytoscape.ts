@@ -48,13 +48,17 @@ export function useCytograph(
         const label = !currentPackage.length
           ? node.data.id!
           : node.data.id!.slice(currentPackage.length + 1);
-        return { classes: node.classes || '', data: { ...node.data, label } } as NodeDefinition;
+        return {
+          group: 'nodes',
+          classes: node.classes || '',
+          data: { ...node.data, label },
+        } as NodeDefinition;
       }),
       edges: afterVendorPkgFilter.edges,
     };
 
     setFilteredElements(finalElements);
-  }, [elements, currentPackage, showSubPackages, showVendorPackages]);
+  }, [elements, currentPackage, setCurrentPackage, showSubPackages, showVendorPackages]);
 
   useEffect(() => {
     if (!cyRef.current || !cyInstance) return;
@@ -118,7 +122,7 @@ export function useCytograph(
         .addClass('hushed');
       node.addClass('highlight');
       node.outgoers().addClass('highlight-outgoer');
-      node.incomers().addClass('highlight-ingoer');
+      node.incomers().addClass('highlight-incomer');
     });
 
     cy.on('mouseout', 'node', event => {
@@ -128,7 +132,7 @@ export function useCytograph(
       cy.elements().removeClass('hushed');
       node.removeClass('highlight');
       node.outgoers().removeClass('highlight-outgoer');
-      node.incomers().removeClass('highlight-ingoer');
+      node.incomers().removeClass('highlight-incomer');
     });
 
     let highlightDelay: ReturnType<typeof setTimeout>;
