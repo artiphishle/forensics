@@ -27,7 +27,7 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
     <div className="p-4 flex items-center justify-center gap-2 text-foreground bg-background dark:bg-gray-950 border-t border-t-gray-200 dark:border-t-gray-800">
       <label htmlFor="zoom">Zoom:</label>
       <button title="Zoom to fit" onClick={() => setZoom(zoomToFit)}>
-        <CircleDotDashedIcon className="text-foreground dark:text-background cursor-pointer" />
+        <CircleDotDashedIcon className="fill-foreground dark:fill-background cursor-pointer" />
       </button>
       <input
         id="zoom"

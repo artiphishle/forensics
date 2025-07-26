@@ -52,7 +52,11 @@ export function getStyle(filteredElements: ElementsDefinition) {
         'border-width': 2,
       },
     },
-    { selector: '.hushed', style: { opacity: 0 } },
+    {
+      selector: 'node.hushed',
+      style: { 'background-opacity': 0.2, 'border-color': colors.bg, opacity: 0.5 },
+    },
+    { selector: 'edge.hushed', style: { opacity: 0 } },
     { selector: 'node.packageCycle', style: { 'border-color': '#d80303', 'border-width': 3 } },
 
     // --- Default Edge Style ---
