@@ -1,8 +1,12 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { layout as concentricLayout } from '@/themes/basic/layouts/concentric.layout';
-import { layout as gridLayout } from '@/themes/basic/layouts/grid.layout';
-import { layout as circleLayout } from '@/themes/basic/layouts/circle.layout';
+import { layout as concentricLayout } from '@/themes/basic/concentric/layout';
+import { layout as gridLayout } from '@/themes/basic/grid/layout';
+import { layout as circleLayout } from '@/themes/basic/circle/layout';
+import { getStyle as getCommonStyle } from '@/themes/basic/style';
+import { getStyle as getConcentricStyle } from '@/themes/basic/concentric/style';
+import { getStyle as getGridStyle } from '@/themes/basic/grid/style';
+import { getStyle as getCircleStyle } from '@/themes/basic/circle/style';
 
 import cytoscape, {
   Core,
@@ -11,7 +15,6 @@ import cytoscape, {
   type NodeDefinition,
 } from 'cytoscape';
 import { useSettings } from '@/contexts/SettingsContext';
-import { getStyle } from '@/themes/basic/style';
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
@@ -94,9 +97,12 @@ export function useCytograph(
       console.log(n.data.id?.split('.')[3]);
     });
 
+    const getLayoutStyle =
+      layout === 'circle' ? getCircleStyle : layout === 'grid' ? getGridStyle : getConcentricStyle;
+
     const cy = cytoscape({
       layout: Layout[layout as 'circle' | 'concentric' | 'grid'],
-      style: getStyle(filteredElements),
+      style: [...getCommonStyle(filteredElements), ...getLayoutStyle()],
       container: cyRef.current,
       elements: filteredElements,
       selectionType: 'additive',

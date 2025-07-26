@@ -3,8 +3,8 @@
   "type": "module",
   "engines": {
     "node": ">=22.14.0",
-    "npm": ">=10.9.2",
-    "bun": ">=1.2.18"
+    "bun": ">=1.2.18",
+    "npm": ">=10.9.2"
   },
   "version": "0.1.0",
   "scripts": {
@@ -48,6 +48,5 @@
     "tailwindcss-cli": "^0.1.2",
     "tsx": "^4.19.3",
     "typescript": "^5"
-  },
-  "packageManager": "bun"
+  }
 }
