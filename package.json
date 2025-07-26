@@ -15,7 +15,7 @@
     "lint": "next lint",
     "format:check": "prettier --check .",
     "format:write": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml,yaml,mjs,cjs,html,css,scss,mdx}\"",
-    "test": "bunx @artiphishle/testosterone",
+    "test": "npx @artiphishle/testosterone",
     "test:cov": "c8 --reporter=text --reporter=text-summary tsx --test",
     "test:cov:html": "c8 --report-dir=./test/coverage --reporter=html tsx --test"
   },

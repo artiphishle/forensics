@@ -16,7 +16,10 @@ Make sure to have PNPM & Node installed, check `package.json` for allowed versio
 
 ```bash
 # 1. Install dependencies
+bun install
+yarn install
 pnpm install
+npm install
 
 # 2. Create your .env file
 cp .env.tpl .env
@@ -24,7 +27,10 @@ cp .env.tpl .env
 # 3. Supply the project path to analyze in the .env file
 
 # 4. Run the app
+bun run dev
+yarn run dev
 pnpm run dev
+npm run dev
 ```
 
 ## Documentation
@@ -37,13 +43,22 @@ Find the official documentation at Github Pages here:
 
 ```bash
 # Run tests
-pnpm test
+bun run test
+yarn run test
+pnpm run test
+npm run test
 
 # Print Coverage to stdout
-pnpm test:cov
+bun run test:cov
+yarn run test:cov
+pnpm run test:cov
+npm run test:cov
 
 # Generate HTML Coverage to 'test/coverage/index.html'
+bun test:cov:html
+yarn test:cov:html
 pnpm test:cov:html
+npm test:cov:html
 ```
 
 ## Contributing
