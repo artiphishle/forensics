@@ -7,7 +7,7 @@ export function getStyle() {
       selector: 'node',
       style: {
         // Ellipses or circles complement the layout
-        shape: 'ellipse',
+        shape: 'barrel',
       },
     },
     {

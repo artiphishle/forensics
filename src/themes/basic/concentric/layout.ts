@@ -1,8 +1,7 @@
-export const layout = {
-  avoidOverlap: true,
+import { ConcentricLayoutOptions } from 'cytoscape';
 
-  // Add 20px buffer around each node
-  avoidOverlapPadding: 20,
+export const layout: ConcentricLayoutOptions = {
+  avoidOverlap: true,
 
   fit: true,
   name: 'concentric',
