@@ -1,4 +1,3 @@
-// /styles/circle.ts
 import type { StylesheetJson } from 'cytoscape';
 
 export function getStyle() {
