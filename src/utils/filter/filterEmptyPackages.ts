@@ -5,10 +5,8 @@ import { ElementsDefinition } from 'cytoscape';
  */
 function getRootPackage(elements: ElementsDefinition) {
   const rootPackages = elements.nodes.filter(n => {
-    if (!n.data.id?.includes('.')) console.log('root', n.data.id);
     return !n.data.id?.includes('.');
   });
-  console.log(rootPackages.length > 1 ? '{empty}' : rootPackages[0].data.id);
   return rootPackages.length > 1 ? '' : (rootPackages[0].data.id as string);
 }
 

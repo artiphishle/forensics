@@ -16,6 +16,7 @@ const en: ILanguage = {
   'settings.filter': 'Filter',
 
   // Layouts
+  breadthfirst: 'Breadthfirst',
   circle: 'Circle',
   concentric: 'Concentric',
   grid: 'Grid',

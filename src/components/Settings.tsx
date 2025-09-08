@@ -6,6 +6,7 @@ import Switch from '@/components/Switch';
 import { useSettings } from '@/contexts/SettingsContext';
 import { t } from '@/i18n/i18n';
 import { Select, Slider } from 'radix-ui';
+import { CYTOSCAPE_LAYOUTS } from '@/contexts/constants';
 
 export default function Settings() {
   const {
@@ -95,29 +96,16 @@ export default function Settings() {
             >
               <Select.Viewport className="p-1">
                 <Select.Group>
-                  <Select.Item
-                    value="circle"
-                    textValue={t('circle')}
-                    className="px-2 py-1.5 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  >
-                    <Select.ItemText>{t('circle')}</Select.ItemText>
-                  </Select.Item>
-
-                  <Select.Item
-                    value="concentric"
-                    textValue={t('concentric')}
-                    className="px-2 py-1.5 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  >
-                    <Select.ItemText>{t('concentric')}</Select.ItemText>
-                  </Select.Item>
-
-                  <Select.Item
-                    value="grid"
-                    textValue={t('grid')}
-                    className="px-2 py-1.5 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  >
-                    <Select.ItemText>{t('grid')}</Select.ItemText>
-                  </Select.Item>
+                  {CYTOSCAPE_LAYOUTS.map(layout => (
+                    <Select.Item
+                      key={layout}
+                      value={layout}
+                      textValue={t(layout)}
+                      className="px-2 py-1.5 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                      <Select.ItemText>{t(layout)}</Select.ItemText>
+                    </Select.Item>
+                  ))}
                 </Select.Group>
               </Select.Viewport>
             </Select.Content>

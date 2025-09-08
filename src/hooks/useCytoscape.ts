@@ -1,9 +1,12 @@
 'use client';
+import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
+import { layout as breadthfirstLayout } from '@/themes/basic/breadthfirst/layout';
 import { layout as concentricLayout } from '@/themes/basic/concentric/layout';
 import { layout as gridLayout } from '@/themes/basic/grid/layout';
 import { layout as circleLayout } from '@/themes/basic/circle/layout';
-import { getStyle as getCommonStyle, getCanvasBg } from '@/themes/basic/style'; // <- export getBg + accept theme
+import { getStyle as getCommonStyle, getCanvasBg } from '@/themes/basic/style';
+import { getStyle as getBreadthfirstStyle } from '@/themes/basic/breadthfirst/style';
 import { getStyle as getConcentricStyle } from '@/themes/basic/concentric/style';
 import { getStyle as getGridStyle } from '@/themes/basic/grid/style';
 import { getStyle as getCircleStyle } from '@/themes/basic/circle/style';
@@ -15,7 +18,6 @@ import cytoscape, {
   type NodeDefinition,
 } from 'cytoscape';
 import { CytoscapeLayout, useSettings } from '@/contexts/SettingsContext';
-import { useTheme } from 'next-themes'; // <- listen to theme
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
@@ -23,6 +25,7 @@ import { hasChildren } from '@/utils/cytoscape/hasChildren';
 import { filterEmptyPackages } from '@/utils/filter/filterEmptyPackages';
 
 const Layout = {
+  breadthfirst: breadthfirstLayout,
   circle: circleLayout,
   concentric: concentricLayout,
   grid: gridLayout,
@@ -88,11 +91,13 @@ export function useCytograph(
     if (!cyRef.current || !elements || !filteredElements) return;
 
     const getLayoutStyle =
-      cytoscapeLayout === 'circle'
-        ? getCircleStyle
-        : cytoscapeLayout === 'grid'
-          ? getGridStyle
-          : getConcentricStyle;
+      cytoscapeLayout === 'breadthfirst'
+        ? getBreadthfirstStyle
+        : cytoscapeLayout === 'circle'
+          ? getCircleStyle
+          : cytoscapeLayout === 'grid'
+            ? getGridStyle
+            : getConcentricStyle;
 
     const cy = cytoscape({
       layout: {
