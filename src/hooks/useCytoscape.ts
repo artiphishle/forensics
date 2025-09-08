@@ -64,9 +64,10 @@ export function useCytograph(
 
     const finalElements: ElementsDefinition = {
       nodes: afterVendorPkgFilter.nodes.map(node => {
+        console.log(node.data.id);
         const label = !currentPackage.length
-          ? node.data.id!
-          : node.data.id!.slice(currentPackage.length + 1);
+          ? node.data.id
+          : node.data.id?.slice(currentPackage.length + 1);
         return {
           group: 'nodes',
           classes: node.classes || '',
@@ -112,12 +113,12 @@ export function useCytograph(
               ? getKlayStyle
               : getConcentricStyle;
 
+    console.log(filteredElements);
     const cy = cytoscape({
       layout: {
         ...LAYOUTS[cytoscapeLayout as CytoscapeLayout],
         spacingFactor: cytoscapeLayoutSpacing,
       } as LayoutOptions,
-      // IMPORTANT: pass theme into your style getter
       style: [...getLayoutStyle(), ...getCommonStyle(filteredElements, theme)],
       container: cyRef.current,
       elements: filteredElements,

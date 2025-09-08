@@ -1,4 +1,9 @@
-import type { EdgeDataDefinition, EdgeDefinition, NodeDataDefinition } from 'cytoscape';
+import type {
+  EdgeDataDefinition,
+  EdgeDefinition,
+  NodeDataDefinition,
+  NodeDefinition,
+} from 'cytoscape';
 
 /**
  * General
@@ -51,6 +56,6 @@ export interface IPkgEdgeData extends EdgeDataDefinition {
   weight: number;
 }
 export interface IRawElementsDefinition {
-  readonly nodes: { data: IPkgNodeData }[];
+  readonly nodes: NodeDefinition[];
   readonly edges: Map<string, EdgeDefinition>;
 }

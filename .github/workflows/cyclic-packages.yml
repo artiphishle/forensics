@@ -1,0 +1,56 @@
+name: Audit cyclic packages
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      # Generate the audit.json using your published CLI
+      - name: Generate audit.json
+        run: |
+          bunx @artiphishle/forensics -o audit.json --prod || bunx @artiphishle/forensics -o audit.json
+        # ^ tries prod (next start) if your package ships .next; falls back to dev
+
+      - name: Ensure audit.json exists
+        run: |
+          test -f audit.json || (echo "audit.json not found" && exit 1)
+
+      # Check evaluation.cyclicPackages length and fail if > 0
+      - name: Fail on cyclic packages
+        shell: bash
+        run: |
+          node -e '
+            const fs = require("fs");
+            const p = "audit.json";
+            const data = JSON.parse(fs.readFileSync(p, "utf8"));
+            const arr = data?.evaluation?.cyclicPackages ?? [];
+            if (!Array.isArray(arr)) {
+              console.error("audit.json: evaluation.cyclicPackages is missing or not an array");
+              process.exit(1);
+            }
+            if (arr.length > 0) {
+              console.error(`Found ${arr.length} cyclic package(s):`, arr);
+              process.exit(1);
+            }
+            console.log("No cyclic packages found ✅");
+          '
+
+      - name: Upload audit.json (artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-json
+          path: audit.json

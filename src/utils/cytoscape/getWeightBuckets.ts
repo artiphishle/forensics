@@ -1,5 +1,5 @@
 import type { ElementsDefinition } from 'cytoscape';
-import { getMaxEdgeWeight } from './getMaxEdgeWeight';
+import { getMaxEdgeWeight } from '@/utils/cytoscape/getMaxEdgeWeight';
 
 export function getWeightBuckets(
   categoryCount: number,

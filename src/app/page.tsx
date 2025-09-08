@@ -12,7 +12,7 @@ import { useCytograph } from '@/hooks/useCytoscape';
 
 export default function Home() {
   const [packageGraph, setPackageGraph] = useState<ElementsDefinition | null>(null);
-  const [currentPackage, setCurrentPackage] = useState<string>('');
+  const [currentPackage, setCurrentPackage] = useState<string>('src');
   const { cyRef, cyInstance } = useCytograph(packageGraph, currentPackage, setCurrentPackage);
 
   useEffect(() => {
@@ -20,6 +20,7 @@ export default function Home() {
   }, []);
 
   if (!packageGraph) return <Loader />;
+  console.log('current', currentPackage);
 
   return (
     <>

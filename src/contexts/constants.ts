@@ -1,4 +1,4 @@
-import { CytoscapeLayout } from './SettingsContext';
+import { CytoscapeLayout } from '@/contexts/SettingsContext';
 
 export const CYTOSCAPE_LAYOUTS: CytoscapeLayout[] = [
   'breadthfirst',
