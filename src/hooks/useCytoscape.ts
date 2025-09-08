@@ -14,7 +14,7 @@ import cytoscape, {
   type NodeDataDefinition,
   type NodeDefinition,
 } from 'cytoscape';
-import { useSettings } from '@/contexts/SettingsContext';
+import { CytoscapeLayout, useSettings } from '@/contexts/SettingsContext';
 import { useTheme } from 'next-themes'; // <- listen to theme
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
@@ -36,8 +36,8 @@ export function useCytograph(
   const cyRef = useRef<HTMLDivElement>(null);
   const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
   const [cyInstance, setCyInstance] = useState<Core | null>(null);
-  const { showSubPackages, showVendorPackages } = useSettings();
-  const [layout] = useState(process.env.NEXT_PUBLIC_SETTINGS_LAYOUT || 'grid');
+  const { cytoscapeLayout, cytoscapeLayoutSpacing, showSubPackages, showVendorPackages } =
+    useSettings();
 
   const { resolvedTheme } = useTheme();
   const theme = (resolvedTheme === 'dark' ? 'dark' : 'light') as 'dark' | 'light';
@@ -88,10 +88,17 @@ export function useCytograph(
     if (!cyRef.current || !elements || !filteredElements) return;
 
     const getLayoutStyle =
-      layout === 'circle' ? getCircleStyle : layout === 'grid' ? getGridStyle : getConcentricStyle;
+      cytoscapeLayout === 'circle'
+        ? getCircleStyle
+        : cytoscapeLayout === 'grid'
+          ? getGridStyle
+          : getConcentricStyle;
 
     const cy = cytoscape({
-      layout: Layout[layout as 'circle' | 'grid' | 'concentric'],
+      layout: {
+        ...Layout[cytoscapeLayout as CytoscapeLayout],
+        spacingFactor: cytoscapeLayoutSpacing,
+      },
       // IMPORTANT: pass theme into your style getter
       style: [...getLayoutStyle(), ...getCommonStyle(filteredElements, theme)],
       container: cyRef.current,
@@ -177,7 +184,14 @@ export function useCytograph(
       cy.destroy();
       setCyInstance(null);
     };
-  }, [elements, filteredElements, layout, theme, setCurrentPackage]);
+  }, [
+    elements,
+    filteredElements,
+    cytoscapeLayout,
+    cytoscapeLayoutSpacing,
+    theme,
+    setCurrentPackage,
+  ]);
 
   // Theme live update: Restyle without re-creating the instance
   useEffect(() => {
