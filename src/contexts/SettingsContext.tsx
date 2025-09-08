@@ -1,21 +1,32 @@
 'use client';
-import React, { createContext, use, useState, type PropsWithChildren } from 'react';
+import React, { createContext, use, type PropsWithChildren } from 'react';
 import {
   getCytoscapeLayout,
   getCytoscapeLayoutSpacing,
   getShowSubPackages,
   getShowVendorPackages,
 } from '@/utils/parseEnv';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 // Settings context
 const SettingsContext = createContext<ISettingsContext | null>(null);
 
 // Settings provider
 export const SettingsProvider = ({ children }: PropsWithChildren) => {
-  const [showSubPackages, setShowSubPackages] = useState(getShowSubPackages());
-  const [showVendorPackages, setShowVendorPackages] = useState(getShowVendorPackages());
-  const [cytoscapeLayout, setCytoscapeLayout] = useState<CytoscapeLayout>(getCytoscapeLayout());
-  const [cytoscapeLayoutSpacing, setCytoscapeLayoutSpacing] = useState<number>(
+  const [showSubPackages, setShowSubPackages] = useLocalStorage<boolean>(
+    'showSubPackages',
+    getShowSubPackages()
+  );
+  const [showVendorPackages, setShowVendorPackages] = useLocalStorage<boolean>(
+    'showVendorPackages',
+    getShowVendorPackages()
+  );
+  const [cytoscapeLayout, setCytoscapeLayout] = useLocalStorage<CytoscapeLayout>(
+    'cytoscapeLayout',
+    getCytoscapeLayout()
+  );
+  const [cytoscapeLayoutSpacing, setCytoscapeLayoutSpacing] = useLocalStorage<number>(
+    'cytoscapeLayoutSpacing',
     getCytoscapeLayoutSpacing()
   );
 
