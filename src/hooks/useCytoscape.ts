@@ -15,7 +15,7 @@ import cytoscape, {
   type NodeDataDefinition,
   type NodeDefinition,
 } from 'cytoscape';
-import { CytoscapeLayout, useSettings } from '@/contexts/SettingsContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 // import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
@@ -23,6 +23,7 @@ import { hasChildren } from '@/utils/cytoscape/hasChildren';
 import { filterEmptyPackages } from '@/utils/filter/filterEmptyPackages';
 import { LAYOUTS } from '@/themes/constants';
 import { filterSubPackagesByDepth, getMaxDepth } from '@/utils/filter/filterSubPackagesFromDepth';
+import { CytoscapeLayout } from '@/themes/types';
 
 export function useCytograph(
   elements: ElementsDefinition | null,

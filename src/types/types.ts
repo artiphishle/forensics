@@ -1,9 +1,4 @@
-import type {
-  EdgeDataDefinition,
-  EdgeDefinition,
-  NodeDataDefinition,
-  NodeDefinition,
-} from 'cytoscape';
+import type { EdgeDataDefinition, EdgeDefinition, NodeDefinition } from 'cytoscape';
 
 /**
  * General
@@ -48,10 +43,6 @@ export interface IJavaImport {
 /**
  * Cytoscape
  */
-export interface IPkgNodeData extends NodeDataDefinition {
-  readonly path: string;
-  readonly isIntrinsic?: boolean;
-}
 export interface IPkgEdgeData extends EdgeDataDefinition {
   weight: number;
 }

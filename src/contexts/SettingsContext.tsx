@@ -1,4 +1,6 @@
 'use client';
+import type { CytoscapeLayout } from '@/themes/types';
+
 import React, { createContext, use, type PropsWithChildren } from 'react';
 import {
   getCytoscapeLayout,
@@ -7,7 +9,7 @@ import {
   getShowVendorPackages,
   getSubPackageDepth,
 } from '@/utils/parseEnv';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useLocalStorage } from '@/store/useLocalStorage';
 
 // Settings context
 const SettingsContext = createContext<ISettingsContext | null>(null);
@@ -85,5 +87,3 @@ interface ISettingsContext {
   readonly toggleShowSubPackages: () => void;
   readonly toggleShowVendorPackages: () => void;
 }
-
-export type CytoscapeLayout = 'breadthfirst' | 'circle' | 'concentric' | 'grid' | 'klay';

@@ -1,10 +1,6 @@
 {
   "evaluation": {
-    "cyclicPackages": [
-      "src.themes",
-      "src.hooks",
-      "src.contexts"
-    ]
+    "cyclicPackages": []
   },
   "files": {
     "bin": {
@@ -332,11 +328,6 @@
                     "name": "next.server",
                     "pkg": "next",
                     "isIntrinsic": false
-                  },
-                  {
-                    "name": "src.utils.cytoscape.buildGraph",
-                    "pkg": "src.utils.cytoscape",
-                    "isIntrinsic": true
                   },
                   {
                     "name": "src.utils.getParsedFileStructure",
@@ -843,6 +834,11 @@
           "className": "SettingsContext.tsx",
           "imports": [
             {
+              "name": "src.themes.types",
+              "pkg": "src.themes",
+              "isIntrinsic": true
+            },
+            {
               "name": "react",
               "pkg": "",
               "isIntrinsic": false
@@ -853,8 +849,8 @@
               "isIntrinsic": true
             },
             {
-              "name": "src.hooks.useLocalStorage",
-              "pkg": "src.hooks",
+              "name": "src.store.useLocalStorage",
+              "pkg": "src.store",
               "isIntrinsic": true
             }
           ],
@@ -867,8 +863,8 @@
           "className": "constants",
           "imports": [
             {
-              "name": "src.contexts.SettingsContext",
-              "pkg": "src.contexts",
+              "name": "src.themes.types",
+              "pkg": "src.themes",
               "isIntrinsic": true
             }
           ],
@@ -960,6 +956,11 @@
             {
               "name": "src.utils.filter.filterSubPackagesFromDepth",
               "pkg": "src.utils.filter",
+              "isIntrinsic": true
+            },
+            {
+              "name": "src.themes.types",
+              "pkg": "src.themes",
               "isIntrinsic": true
             }
           ],
@@ -1228,7 +1229,39 @@
           ],
           "package": "src.hooks",
           "path": "src/hooks/useCytoscape.ts"
+        }
+      },
+      "i18n": {
+        "en.ts": {
+          "className": "en",
+          "imports": [
+            {
+              "name": "src.i18n.i18n",
+              "pkg": "src.i18n",
+              "isIntrinsic": true
+            }
+          ],
+          "methods": [],
+          "calls": [],
+          "package": "src.i18n",
+          "path": "src/i18n/en.ts"
         },
+        "i18n.ts": {
+          "className": "i18n",
+          "imports": [
+            {
+              "name": "src.i18n.en",
+              "pkg": "src.i18n",
+              "isIntrinsic": true
+            }
+          ],
+          "methods": [],
+          "calls": [],
+          "package": "src.i18n",
+          "path": "src/i18n/i18n.ts"
+        }
+      },
+      "store": {
         "useLocalStorage.ts": {
           "className": "useLocalStorage",
           "imports": [
@@ -1265,38 +1298,8 @@
               "method": "warn"
             }
           ],
-          "package": "src.hooks",
-          "path": "src/hooks/useLocalStorage.ts"
-        }
-      },
-      "i18n": {
-        "en.ts": {
-          "className": "en",
-          "imports": [
-            {
-              "name": "src.i18n.i18n",
-              "pkg": "src.i18n",
-              "isIntrinsic": true
-            }
-          ],
-          "methods": [],
-          "calls": [],
-          "package": "src.i18n",
-          "path": "src/i18n/en.ts"
-        },
-        "i18n.ts": {
-          "className": "i18n",
-          "imports": [
-            {
-              "name": "src.i18n.en",
-              "pkg": "src.i18n",
-              "isIntrinsic": true
-            }
-          ],
-          "methods": [],
-          "calls": [],
-          "package": "src.i18n",
-          "path": "src/i18n/i18n.ts"
+          "package": "src.store",
+          "path": "src/store/useLocalStorage.ts"
         }
       },
       "themes": {
@@ -1521,8 +1524,8 @@
               "isIntrinsic": false
             },
             {
-              "name": "src.contexts.SettingsContext",
-              "pkg": "src.contexts",
+              "name": "src.themes.types",
+              "pkg": "src.themes",
               "isIntrinsic": true
             },
             {
@@ -1560,8 +1563,8 @@
           "className": "getLayoutStyle",
           "imports": [
             {
-              "name": "src.contexts.SettingsContext",
-              "pkg": "src.contexts",
+              "name": "src.themes.types",
+              "pkg": "src.themes",
               "isIntrinsic": true
             },
             {
@@ -1651,24 +1654,24 @@
                 "method": "push"
               },
               {
-                "callee": "(dirOrFile as IFile).imports",
+                "callee": "file.package",
+                "method": "trim"
+              },
+              {
+                "callee": "(file.imports ?? [])\n        .map(imp => imp.pkg?.trim())",
+                "method": "filter"
+              },
+              {
+                "callee": "(file.imports ?? [])",
                 "method": "map"
               },
               {
-                "callee": "console",
-                "method": "log"
-              },
-              {
-                "callee": "targets",
-                "method": "join"
+                "callee": "imp.pkg",
+                "method": "trim"
               },
               {
                 "callee": "targets",
                 "method": "forEach"
-              },
-              {
-                "callee": "edges",
-                "method": "get"
               },
               {
                 "callee": "edges",
@@ -1685,6 +1688,10 @@
               {
                 "callee": "[source, target]",
                 "method": "forEach"
+              },
+              {
+                "callee": "String(maybeNode ?? '')",
+                "method": "trim"
               },
               {
                 "callee": "rawElements.nodes",
@@ -1837,6 +1844,11 @@
                   "name": "src.types.types",
                   "pkg": "src.types",
                   "isIntrinsic": true
+                },
+                {
+                  "name": "src.utils.cytoscape.buildGraph",
+                  "pkg": "src.utils.cytoscape",
+                  "isIntrinsic": true
                 }
               ],
               "methods": [],
@@ -1846,27 +1858,59 @@
                   "method": "push"
                 },
                 {
-                  "callee": "graph",
+                  "callee": "map",
                   "method": "has"
                 },
                 {
-                  "callee": "graph",
+                  "callee": "map",
                   "method": "set"
                 },
                 {
-                  "callee": "graph.get(fromPkg)!",
-                  "method": "add"
+                  "callee": "map.get(key)!",
+                  "method": "push"
                 },
                 {
-                  "callee": "graph",
+                  "callee": "map",
                   "method": "get"
                 },
                 {
-                  "callee": "indexes",
+                  "callee": "adj",
+                  "method": "has"
+                },
+                {
+                  "callee": "adj",
                   "method": "set"
                 },
                 {
-                  "callee": "lowlinks",
+                  "callee": "adj",
+                  "method": "has"
+                },
+                {
+                  "callee": "adj",
+                  "method": "set"
+                },
+                {
+                  "callee": "adj",
+                  "method": "has"
+                },
+                {
+                  "callee": "adj",
+                  "method": "set"
+                },
+                {
+                  "callee": "adj.get(s)!",
+                  "method": "add"
+                },
+                {
+                  "callee": "adj",
+                  "method": "get"
+                },
+                {
+                  "callee": "idx",
+                  "method": "set"
+                },
+                {
+                  "callee": "low",
                   "method": "set"
                 },
                 {
@@ -1882,11 +1926,11 @@
                   "method": "get"
                 },
                 {
-                  "callee": "indexes",
+                  "callee": "idx",
                   "method": "has"
                 },
                 {
-                  "callee": "lowlinks",
+                  "callee": "low",
                   "method": "set"
                 },
                 {
@@ -1894,11 +1938,11 @@
                   "method": "min"
                 },
                 {
-                  "callee": "lowlinks",
+                  "callee": "low",
                   "method": "get"
                 },
                 {
-                  "callee": "lowlinks",
+                  "callee": "low",
                   "method": "get"
                 },
                 {
@@ -1906,7 +1950,7 @@
                   "method": "has"
                 },
                 {
-                  "callee": "lowlinks",
+                  "callee": "low",
                   "method": "set"
                 },
                 {
@@ -1914,19 +1958,19 @@
                   "method": "min"
                 },
                 {
-                  "callee": "lowlinks",
+                  "callee": "low",
                   "method": "get"
                 },
                 {
-                  "callee": "indexes",
+                  "callee": "idx",
                   "method": "get"
                 },
                 {
-                  "callee": "lowlinks",
+                  "callee": "low",
                   "method": "get"
                 },
                 {
-                  "callee": "indexes",
+                  "callee": "idx",
                   "method": "get"
                 },
                 {
@@ -1938,19 +1982,11 @@
                   "method": "delete"
                 },
                 {
-                  "callee": "scc",
+                  "callee": "comp",
                   "method": "push"
                 },
                 {
-                  "callee": "graph.get(scc[0])",
-                  "method": "has"
-                },
-                {
-                  "callee": "graph",
-                  "method": "get"
-                },
-                {
-                  "callee": "sccs",
+                  "callee": "out",
                   "method": "push"
                 },
                 {
@@ -1958,20 +1994,92 @@
                   "method": "keys"
                 },
                 {
-                  "callee": "indexes",
+                  "callee": "idx",
                   "method": "has"
                 },
                 {
-                  "callee": "sccs",
-                  "method": "flat"
+                  "callee": "Array",
+                  "method": "from"
+                },
+                {
+                  "callee": "path",
+                  "method": "push"
+                },
+                {
+                  "callee": "seen",
+                  "method": "add"
+                },
+                {
+                  "callee": "graph",
+                  "method": "get"
+                },
+                {
+                  "callee": "sccSet",
+                  "method": "has"
+                },
+                {
+                  "callee": "seen",
+                  "method": "has"
+                },
+                {
+                  "callee": "path",
+                  "method": "pop"
+                },
+                {
+                  "callee": "adj.get(scc[0])",
+                  "method": "has"
+                },
+                {
+                  "callee": "adj",
+                  "method": "get"
+                },
+                {
+                  "callee": "scc",
+                  "method": "forEach"
+                },
+                {
+                  "callee": "packageSet",
+                  "method": "add"
+                },
+                {
+                  "callee": "edges",
+                  "method": "push"
+                },
+                {
+                  "callee": "evidence",
+                  "method": "get"
+                },
+                {
+                  "callee": "cycles",
+                  "method": "push"
+                },
+                {
+                  "callee": "pkgToEdges",
+                  "method": "has"
+                },
+                {
+                  "callee": "pkgToEdges",
+                  "method": "set"
+                },
+                {
+                  "callee": "pkgToEdges.get(e.from)!",
+                  "method": "push"
+                },
+                {
+                  "callee": "pkgToEdges",
+                  "method": "get"
                 },
                 {
                   "callee": "elements.nodes",
                   "method": "map"
                 },
                 {
-                  "callee": "cyclicPackages",
+                  "callee": "packageSet",
                   "method": "has"
+                },
+                {
+                  "callee": "pkgToEdges",
+                  "method": "get"
                 }
               ],
               "package": "src.utils.cytoscape.rules",
@@ -2615,16 +2723,6 @@
           "className": "getAudit",
           "imports": [
             {
-              "name": "src.utils.getParsedFileStructure",
-              "pkg": "src.utils",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.utils.detectLanguage",
-              "pkg": "src.utils",
-              "isIntrinsic": true
-            },
-            {
               "name": "src.utils.detectLanguage.types",
               "pkg": "src.utils",
               "isIntrinsic": true
@@ -2632,6 +2730,16 @@
             {
               "name": "src.types.types",
               "pkg": "src.types",
+              "isIntrinsic": true
+            },
+            {
+              "name": "src.utils.getParsedFileStructure",
+              "pkg": "src.utils",
+              "isIntrinsic": true
+            },
+            {
+              "name": "src.utils.detectLanguage",
+              "pkg": "src.utils",
               "isIntrinsic": true
             },
             {
@@ -2653,10 +2761,6 @@
             {
               "callee": "Date",
               "method": "now"
-            },
-            {
-              "callee": "Array",
-              "method": "from"
             },
             {
               "callee": "Date",
@@ -3217,7 +3321,7 @@
       ]
     },
     "projectName": "forensics",
-    "timeStart": 1757346323199,
-    "timeEnd": 1757346323295
+    "timeStart": 1757354293505,
+    "timeEnd": 1757354293601
   }
 }

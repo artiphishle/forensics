@@ -2,7 +2,11 @@ import type { EdgeDefinition, ElementsDefinition, NodeDefinition } from 'cytosca
 import type { IDirectory, IFile, IPkgEdgeData, IRawElementsDefinition } from '@/types/types';
 
 /**
- * Builds a weighted dependency graph based on package-level imports
+ * Builds a weighted dependency graph based on package-level imports.
+ * - Adds intrinsic directory nodes (from folder structure)
+ * - Aggregates edges (source pkg -> target pkg) with cumulative weight
+ * - Adds vendor nodes for any edge endpoints not present as intrinsic nodes
+ * - Sanitizes: skips empty package ids and self-edges
  */
 export function buildGraph(dir: IDirectory) {
   /**
@@ -15,34 +19,41 @@ export function buildGraph(dir: IDirectory) {
     edges: Map<string, EdgeDefinition> = new Map()
   ) {
     Object.keys(currentDir).forEach(key => {
-      const dirOrFile: IDirectory | IFile = currentDir[key];
-      const isDirectory = !dirOrFile?.className;
+      const dirOrFile = (currentDir as Record<string, IDirectory | IFile>)[key];
+      const isDirectory = !(dirOrFile as IFile)?.className;
 
-      // 1. Add directory as a node
+      // 1) Add directory as a node
       if (isDirectory) {
         const path = currentPath ? `${currentPath}.${key}` : key;
-        nodes.push({ data: { id: path, path, label: path, isIntrinsic: true }, group: 'nodes' });
+        nodes.push({
+          data: { id: path, path, label: path, isIntrinsic: true },
+          group: 'nodes',
+        });
 
-        // Add subdirectories recursively
+        // Recurse into subdirectories
         return buildGraphRecursively(dirOrFile as IDirectory, path, nodes, edges);
       }
-      // 2. Add file imports with cummulative weight as edges (package perspective)
-      else {
-        const source = (dirOrFile as IFile).package;
-        const targets = (dirOrFile as IFile).imports.map(imp => imp.pkg);
-        console.log('source/target', source, targets.join(','));
-        targets.forEach(target => {
-          const edgeId = `${source}->${target}`;
-          const isExistingEdge = !!edges.get(edgeId);
-          const weight: IPkgEdgeData['weight'] = isExistingEdge
-            ? edges.get(edgeId)?.data.weight + 1
-            : 1;
-          const data: IPkgEdgeData = { source, target, weight };
 
-          // Set new or override existing edge
-          edges.set(edgeId, { data, group: 'edges' });
-        });
-      }
+      // 2) Aggregate file imports as weighted package edges (package perspective)
+      const file = dirOrFile as IFile;
+      const source = file.package?.trim();
+      if (!source) return; // skip empty/default package ids
+
+      const targets = (file.imports ?? [])
+        .map(imp => imp.pkg?.trim())
+        .filter((t): t is string => !!t);
+
+      targets.forEach(target => {
+        if (target === source) return; // skip self-edges at package level
+
+        const edgeId = `${source}->${target}`;
+        const existing = edges.get(edgeId);
+        const prev = (existing?.data as IPkgEdgeData | undefined)?.weight ?? 0;
+        const weight: IPkgEdgeData['weight'] = prev + 1;
+
+        const data: IPkgEdgeData = { source, target, weight };
+        edges.set(edgeId, { data, group: 'edges' });
+      });
     });
 
     return { nodes, edges };
@@ -50,15 +61,18 @@ export function buildGraph(dir: IDirectory) {
 
   const rawElements: IRawElementsDefinition = buildGraphRecursively(dir);
 
-  // Add vendor packages (edge source|target which is not in 'nodes' already)
+  // Add vendor packages (edge source/target not already in 'nodes')
   rawElements.edges.forEach(({ data: { source, target } }) => {
     [source, target].forEach(maybeNode => {
-      // Node already defined while handling 'src/main/java' dir (no vendor package)
-      if (rawElements.nodes.find(node => node.data.id === maybeNode)) return;
+      const id = String(maybeNode ?? '').trim();
+      if (!id) return; // don't create a node with empty id
+
+      // Node already defined while handling intrinsic directories
+      if (rawElements.nodes.find(node => node.data.id === id)) return;
 
       // Add vendor node: 'isIntrinsic' is not set (vendor package)
       rawElements.nodes.push({
-        data: { id: maybeNode, label: maybeNode, path: maybeNode },
+        data: { id, label: id, path: id },
         group: 'nodes',
       });
     });

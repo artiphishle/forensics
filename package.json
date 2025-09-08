@@ -1,5 +1,5 @@
 {
-  "name": "forensics",
+  "name": "@artiphishle/forensics",
   "bin": {
     "forensics": "bin/forensics.ts"
   },

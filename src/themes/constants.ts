@@ -1,5 +1,5 @@
 import type { LayoutOptions } from 'cytoscape';
-import type { CytoscapeLayout } from '@/contexts/SettingsContext';
+import type { CytoscapeLayout } from '@/themes/types';
 
 import { layout as breadthfirstLayout } from '@/themes/basic/breadthfirst/layout';
 import { layout as circleLayout } from '@/themes/basic/circle/layout';

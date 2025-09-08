@@ -1,9 +1,13 @@
 'use server';
-import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
-import { detectLanguage } from '@/utils/detectLanguage';
 import type { ILanguageDetectionResult } from '@/utils/detectLanguage.types';
 import type { IDirectory } from '@/types/types';
-import { getCyclicPackages } from '@/utils/cytoscape/rules/markCyclicPackages';
+
+import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
+import { detectLanguage } from '@/utils/detectLanguage';
+import {
+  getPackageCyclesWithMembers,
+  PackageCycleDetail,
+} from '@/utils/cytoscape/rules/markCyclicPackages';
 
 /**
  * Returns audit for JSON or XML exports
@@ -19,12 +23,12 @@ export async function getAudit() {
 
   const language = await detectLanguage(projectPath);
   const files = await getParsedFileStructure();
-  const cyclicPackages = getCyclicPackages(files);
+  const cyclicPackages = getPackageCyclesWithMembers(files).cycles;
 
   // 1. Build audit object
   const audit: Partial<IAudit> = {
     evaluation: {
-      cyclicPackages: Array.from(cyclicPackages),
+      cyclicPackages,
     },
     files,
     meta: {
@@ -49,7 +53,7 @@ interface IAuditMeta {
 
 export interface IAudit {
   readonly evaluation: {
-    readonly cyclicPackages: string[];
+    readonly cyclicPackages: PackageCycleDetail[];
   };
   readonly meta: IAuditMeta;
   readonly files: IDirectory;

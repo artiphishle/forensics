@@ -1,4 +1,5 @@
-import { CytoscapeLayout } from '@/contexts/SettingsContext';
+import type { CytoscapeLayout } from '@/themes/types';
+
 import { getStyle as getBreadthfirstStyle } from '@/themes/basic/breadthfirst/style';
 import { getStyle as getCircleStyle } from '@/themes/basic/circle/style';
 import { getStyle as getConcentricStyle } from '@/themes/basic/concentric/style';
