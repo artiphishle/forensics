@@ -5,6 +5,7 @@ import {
   getCytoscapeLayoutSpacing,
   getShowSubPackages,
   getShowVendorPackages,
+  getSubPackageDepth,
 } from '@/utils/parseEnv';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
@@ -13,6 +14,10 @@ const SettingsContext = createContext<ISettingsContext | null>(null);
 
 // Settings provider
 export const SettingsProvider = ({ children }: PropsWithChildren) => {
+  const [maxSubPackageDepth, setMaxSubPackageDepth] = useLocalStorage<number | null>(
+    'maxSubPackageDepth',
+    null
+  );
   const [showSubPackages, setShowSubPackages] = useLocalStorage<boolean>(
     'showSubPackages',
     getShowSubPackages()
@@ -20,6 +25,10 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
   const [showVendorPackages, setShowVendorPackages] = useLocalStorage<boolean>(
     'showVendorPackages',
     getShowVendorPackages()
+  );
+  const [subPackageDepth, setSubPackageDepth] = useLocalStorage<number>(
+    'showVendorPackages',
+    getSubPackageDepth()
   );
   const [cytoscapeLayout, setCytoscapeLayout] = useLocalStorage<CytoscapeLayout>(
     'cytoscapeLayout',
@@ -38,10 +47,14 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
       value={{
         cytoscapeLayout,
         cytoscapeLayoutSpacing,
+        maxSubPackageDepth,
         showSubPackages,
         showVendorPackages,
+        subPackageDepth,
         setCytoscapeLayout,
         setCytoscapeLayoutSpacing,
+        setMaxSubPackageDepth,
+        setSubPackageDepth,
         toggleShowSubPackages,
         toggleShowVendorPackages,
       }}
@@ -61,10 +74,14 @@ export function useSettings() {
 interface ISettingsContext {
   readonly cytoscapeLayout: CytoscapeLayout;
   readonly cytoscapeLayoutSpacing: number;
+  readonly maxSubPackageDepth: number | null;
   readonly showSubPackages: boolean;
+  readonly subPackageDepth: number;
   readonly showVendorPackages: boolean;
   readonly setCytoscapeLayout: (layout: CytoscapeLayout) => void;
   readonly setCytoscapeLayoutSpacing: (layoutSpacing: number) => void;
+  readonly setMaxSubPackageDepth: (depth: number | null) => void;
+  readonly setSubPackageDepth: (depth: number) => void;
   readonly toggleShowSubPackages: () => void;
   readonly toggleShowVendorPackages: () => void;
 }

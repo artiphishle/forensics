@@ -12,10 +12,13 @@ export default function Settings() {
   const {
     cytoscapeLayout,
     cytoscapeLayoutSpacing,
+    maxSubPackageDepth,
     showSubPackages,
     showVendorPackages,
+    subPackageDepth,
     setCytoscapeLayout,
     setCytoscapeLayoutSpacing,
+    setSubPackageDepth,
     toggleShowSubPackages,
     toggleShowVendorPackages,
   } = useSettings();
@@ -50,17 +53,6 @@ export default function Settings() {
       </div>
 
       <h3>{t('settings.filter')}</h3>
-      {/* Whether to show sub packages */}
-      <Setting>
-        <Switch
-          id="switch-show-sub-packages"
-          label={t('settings.showSubPackages')}
-          onToggle={() => {
-            toggleShowSubPackages();
-          }}
-          value={showSubPackages}
-        />
-      </Setting>
       {/* Whether to show vendor packages */}
       <Setting>
         <Switch
@@ -72,6 +64,42 @@ export default function Settings() {
           value={showVendorPackages}
         />
       </Setting>
+
+      {/* Whether to show sub packages */}
+      <Setting>
+        <Switch
+          id="switch-show-sub-packages"
+          label={t('settings.showSubPackages')}
+          onToggle={() => {
+            toggleShowSubPackages();
+          }}
+          value={showSubPackages}
+        />
+      </Setting>
+
+      {/* How many sub package levels to show */}
+      {!showSubPackages && (
+        <>
+          <h3>{`${t('settings.subPackageDepth')}: ${subPackageDepth}/${maxSubPackageDepth}`}</h3>
+          <Setting>
+            <Slider.Root
+              id="spacing"
+              min={1}
+              max={maxSubPackageDepth || 10}
+              step={1}
+              value={[subPackageDepth]}
+              onValueChange={([v]) => setSubPackageDepth(Number(v.toFixed(1)))}
+              aria-label="Subpackage depth"
+              className="relative flex h-5 w-56 touch-none select-none items-center"
+            >
+              <Slider.Track className="relative h-1.5 grow rounded-full bg-neutral-200 dark:bg-neutral-800">
+                <Slider.Range className="absolute h-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />
+              </Slider.Track>
+              <Slider.Thumb className="block h-4 w-4 rounded-full border border-neutral-300 bg-white shadow focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-neutral-600 dark:bg-neutral-100" />
+            </Slider.Root>
+          </Setting>
+        </>
+      )}
 
       <h3>{t('settings.layout')}</h3>
       {/* Which Cytoscape layout style */}

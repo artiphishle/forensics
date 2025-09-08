@@ -55,3 +55,15 @@ export const getShowVendorPackages = () => {
 
   return env === true ? true : false;
 };
+
+/**
+ * How many subpackage levels to show
+ */
+export const getSubPackageDepth = () => {
+  const env = parseEnv(
+    'NEXT_PUBLIC_SETTINGS_SUBPACKAGE_DEPTH',
+    process.env.NEXT_PUBLIC_SETTINGS_SUBPACKAGE_DEPTH
+  );
+
+  return isNaN(Number(env)) ? 1 : Number(env);
+};

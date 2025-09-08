@@ -1,11 +1,6 @@
 'use client';
 import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
-import { layout as breadthfirstLayout } from '@/themes/basic/breadthfirst/layout';
-import { layout as circleLayout } from '@/themes/basic/circle/layout';
-import { layout as concentricLayout } from '@/themes/basic/concentric/layout';
-import { layout as gridLayout } from '@/themes/basic/grid/layout';
-import { layout as klayLayout } from '@/themes/basic/klay/layout';
 import { getStyle as getCommonStyle, getCanvasBg } from '@/themes/basic/style';
 import { getStyle as getBreadthfirstStyle } from '@/themes/basic/breadthfirst/style';
 import { getStyle as getCircleStyle } from '@/themes/basic/circle/style';
@@ -22,18 +17,12 @@ import cytoscape, {
 } from 'cytoscape';
 import { CytoscapeLayout, useSettings } from '@/contexts/SettingsContext';
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
-import { filterSubPackages } from '@/utils/filter/filterSubPackages';
+// import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
 import { hasChildren } from '@/utils/cytoscape/hasChildren';
 import { filterEmptyPackages } from '@/utils/filter/filterEmptyPackages';
-
-const Layout = {
-  breadthfirst: breadthfirstLayout,
-  circle: circleLayout,
-  concentric: concentricLayout,
-  grid: gridLayout,
-  klay: klayLayout,
-} as const;
+import { LAYOUTS } from '@/themes/constants';
+import { filterSubPackagesByDepth, getMaxDepth } from '@/utils/filter/filterSubPackagesFromDepth';
 
 export function useCytograph(
   elements: ElementsDefinition | null,
@@ -43,8 +32,14 @@ export function useCytograph(
   const cyRef = useRef<HTMLDivElement>(null);
   const [filteredElements, setFilteredElements] = useState<ElementsDefinition | null>(null);
   const [cyInstance, setCyInstance] = useState<Core | null>(null);
-  const { cytoscapeLayout, cytoscapeLayoutSpacing, showSubPackages, showVendorPackages } =
-    useSettings();
+  const {
+    cytoscapeLayout,
+    cytoscapeLayoutSpacing,
+    showSubPackages,
+    showVendorPackages,
+    subPackageDepth,
+    setMaxSubPackageDepth,
+  } = useSettings();
 
   const { resolvedTheme } = useTheme();
   const theme = (resolvedTheme === 'dark' ? 'dark' : 'light') as 'dark' | 'light';
@@ -53,7 +48,10 @@ export function useCytograph(
     if (!elements) return;
 
     const afterPkgFilter = filterByPackagePrefix(elements, currentPackage.replace(/\//g, '.'));
-    const afterSubPkgFilter = showSubPackages ? afterPkgFilter : filterSubPackages(afterPkgFilter);
+    const afterSubPkgFilter = showSubPackages
+      ? afterPkgFilter
+      : filterSubPackagesByDepth(afterPkgFilter, false, subPackageDepth);
+    // const afterSubPkgFilter = showSubPackages ? afterPkgFilter : filterSubPackages(afterPkgFilter);
     const afterVendorPkgFilter = showVendorPackages
       ? afterSubPkgFilter
       : filterVendorPackages(afterSubPkgFilter);
@@ -79,7 +77,16 @@ export function useCytograph(
     };
 
     setFilteredElements(finalElements);
-  }, [elements, currentPackage, setCurrentPackage, showSubPackages, showVendorPackages]);
+    setMaxSubPackageDepth(getMaxDepth(elements));
+  }, [
+    elements,
+    currentPackage,
+    setCurrentPackage,
+    showSubPackages,
+    showVendorPackages,
+    subPackageDepth,
+    setMaxSubPackageDepth,
+  ]);
 
   // Resize -> fit
   useEffect(() => {
@@ -107,7 +114,7 @@ export function useCytograph(
 
     const cy = cytoscape({
       layout: {
-        ...Layout[cytoscapeLayout as CytoscapeLayout],
+        ...LAYOUTS[cytoscapeLayout as CytoscapeLayout],
         spacingFactor: cytoscapeLayoutSpacing,
       } as LayoutOptions,
       // IMPORTANT: pass theme into your style getter
