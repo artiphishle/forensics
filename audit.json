@@ -652,57 +652,43 @@
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [
-                ""
-              ],
+              "parameters": [""],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [
-                ""
-              ],
+              "parameters": [""],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [
-                ""
-              ],
+              "parameters": [""],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [
-                ""
-              ],
+              "parameters": [""],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [
-                ""
-              ],
+              "parameters": [""],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [
-                "layout"
-              ],
+              "parameters": ["layout"],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [
-                "layout"
-              ],
+              "parameters": ["layout"],
               "visibility": "default"
             }
           ],
@@ -789,9 +775,7 @@
             {
               "name": "setZoom",
               "returnType": "void",
-              "parameters": [
-                "parseFloat"
-              ],
+              "parameters": ["parseFloat"],
               "visibility": "default"
             }
           ],
@@ -3314,11 +3298,7 @@
     "language": {
       "language": "typescript",
       "confidence": 0.6,
-      "indicators": [
-        "tsconfig.json",
-        ".ts/.tsx files",
-        "typescript dependency"
-      ]
+      "indicators": ["tsconfig.json", ".ts/.tsx files", "typescript dependency"]
     },
     "projectName": "forensics",
     "timeStart": 1757354293505,
