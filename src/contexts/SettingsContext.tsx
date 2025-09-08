@@ -69,4 +69,4 @@ interface ISettingsContext {
   readonly toggleShowVendorPackages: () => void;
 }
 
-export type CytoscapeLayout = 'breadthfirst' | 'circle' | 'concentric' | 'grid';
+export type CytoscapeLayout = 'breadthfirst' | 'circle' | 'concentric' | 'grid' | 'klay';

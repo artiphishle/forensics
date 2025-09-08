@@ -2,17 +2,20 @@
 import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
 import { layout as breadthfirstLayout } from '@/themes/basic/breadthfirst/layout';
+import { layout as circleLayout } from '@/themes/basic/circle/layout';
 import { layout as concentricLayout } from '@/themes/basic/concentric/layout';
 import { layout as gridLayout } from '@/themes/basic/grid/layout';
-import { layout as circleLayout } from '@/themes/basic/circle/layout';
+import { layout as klayLayout } from '@/themes/basic/klay/layout';
 import { getStyle as getCommonStyle, getCanvasBg } from '@/themes/basic/style';
 import { getStyle as getBreadthfirstStyle } from '@/themes/basic/breadthfirst/style';
+import { getStyle as getCircleStyle } from '@/themes/basic/circle/style';
 import { getStyle as getConcentricStyle } from '@/themes/basic/concentric/style';
 import { getStyle as getGridStyle } from '@/themes/basic/grid/style';
-import { getStyle as getCircleStyle } from '@/themes/basic/circle/style';
+import { getStyle as getKlayStyle } from '@/themes/basic/klay/style';
 
 import cytoscape, {
   Core,
+  LayoutOptions,
   type ElementsDefinition,
   type NodeDataDefinition,
   type NodeDefinition,
@@ -29,6 +32,7 @@ const Layout = {
   circle: circleLayout,
   concentric: concentricLayout,
   grid: gridLayout,
+  klay: klayLayout,
 } as const;
 
 export function useCytograph(
@@ -97,13 +101,15 @@ export function useCytograph(
           ? getCircleStyle
           : cytoscapeLayout === 'grid'
             ? getGridStyle
-            : getConcentricStyle;
+            : cytoscapeLayout === 'klay'
+              ? getKlayStyle
+              : getConcentricStyle;
 
     const cy = cytoscape({
       layout: {
         ...Layout[cytoscapeLayout as CytoscapeLayout],
         spacingFactor: cytoscapeLayoutSpacing,
-      },
+      } as LayoutOptions,
       // IMPORTANT: pass theme into your style getter
       style: [...getLayoutStyle(), ...getCommonStyle(filteredElements, theme)],
       container: cyRef.current,

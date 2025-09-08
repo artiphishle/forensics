@@ -5,4 +5,5 @@ export const CYTOSCAPE_LAYOUTS: CytoscapeLayout[] = [
   'circle',
   'concentric',
   'grid',
+  'klay',
 ] as const;

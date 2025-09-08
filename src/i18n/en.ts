@@ -20,6 +20,7 @@ const en: ILanguage = {
   circle: 'Circle',
   concentric: 'Concentric',
   grid: 'Grid',
+  klay: 'Klay',
 };
 
 export default en;
