@@ -24,10 +24,10 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
   }, [zoom, cyInstance]);
 
   return (
-    <div className="p-4 flex items-center justify-center gap-2 text-foreground bg-background dark:bg-gray-950 border-t border-t-gray-200 dark:border-t-gray-800">
+    <div className="p-4 flex items-center justify-center gap-2 border-t border-t-gray-200 dark:border-t-gray-800">
       <label htmlFor="zoom">Zoom:</label>
-      <button title="Zoom to fit" onClick={() => setZoom(zoomToFit)}>
-        <CircleDotDashedIcon className="text-foreground dark:text-background cursor-pointer" />
+      <button className="" title="Zoom to fit" onClick={() => setZoom(zoomToFit)}>
+        <CircleDotDashedIcon className="cursor-pointer" />
       </button>
       <input
         id="zoom"
@@ -39,7 +39,7 @@ export default function ZoomInput({ cyInstance }: IZoomInput) {
         onChange={e => setZoom(parseFloat(e.target.value))}
         className="w-64"
       />
-      <span className="text-sm text-gray-500">{(zoom * 100).toFixed(0)}%</span>
+      <span className="text-sm">{(zoom * 100).toFixed(0)}%</span>
     </div>
   );
 }

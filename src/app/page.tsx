@@ -1,4 +1,6 @@
 'use client';
+import type { ElementsDefinition } from 'cytoscape';
+
 import { useEffect, useState } from 'react';
 import Breadcrumb from '@/components/Breadcrumb';
 import ZoomInput from '@/components/ZoomInput';
@@ -7,7 +9,6 @@ import Main from '@/components/Main';
 import Loader from '@/components/Loader';
 import { getJson } from '@/utils/getJson';
 import { useCytograph } from '@/hooks/useCytoscape';
-import type { ElementsDefinition } from 'cytoscape';
 
 export default function Home() {
   const [packageGraph, setPackageGraph] = useState<ElementsDefinition | null>(null);

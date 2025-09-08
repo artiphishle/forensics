@@ -9,7 +9,7 @@ describe('[getIntrinsicPackagesRecursive]', () => {
     const projectPath = process.env.NEXT_PUBLIC_PROJECT_PATH;
     if (!projectPath) throw new Error('no project env');
 
-    const intrinsicPackages = await getIntrinsicPackagesRecursive(projectPath);
+    const intrinsicPackages = (await getIntrinsicPackagesRecursive(projectPath)).sort();
 
     expect(intrinsicPackages.length).toBe(4);
     expect(intrinsicPackages[0]).toBe('com.example.myapp.a');

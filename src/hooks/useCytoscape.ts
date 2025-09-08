@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { layout as concentricLayout } from '@/themes/basic/concentric/layout';
 import { layout as gridLayout } from '@/themes/basic/grid/layout';
 import { layout as circleLayout } from '@/themes/basic/circle/layout';
-import { getStyle as getCommonStyle } from '@/themes/basic/style';
+import { getStyle as getCommonStyle, getCanvasBg } from '@/themes/basic/style'; // <- export getBg + accept theme
 import { getStyle as getConcentricStyle } from '@/themes/basic/concentric/style';
 import { getStyle as getGridStyle } from '@/themes/basic/grid/style';
 import { getStyle as getCircleStyle } from '@/themes/basic/circle/style';
@@ -15,6 +15,7 @@ import cytoscape, {
   type NodeDefinition,
 } from 'cytoscape';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useTheme } from 'next-themes'; // <- listen to theme
 import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
@@ -25,7 +26,7 @@ const Layout = {
   circle: circleLayout,
   concentric: concentricLayout,
   grid: gridLayout,
-};
+} as const;
 
 export function useCytograph(
   elements: ElementsDefinition | null,
@@ -38,26 +39,25 @@ export function useCytograph(
   const { showSubPackages, showVendorPackages } = useSettings();
   const [layout] = useState(process.env.NEXT_PUBLIC_SETTINGS_LAYOUT || 'grid');
 
-  // Handle package filtering
+  const { resolvedTheme } = useTheme();
+  const theme = (resolvedTheme === 'dark' ? 'dark' : 'light') as 'dark' | 'light';
+
   useEffect(() => {
     if (!elements) return;
 
-    // 1. current package prefix
     const afterPkgFilter = filterByPackagePrefix(elements, currentPackage.replace(/\//g, '.'));
-    // 2. show/hide sub packages
     const afterSubPkgFilter = showSubPackages ? afterPkgFilter : filterSubPackages(afterPkgFilter);
-    // 3. show/hide vendor packages
     const afterVendorPkgFilter = showVendorPackages
       ? afterSubPkgFilter
       : filterVendorPackages(afterSubPkgFilter);
-    // 4. Update currentPath if only one package inside
+
     const nonEmptyCurrentPackage = filterEmptyPackages(currentPackage, afterVendorPkgFilter);
     if (nonEmptyCurrentPackage !== currentPackage) {
       setCurrentPackage(nonEmptyCurrentPackage);
       return;
     }
-    // 5. Shorten label by currentPackage
-    const finalElements = {
+
+    const finalElements: ElementsDefinition = {
       nodes: afterVendorPkgFilter.nodes.map(node => {
         const label = !currentPackage.length
           ? node.data.id!
@@ -74,35 +74,26 @@ export function useCytograph(
     setFilteredElements(finalElements);
   }, [elements, currentPackage, setCurrentPackage, showSubPackages, showVendorPackages]);
 
-  // Handle resize events
+  // Resize -> fit
   useEffect(() => {
     if (!cyRef.current || !cyInstance) return;
-    const handleResize = () => {
-      cyInstance.fit();
-    };
-    const observer = new ResizeObserver(() => {
-      requestAnimationFrame(handleResize);
-    });
+    const handleResize = () => cyInstance.fit();
+    const observer = new ResizeObserver(() => requestAnimationFrame(handleResize));
     observer.observe(cyRef.current);
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [cyRef, cyInstance]);
 
-  // Setup Cytoscape, events, and interactions
+  // Init Cytoscape
   useEffect(() => {
     if (!cyRef.current || !elements || !filteredElements) return;
-
-    filteredElements.nodes.forEach(n => {
-      console.log(n.data.id?.split('.')[3]);
-    });
 
     const getLayoutStyle =
       layout === 'circle' ? getCircleStyle : layout === 'grid' ? getGridStyle : getConcentricStyle;
 
     const cy = cytoscape({
-      layout: Layout[layout as 'circle' | 'concentric' | 'grid'],
-      style: [...getCommonStyle(filteredElements), ...getLayoutStyle()],
+      layout: Layout[layout as 'circle' | 'grid' | 'concentric'],
+      // IMPORTANT: pass theme into your style getter
+      style: [...getLayoutStyle(), ...getCommonStyle(filteredElements, theme)],
       container: cyRef.current,
       elements: filteredElements,
       selectionType: 'additive',
@@ -112,60 +103,35 @@ export function useCytograph(
     });
 
     setCyInstance(cy);
+    cyRef.current.style.background = getCanvasBg(theme);
 
-    /**
-     * Central function to update highlights based on the current selection.
-     * This handles nodes, edges, and summarization for multi-selection.
-     */
     const updateHighlights = () => {
       const selectedNodes = cy.nodes(':selected');
-      const allElements = cy.elements();
-
-      // First, reset the state by removing all related classes from all elements.
-      allElements.removeClass('hushed highlight highlight-outgoer highlight-incomer');
-
-      // If nothing is selected, leave the graph in its default, fully visible state.
+      const all = cy.elements();
+      all.removeClass('hushed highlight highlight-outgoer highlight-incomer');
       if (selectedNodes.empty()) return;
-
-      // The .neighborhood() method gets neighbor nodes AND the edges connecting to them.
-      // We union this with the selected nodes to get the full set of elements to keep visible.
-      const unhushedCollection = selectedNodes.union(selectedNodes.neighborhood());
-
-      // "Hush" all elements (nodes and edges) that are NOT in our unhushed collection.
-      allElements.difference(unhushedCollection).addClass('hushed');
-
-      // --- Apply Specific Highlights ---
-
-      // 1. Highlight the selected nodes themselves.
+      const keep = selectedNodes.union(selectedNodes.neighborhood());
+      all.difference(keep).addClass('hushed');
       selectedNodes.addClass('highlight');
-
-      // 2. Highlight outgoing elements. .outgoers() returns both the outgoing EDGES and their target NODES
       selectedNodes.outgoers().addClass('highlight-outgoer');
-
-      // 3. Highlight incoming elements. .incomers() returns both the incoming EDGES and their source NODES
       selectedNodes.incomers().addClass('highlight-incomer');
     };
 
-    // Add listeners to run our highlight logic whenever the selection changes.
-    cy.on('select', 'node', updateHighlights);
-    cy.on('unselect', 'node', updateHighlights);
+    cy.on('select unselect', 'node', updateHighlights);
 
     cy.ready(() => {
       cy.nodes()
         .filter(node => !!(node.data as NodeDataDefinition).isParent)
-        .addClass('is-parent');
+        .addClass('isParent');
     });
 
-    // Interactions
     cy.on('mouseover', 'node', event => {
       const node = event.target;
       const rawNode = filteredElements.nodes.find(
         elm => elm.data.id === node.data().id
       ) as NodeDefinition;
-
       if (hasChildren(rawNode, elements.nodes)) document.body.style.cursor = 'pointer';
 
-      // Temporarily highlight hovered node and its direct connections
       cy.elements()
         .subtract(node.outgoers())
         .subtract(node.incomers())
@@ -178,22 +144,20 @@ export function useCytograph(
 
     cy.on('mouseout', 'node', () => {
       document.body.style.cursor = 'default';
-      // On mouseout, we restore the view to reflect the persistent selection state.
       updateHighlights();
     });
 
     let highlightDelay: ReturnType<typeof setTimeout>;
-    cy.on('mouseover', 'edge', event => {
-      const edge = event.target;
+    cy.on('mouseover', 'edge', e => {
+      const edge = e.target;
       edge.addClass('highlight-dependency');
       highlightDelay = setTimeout(() => {
         edge.source().addClass('highlight-dependency');
         edge.target().addClass('highlight-dependency');
       }, 150);
     });
-
-    cy.on('mouseout', 'edge', event => {
-      const edge = event.target;
+    cy.on('mouseout', 'edge', e => {
+      const edge = e.target;
       edge.removeClass('highlight-dependency');
       clearTimeout(highlightDelay);
       edge.source().removeClass('highlight-dependency');
@@ -204,20 +168,23 @@ export function useCytograph(
       const rawNode = filteredElements.nodes.find(
         elm => elm.data.id === node.data().id
       ) as NodeDefinition;
-
       if (!hasChildren(rawNode, elements.nodes)) return;
-
       node.addClass('isParent');
-      node.addListener('dblclick', () => {
-        setCurrentPackage(node.id().replace(/\./g, '/'));
-      });
+      node.on('dblclick', () => setCurrentPackage(node.id().replace(/\./g, '/')));
     });
 
     return () => {
       cy.destroy();
       setCyInstance(null);
     };
-  }, [elements, filteredElements, setCurrentPackage]);
+  }, [elements, filteredElements, layout, theme, setCurrentPackage]);
+
+  // Theme live update: Restyle without re-creating the instance
+  useEffect(() => {
+    if (!cyInstance || !filteredElements || !cyRef.current) return;
+    cyInstance.style([...getCommonStyle(filteredElements, theme)]).update();
+    cyRef.current.style.background = getCanvasBg(theme);
+  }, [cyInstance, filteredElements, theme]);
 
   return { cyRef, cyInstance };
 }
