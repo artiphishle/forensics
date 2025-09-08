@@ -6,7 +6,29 @@ export const parseEnv = (name: string, value: string | undefined) => {
   if (!value) return undefined;
   if (value === 'true') return true;
   if (value === 'false') return false;
-  throw new Error(`Invalid ENV value for: ${name}`);
+  return value;
+};
+
+/**
+ * Which Cytoscape layout to use
+ * @default concentric
+ */
+export const getCytoscapeLayout = () => {
+  const env = parseEnv('NEXT_PUBLIC_SETTINGS_LAYOUT', process.env.NEXT_PUBLIC_SETTINGS_LAYOUT);
+  return env === 'grid' ? 'grid' : env === 'circle' ? 'circle' : 'concentric';
+};
+
+/**
+ * Which Cytoscape layout spacing to use
+ * @default 1
+ */
+export const getCytoscapeLayoutSpacing = () => {
+  const env = parseEnv(
+    'NEXT_PUBLIC_SETTINGS_LAYOUT_SPACING',
+    process.env.NEXT_PUBLIC_SETTINGS_LAYOUT_SPACING
+  );
+
+  return isNaN(Number(env)) ? 1 : Number(env);
 };
 
 /**

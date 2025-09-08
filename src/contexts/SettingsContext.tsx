@@ -1,6 +1,11 @@
 'use client';
 import React, { createContext, use, useState, type PropsWithChildren } from 'react';
-import { getShowSubPackages, getShowVendorPackages } from '@/utils/parseEnv';
+import {
+  getCytoscapeLayout,
+  getCytoscapeLayoutSpacing,
+  getShowSubPackages,
+  getShowVendorPackages,
+} from '@/utils/parseEnv';
 
 // Settings context
 const SettingsContext = createContext<ISettingsContext | null>(null);
@@ -9,6 +14,10 @@ const SettingsContext = createContext<ISettingsContext | null>(null);
 export const SettingsProvider = ({ children }: PropsWithChildren) => {
   const [showSubPackages, setShowSubPackages] = useState(getShowSubPackages());
   const [showVendorPackages, setShowVendorPackages] = useState(getShowVendorPackages());
+  const [cytoscapeLayout, setCytoscapeLayout] = useState<CytoscapeLayout>(getCytoscapeLayout());
+  const [cytoscapeLayoutSpacing, setCytoscapeLayoutSpacing] = useState<number>(
+    getCytoscapeLayoutSpacing()
+  );
 
   const toggleShowSubPackages = () => setShowSubPackages(prev => !prev);
   const toggleShowVendorPackages = () => setShowVendorPackages(prev => !prev);
@@ -16,9 +25,13 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
   return (
     <SettingsContext
       value={{
+        cytoscapeLayout,
+        cytoscapeLayoutSpacing,
         showSubPackages,
-        toggleShowSubPackages,
         showVendorPackages,
+        setCytoscapeLayout,
+        setCytoscapeLayoutSpacing,
+        toggleShowSubPackages,
         toggleShowVendorPackages,
       }}
     >
@@ -35,8 +48,14 @@ export function useSettings() {
 }
 
 interface ISettingsContext {
-  showSubPackages: boolean;
-  showVendorPackages: boolean;
-  toggleShowSubPackages: () => void;
-  toggleShowVendorPackages: () => void;
+  readonly cytoscapeLayout: CytoscapeLayout;
+  readonly cytoscapeLayoutSpacing: number;
+  readonly showSubPackages: boolean;
+  readonly showVendorPackages: boolean;
+  readonly setCytoscapeLayout: (layout: CytoscapeLayout) => void;
+  readonly setCytoscapeLayoutSpacing: (layoutSpacing: number) => void;
+  readonly toggleShowSubPackages: () => void;
+  readonly toggleShowVendorPackages: () => void;
 }
+
+export type CytoscapeLayout = 'circle' | 'concentric' | 'grid';

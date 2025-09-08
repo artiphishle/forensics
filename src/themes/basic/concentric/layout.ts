@@ -6,7 +6,4 @@ export const layout: ConcentricLayoutOptions = {
   fit: true,
   name: 'concentric',
   padding: 30,
-
-  // Increase the circle radius
-  spacingFactor: 1.5,
 };
