@@ -1,10 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+const config = {
+  darkMode: 'class',
   content: ['./app/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {},
-  },
-  plugins: {
-    '@tailwindcss/postcss': {},
-  },
+  theme: {},
+  plugins: [], // ← your previous plugins field was not in the right shape
 };
+
+export default config;

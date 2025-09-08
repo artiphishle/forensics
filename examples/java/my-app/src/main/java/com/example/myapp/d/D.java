@@ -1,5 +1,7 @@
 package com.example.myapp.d;
 
 public class D {
-  System.out.println('D');
+  static {
+    System.out.println('D');
+  }
 }
