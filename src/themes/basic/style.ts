@@ -7,7 +7,6 @@ const palette = {
   light: {
     canvasBg: '#ffffff',
     edge: '#9E9E9E',
-    edgeMuted: '#D6D6D6',
     weightXs: '#B0B0B0',
     weightMd: '#7A7A7A',
     weightXl: '#424242',
@@ -23,7 +22,6 @@ const palette = {
   dark: {
     canvasBg: '#171717',
     edge: '#707070',
-    edgeMuted: '#454545',
     weightXs: '#5A5A5A',
     weightMd: '#8A8A8A',
     weightXl: '#C0C0C0',
@@ -97,10 +95,14 @@ export function getStyle(filteredElements: ElementsDefinition, theme: ThemeKey):
     {
       selector: 'edge',
       style: {
-        'arrow-scale': 2,
-        'line-color': colors.edge,
+        'arrow-scale': 1,
+        'source-arrow-color': colors.edge,
         'target-arrow-color': colors.edge,
-        'source-arrow-color': colors.edge, // if you use source arrows
+        'source-arrow-shape': 'chevron',
+        'target-arrow-shape': 'chevron',
+        'source-arrow-fill': 'filled',
+        'target-arrow-fill': 'filled',
+        'line-color': colors.edge,
         'curve-style': 'bezier',
         opacity: 1,
         'line-opacity': 1,
@@ -111,9 +113,9 @@ export function getStyle(filteredElements: ElementsDefinition, theme: ThemeKey):
       style: {
         opacity: 0.2, // affects the entire edge (incl. arrows)
         'line-opacity': 0.4, // extra fade for the stroke
-        'line-color': colors.edgeMuted,
-        'target-arrow-color': colors.edgeMuted,
-        'source-arrow-color': colors.edgeMuted,
+        'line-color': colors.edge,
+        'target-arrow-color': colors.edge,
+        'source-arrow-color': colors.edge,
       },
     },
     {
