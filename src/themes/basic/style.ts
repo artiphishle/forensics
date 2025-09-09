@@ -96,11 +96,8 @@ export function getStyle(filteredElements: ElementsDefinition, theme: ThemeKey):
       selector: 'edge',
       style: {
         'arrow-scale': 1,
-        'source-arrow-color': colors.edge,
         'target-arrow-color': colors.edge,
-        'source-arrow-shape': 'chevron',
         'target-arrow-shape': 'chevron',
-        'source-arrow-fill': 'filled',
         'target-arrow-fill': 'filled',
         'line-color': colors.edge,
         'curve-style': 'bezier',
