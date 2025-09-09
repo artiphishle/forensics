@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import ThemeToggle from './ThemeToggle';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Header({ children, title }: IHeader) {
   const projectPath = process.env.NEXT_PUBLIC_PROJECT_PATH || '{Unknown}';

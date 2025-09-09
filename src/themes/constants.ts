@@ -1,5 +1,4 @@
 import type { LayoutOptions } from 'cytoscape';
-import type { CytoscapeLayout } from '@/contexts/SettingsContext';
 
 import { layout as breadthfirstLayout } from '@/themes/basic/breadthfirst/layout';
 import { layout as circleLayout } from '@/themes/basic/circle/layout';
@@ -7,7 +6,7 @@ import { layout as concentricLayout } from '@/themes/basic/concentric/layout';
 import { layout as gridLayout } from '@/themes/basic/grid/layout';
 import { layout as klayLayout } from '@/themes/basic/klay/layout';
 
-export const LAYOUTS: Record<CytoscapeLayout, LayoutOptions> = {
+export const LAYOUTS: Record<LayoutOptions['name'], LayoutOptions> = {
   breadthfirst: breadthfirstLayout,
   circle: circleLayout,
   concentric: concentricLayout,

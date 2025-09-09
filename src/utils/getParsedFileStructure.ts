@@ -26,7 +26,7 @@ function resolveRoot(dir: string, detectedLanguage: ELanguage) {
       isValidJavaFileStructure(dir);
       return resolve(dir, 'src/main/java');
     case ELanguage.TypeScript:
-      return dir;
+      return resolve(dir);
     default:
       throw new Error(`Invalid file structure for ${detectedLanguage}`);
   }
@@ -42,12 +42,24 @@ export async function readDirRecursively(
   language: ELanguage
 ) {
   // 1. Read current directory
-  const ignoredDirs = ['coverage', 'node_modules', '.git', 'dist', 'build', 'out', '.next'];
-  const entries = readdirSync(dir, { withFileTypes: true }).filter(
-    entry => !ignoredDirs.includes(entry.name)
-  );
+  const entries = readdirSync(dir, { withFileTypes: true });
+  const ignores = [
+    '.cache',
+    'coverage',
+    '.git',
+    '.github',
+    'examples',
+    'packages',
+    'test',
+    '.meta',
+    'node_modules',
+    '.next',
+    '.vscode',
+  ];
 
   for (const entry of entries) {
+    if (ignores.includes(entry.name)) continue;
+
     const fullPath = join(dir, entry.name);
 
     if (language === ELanguage.Java) {
@@ -62,8 +74,9 @@ export async function readDirRecursively(
       if (entry.isDirectory())
         result[entry.name] = await readDirRecursively(fullPath, {}, '', language);
       // 2.2 Add parsed .ts{x} file
-      else if (entry.isFile() && (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')))
+      else if ((entry.isFile() && entry.name.endsWith('.ts')) || entry.name.endsWith('.tsx')) {
         result[entry.name] = await parseTypeScriptFile(fullPath, projectRoot);
+      }
     }
   }
 
@@ -79,11 +92,14 @@ export async function getParsedFileStructure(
   // 1. Detect language & filter non-supported
   const detectedLanguage = (await detectLanguage(dir)).language;
 
+  console.log('detected:', detectedLanguage);
+
   if (![ELanguage.Java, ELanguage.TypeScript].includes(detectedLanguage))
     throw new Error("Supported language is 'Java' & 'TypeScript'. More to follow.");
 
   // 2. Get validated root directory by detectedLanguage
   const rootDir = resolveRoot(dir, detectedLanguage);
+  console.log('rootDir:', rootDir);
 
   // 3. Read directory recursively
   const fileStructure = await readDirRecursively(rootDir, {}, '', detectedLanguage);

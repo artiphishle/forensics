@@ -8,18 +8,19 @@ import Header from '@/components/Header';
 import Main from '@/components/Main';
 import Loader from '@/components/Loader';
 import { getJson } from '@/utils/getJson';
-import { useCytograph } from '@/hooks/useCytoscape';
+import { useCytoscape } from '@/components/cytoscape/hooks/useCytoscape';
 
 export default function Home() {
   const [packageGraph, setPackageGraph] = useState<ElementsDefinition | null>(null);
-  const [currentPackage, setCurrentPackage] = useState<string>('');
-  const { cyRef, cyInstance } = useCytograph(packageGraph, currentPackage, setCurrentPackage);
+  const [currentPackage, setCurrentPackage] = useState<string>('src');
+  const { cyRef, cyInstance } = useCytoscape(packageGraph, currentPackage, setCurrentPackage);
 
   useEffect(() => {
     getJson<ElementsDefinition>('/api/fs/getGraph').then(setPackageGraph);
   }, []);
 
   if (!packageGraph) return <Loader />;
+  console.log('current', currentPackage);
 
   return (
     <>

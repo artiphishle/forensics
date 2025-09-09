@@ -1,7 +1,7 @@
 'use server';
 import fs from 'fs';
 import path from 'path';
-import { ELanguage, ILanguageDetectionResult } from './detectLanguage.types';
+import { ELanguage, ILanguageDetectionResult } from '@/utils/detectLanguage.types';
 
 export async function detectLanguage(directoryPath: string): Promise<ILanguageDetectionResult> {
   // Check if directory exists

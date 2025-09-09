@@ -1,12 +1,12 @@
 'use client';
 import { ChevronDownIcon, Download } from 'lucide-react';
+import { Select, Slider } from 'radix-ui';
 import React from 'react';
+import { CYTOSCAPE_LAYOUTS } from '@/components/cytoscape/constants';
 import Setting from '@/components/Setting';
 import Switch from '@/components/Switch';
 import { useSettings } from '@/contexts/SettingsContext';
 import { t } from '@/i18n/i18n';
-import { Select, Slider } from 'radix-ui';
-import { CYTOSCAPE_LAYOUTS } from '@/contexts/constants';
 
 export default function Settings() {
   const {

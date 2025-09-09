@@ -2,7 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { getIntrinsicPackagesRecursive } from '@/utils/java/getIntrinsicPackagesRecursive';
-import { extractJavaPackageFromImport } from './extractJavaPackageFromImport';
+import { extractJavaPackageFromImport } from '@/utils/java/extractJavaPackageFromImport';
 import type { IFile, IMethodCall, IMethodDefinition } from '@/types/types';
 
 /**

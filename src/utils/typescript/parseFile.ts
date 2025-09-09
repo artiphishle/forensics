@@ -1,16 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import * as ts from 'typescript';
-import { extractTypeScriptPackageFromImport } from './extractTypeScriptPackageFromImport';
+import { extractTypeScriptPackageFromImport } from '@/utils/typescript/extractTypeScriptPackageFromImport';
 import type { IFile, IMethodCall, IMethodDefinition, IJavaImport } from '@/types/types';
-
-/**
- * Extracts the package name based on folder structure relative to project root.
- */
-function extractPackageName(content: string): string {
-  const match = content.match(/@package\s+([\w.]+)/);
-  return match?.[1] ?? '';
-}
 
 /**
  * Extracts import statements from TypeScript code.
@@ -22,12 +14,12 @@ function extractImports(content: string): IJavaImport[] {
   sourceFile.forEachChild(node => {
     if (ts.isImportDeclaration(node)) {
       const moduleSpecifier = (node.moduleSpecifier as ts.StringLiteral).text;
-      const imported = moduleSpecifier.split('/').pop() ?? moduleSpecifier;
+      const replacedAlias = moduleSpecifier.replace(/^\@/, 'src');
 
       imports.push({
-        name: imported,
+        name: replacedAlias.split('/').join('.'),
         pkg: extractTypeScriptPackageFromImport(moduleSpecifier),
-        isIntrinsic: moduleSpecifier.startsWith('node:'),
+        isIntrinsic: moduleSpecifier.startsWith('@'),
       });
     }
   });
@@ -103,13 +95,15 @@ function extractMethodCalls(content: string): IMethodCall[] {
 export async function parseFile(fullPath: string, projectRoot: string): Promise<IFile> {
   const content = await fs.readFile(fullPath, 'utf-8');
   const relativePath = path.relative(projectRoot, fullPath);
+  const segments = relativePath.split('/');
+  const segmentedPath = segments.slice(0, -1);
 
   return {
     className: extractClassName(content, fullPath),
     imports: extractImports(content),
     methods: extractMethodDefinitions(content),
     calls: extractMethodCalls(content),
-    package: extractPackageName(content),
+    package: segmentedPath.join('.'),
     path: relativePath,
   };
 }

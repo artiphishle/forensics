@@ -1,100 +1,247 @@
 import type { ElementsDefinition } from 'cytoscape';
-import type { IDirectory, IFile } from '@/types/types';
+import type { IDirectory, IFile, TUniquePackageName } from '@/types/types';
 
-/**
- * Finds cyclic packages using Tarjan's algorithm
- */
-export function getCyclicPackages(root: IDirectory): Set<string> {
+export type ImportEvidence = {
+  filePath: string; // IFile.path (relative to project)
+  fileClass: string; // IFile.className
+  importName: string; // IJavaImport.name
+  isIntrinsic?: boolean; // IJavaImport.isIntrinsic
+};
+
+export type CycleEdgeEvidence = {
+  from: TUniquePackageName;
+  to: TUniquePackageName;
+  via: ImportEvidence[]; // files in `from` that import `to`
+};
+
+export type PackageCycleDetail = {
+  packages: TUniquePackageName[]; // ordered cycle incl. closing node, e.g. ["A","B","A"]
+  edges: CycleEdgeEvidence[]; // evidence aligned with packages[i] -> packages[i+1]
+};
+
+/** Collect all files from your IDirectory tree. */
+function collectFiles(root: IDirectory): IFile[] {
   const files: IFile[] = [];
-
-  function collectFiles(dir: IDirectory) {
+  const walk = (dir: IDirectory) => {
     for (const key in dir) {
-      const entry = dir[key];
-      if ('path' in entry && 'package' in entry) {
+      const entry = (dir as Record<string, unknown>)[key];
+      if (entry && typeof entry === 'object' && 'path' in entry && 'package' in entry) {
         files.push(entry as IFile);
-      } else {
-        collectFiles(entry as IDirectory);
+      } else if (entry && typeof entry === 'object') {
+        walk(entry as IDirectory);
       }
     }
-  }
+  };
+  walk(root);
+  return files;
+}
 
-  collectFiles(root);
+/** Build per-edge evidence: key "from->to" → list of ImportEvidence. */
+function buildEdgeEvidence(dir: IDirectory): Map<string, ImportEvidence[]> {
+  const files = collectFiles(dir);
+  const map = new Map<string, ImportEvidence[]>();
 
-  const graph = new Map<string, Set<string>>();
-
-  for (const file of files) {
-    const fromPkg = file.package;
-    if (!graph.has(fromPkg)) graph.set(fromPkg, new Set());
-
-    for (const imp of file.imports) {
-      if (imp.pkg !== fromPkg) graph.get(fromPkg)!.add(imp.pkg);
+  for (const f of files) {
+    const from = f.package as TUniquePackageName;
+    for (const imp of f.imports ?? []) {
+      const to = imp.pkg as TUniquePackageName;
+      if (!to || to === from) continue;
+      const key = `${from}->${to}`;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push({
+        filePath: f.path,
+        fileClass: f.className,
+        importName: imp.name,
+        isIntrinsic: imp.isIntrinsic,
+      });
     }
   }
+  return map;
+}
 
-  // Tarjan’s algorithm
+/** Convert ElementsDefinition (from buildGraph) to adjacency map. */
+function elementsToAdj(elements: ElementsDefinition) {
+  const adj = new Map<TUniquePackageName, Set<TUniquePackageName>>();
+  for (const n of elements.nodes) {
+    const id = String(n.data.id) as TUniquePackageName;
+    if (!adj.has(id)) adj.set(id, new Set());
+  }
+  for (const e of elements.edges) {
+    const s = String(e.data.source) as TUniquePackageName;
+    const t = String(e.data.target) as TUniquePackageName;
+    if (!adj.has(s)) adj.set(s, new Set());
+    if (!adj.has(t)) adj.set(t, new Set());
+    adj.get(s)!.add(t);
+  }
+  return adj;
+}
+
+/** Tarjan SCC on adjacency. */
+function tarjanSCC(
+  graph: Map<TUniquePackageName, Set<TUniquePackageName>>
+): TUniquePackageName[][] {
   let index = 0;
-  const indexes = new Map<string, number>();
-  const lowlinks = new Map<string, number>();
-  const stack: string[] = [];
-  const onStack = new Set<string>();
-  const sccs: string[][] = [];
+  const idx = new Map<TUniquePackageName, number>();
+  const low = new Map<TUniquePackageName, number>();
+  const stack: TUniquePackageName[] = [];
+  const onStack = new Set<TUniquePackageName>();
+  const out: TUniquePackageName[][] = [];
 
-  function strongConnect(pkg: string) {
-    indexes.set(pkg, index);
-    lowlinks.set(pkg, index);
+  function strong(v: TUniquePackageName) {
+    idx.set(v, index);
+    low.set(v, index);
     index++;
-    stack.push(pkg);
-    onStack.add(pkg);
+    stack.push(v);
+    onStack.add(v);
 
-    const neighbors = graph.get(pkg) || new Set();
-    for (const neighbor of neighbors) {
-      if (!indexes.has(neighbor)) {
-        strongConnect(neighbor);
-        lowlinks.set(pkg, Math.min(lowlinks.get(pkg)!, lowlinks.get(neighbor)!));
-      } else if (onStack.has(neighbor)) {
-        lowlinks.set(pkg, Math.min(lowlinks.get(pkg)!, indexes.get(neighbor)!));
+    for (const w of graph.get(v) ?? []) {
+      if (!idx.has(w)) {
+        strong(w);
+        low.set(v, Math.min(low.get(v)!, low.get(w)!));
+      } else if (onStack.has(w)) {
+        low.set(v, Math.min(low.get(v)!, idx.get(w)!));
       }
     }
 
-    if (lowlinks.get(pkg) === indexes.get(pkg)) {
-      const scc: string[] = [];
-      let w;
+    if (low.get(v) === idx.get(v)) {
+      const comp: TUniquePackageName[] = [];
+      let w: TUniquePackageName;
       do {
         w = stack.pop()!;
         onStack.delete(w);
-        scc.push(w);
-      } while (w !== pkg);
+        comp.push(w);
+      } while (w !== v);
+      out.push(comp);
+    }
+  }
 
-      if (scc.length > 1 || (scc.length === 1 && graph.get(scc[0])?.has(scc[0]))) {
-        sccs.push(scc);
+  for (const v of graph.keys()) if (!idx.has(v)) strong(v);
+  return out;
+}
+
+/** Find one simple cycle ordering inside a given SCC. */
+function findOneCycleInScc(
+  graph: Map<TUniquePackageName, Set<TUniquePackageName>>,
+  sccSet: Set<TUniquePackageName>
+): TUniquePackageName[] | null {
+  const nodes = Array.from(sccSet);
+  for (const start of nodes) {
+    const path: TUniquePackageName[] = [];
+    const seen = new Set<TUniquePackageName>();
+    function dfs(v: TUniquePackageName): TUniquePackageName[] | null {
+      path.push(v);
+      seen.add(v);
+      for (const w of graph.get(v) ?? []) {
+        if (!sccSet.has(w)) continue;
+        if (w === start && path.length > 1) return [...path, start];
+        if (!seen.has(w)) {
+          const r = dfs(w);
+          if (r) return r;
+        }
       }
+      path.pop();
+      return null;
     }
+    const cyc = dfs(start);
+    if (cyc) return cyc;
   }
-
-  for (const pkg of graph.keys()) {
-    if (!indexes.has(pkg)) {
-      strongConnect(pkg);
-    }
-  }
-
-  return new Set(sccs.flat());
+  return null;
 }
 
 /**
- * Marks cyclic packages
+ * High-level API: build graph via `buildGraph`, detect package cycles,
+ * and attach **member evidence** (files/imports) per cycle edge.
  */
-export function markCyclicPackages(elements: ElementsDefinition, files: IDirectory) {
-  const cyclicPackages = getCyclicPackages(files);
-  const nodes = elements.nodes.map(node => {
-    const pkg = node.data.id as string;
-    const isCyclic = cyclicPackages.has(pkg);
+export function getPackageCyclesWithMembers(
+  dir: IDirectory,
+  graph: ElementsDefinition
+): {
+  cycles: PackageCycleDetail[];
+  packageSet: Set<TUniquePackageName>;
+  graph: ElementsDefinition; // for convenience (already built)
+} {
+  const adj = elementsToAdj(graph);
+  const sccs = tarjanSCC(adj);
+  const evidence = buildEdgeEvidence(dir);
+
+  const cycles: PackageCycleDetail[] = [];
+  const packageSet = new Set<TUniquePackageName>();
+
+  for (const scc of sccs) {
+    const selfLoop = scc.length === 1 && (adj.get(scc[0])?.has(scc[0]) ?? false);
+    if (scc.length > 1 || selfLoop) {
+      scc.forEach(p => packageSet.add(p));
+      const sccSet = new Set(scc);
+      const cycle = findOneCycleInScc(adj, sccSet) ?? [...scc, scc[0]];
+
+      const edges: CycleEdgeEvidence[] = [];
+      for (let i = 0; i < cycle.length - 1; i++) {
+        const from = cycle[i];
+        const to = cycle[i + 1];
+        const key = `${from}->${to}`;
+        edges.push({
+          from,
+          to,
+          via: evidence.get(key) ?? [],
+        });
+      }
+
+      cycles.push({ packages: cycle, edges });
+    }
+  }
+
+  return { cycles, packageSet, graph };
+}
+
+/**
+ * Annotate Cytoscape nodes:
+ *  - adds class "packageCycle" for cyclic packages
+ *  - sets data.packageCycle (boolean)
+ *  - sets data.cycleEvidence (edges where this pkg is the "from" side)
+ */
+export function markCyclicPackagesWithEvidence(
+  elements: ElementsDefinition,
+  dir: IDirectory
+): ElementsDefinition {
+  const { cycles, packageSet } = getPackageCyclesWithMembers(dir, elements);
+
+  // pkg → list of outgoing cycle edges (evidence)
+  const pkgToEdges = new Map<TUniquePackageName, CycleEdgeEvidence[]>();
+  for (const c of cycles) {
+    for (const e of c.edges) {
+      if (!pkgToEdges.has(e.from)) pkgToEdges.set(e.from, []);
+      pkgToEdges.get(e.from)!.push(e);
+    }
+  }
+
+  const nodes = elements.nodes.map(n => {
+    const id = String(n.data.id) as TUniquePackageName;
+    const isCyclic = packageSet.has(id);
+    const existing = n.classes ? String(n.classes) : '';
+    const classes = isCyclic ? (existing ? `${existing} packageCycle` : 'packageCycle') : existing;
 
     return {
-      ...node,
-      classes: isCyclic ? 'packageCycle' : '',
-      data: { ...node.data, packageCycle: isCyclic },
+      ...n,
+      classes,
+      data: {
+        ...n.data,
+        packageCycle: isCyclic,
+        cycleEvidence: isCyclic ? (pkgToEdges.get(id) ?? []) : undefined,
+      },
     };
   });
 
   return { ...elements, nodes };
+}
+
+/* =========================================================================================
+ * Optional: convenience that only returns the set of cyclic packages (no evidence)
+ * =======================================================================================*/
+
+export function getCyclicPackageSet(
+  dir: IDirectory,
+  graph: ElementsDefinition
+): Set<TUniquePackageName> {
+  const { packageSet } = getPackageCyclesWithMembers(dir, graph);
+  return packageSet;
 }
