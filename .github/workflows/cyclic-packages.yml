@@ -20,9 +20,7 @@ jobs:
 
       # Generate the audit.json using your published CLI
       - name: Generate audit.json
-        run: |
-          bunx pkgviz -o audit.json --prod || bunx pkgviz -o audit.json
-        # ^ tries prod (next start) if your package ships .next; falls back to dev
+        run: bunx pkgviz
 
       - name: Ensure audit.json exists
         run: |
