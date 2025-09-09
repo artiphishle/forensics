@@ -16,13 +16,16 @@ import cytoscape, {
   type NodeDefinition,
 } from 'cytoscape';
 import { useSettings } from '@/contexts/SettingsContext';
-import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
+import { filterByPackagePrefix } from '@/components/cytoscape/filter/filterByPackagePrefix';
 // import { filterSubPackages } from '@/utils/filter/filterSubPackages';
-import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
-import { hasChildren } from '@/utils/cytoscape/hasChildren';
-import { filterEmptyPackages } from '@/utils/filter/filterEmptyPackages';
+import { filterVendorPackages } from '@/components/cytoscape/filter/filterVendorPackages';
+import { hasChildren } from '@/components/cytoscape/hasChildren';
+import { filterEmptyPackages } from '@/components/cytoscape/filter/filterEmptyPackages';
 import { LAYOUTS } from '@/themes/constants';
-import { filterSubPackagesByDepth, getMaxDepth } from '@/utils/filter/filterSubPackagesFromDepth';
+import {
+  filterSubPackagesByDepth,
+  getMaxDepth,
+} from '@/components/cytoscape/filter/filterSubPackagesFromDepth';
 
 export function useCytoscape(
   elements: ElementsDefinition | null,
@@ -64,7 +67,6 @@ export function useCytoscape(
 
     const finalElements: ElementsDefinition = {
       nodes: afterVendorPkgFilter.nodes.map(node => {
-        console.log(node.data.id);
         const label = !currentPackage.length
           ? node.data.id
           : node.data.id?.slice(currentPackage.length + 1);
@@ -89,15 +91,6 @@ export function useCytoscape(
     setMaxSubPackageDepth,
   ]);
 
-  // Resize -> fit
-  useEffect(() => {
-    if (!cyRef.current || !cyInstance) return;
-    const handleResize = () => cyInstance.fit();
-    const observer = new ResizeObserver(() => requestAnimationFrame(handleResize));
-    observer.observe(cyRef.current);
-    return () => observer.disconnect();
-  }, [cyRef, cyInstance]);
-
   // Init Cytoscape
   useEffect(() => {
     if (!cyRef.current || !elements || !filteredElements) return;
@@ -113,7 +106,6 @@ export function useCytoscape(
               ? getKlayStyle
               : getConcentricStyle;
 
-    console.log(filteredElements);
     const cy = cytoscape({
       layout: {
         ...LAYOUTS[cytoscapeLayout as LayoutOptions['name']],
@@ -199,8 +191,14 @@ export function useCytoscape(
       node.on('dblclick', () => setCurrentPackage(node.id().replace(/\./g, '/')));
     });
 
+    // Fit on resize
+    const handleResize = () => cy.fit();
+    const observer = new ResizeObserver(() => requestAnimationFrame(handleResize));
+    observer.observe(cyRef.current);
+
     return () => {
       cy.destroy();
+      observer.disconnect();
       setCyInstance(null);
     };
   }, [

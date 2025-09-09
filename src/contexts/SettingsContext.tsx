@@ -1,4 +1,3 @@
-'use client';
 import type { LayoutOptions } from 'cytoscape';
 import React, { createContext, use, type PropsWithChildren } from 'react';
 import {
@@ -7,7 +6,7 @@ import {
   getShowSubPackages,
   getShowVendorPackages,
   getSubPackageDepth,
-} from '@/utils/parseEnv';
+} from '@/contexts/parseEnv';
 import { useLocalStorage } from '@/store/useLocalStorage';
 
 // Settings context
@@ -15,9 +14,9 @@ const SettingsContext = createContext<ISettingsContext | null>(null);
 
 // Settings provider
 export const SettingsProvider = ({ children }: PropsWithChildren) => {
-  const [maxSubPackageDepth, setMaxSubPackageDepth] = useLocalStorage<number | null>(
+  const [maxSubPackageDepth, setMaxSubPackageDepth] = useLocalStorage<number>(
     'maxSubPackageDepth',
-    null
+    1
   );
   const [showSubPackages, setShowSubPackages] = useLocalStorage<boolean>(
     'showSubPackages',
@@ -75,13 +74,13 @@ export function useSettings() {
 interface ISettingsContext {
   readonly cytoscapeLayout: LayoutOptions['name'];
   readonly cytoscapeLayoutSpacing: number;
-  readonly maxSubPackageDepth: number | null;
+  readonly maxSubPackageDepth: number;
   readonly showSubPackages: boolean;
   readonly subPackageDepth: number;
   readonly showVendorPackages: boolean;
   readonly setCytoscapeLayout: (layout: LayoutOptions['name']) => void;
   readonly setCytoscapeLayoutSpacing: (layoutSpacing: number) => void;
-  readonly setMaxSubPackageDepth: (depth: number | null) => void;
+  readonly setMaxSubPackageDepth: (depth: number) => void;
   readonly setSubPackageDepth: (depth: number) => void;
   readonly toggleShowSubPackages: () => void;
   readonly toggleShowVendorPackages: () => void;

@@ -1,7 +1,7 @@
 'use server';
 import { NextResponse } from 'next/server';
 import { js2xml } from 'xml-js';
-import { getAudit } from '@/utils/getAudit';
+import { getAudit } from '@/app/api/audit/getAudit';
 
 /**
  * Audit (XML)

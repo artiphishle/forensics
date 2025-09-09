@@ -1,5 +1,6 @@
-import { getWeightBuckets } from '@/utils/cytoscape/getWeightBuckets';
 import type { ElementsDefinition, StylesheetJson } from 'cytoscape';
+
+import { getWeightBuckets } from '@/themes/getWeightBuckets';
 
 type ThemeKey = 'dark' | 'light';
 

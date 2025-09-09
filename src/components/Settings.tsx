@@ -1,5 +1,6 @@
 'use client';
-import { ChevronDownIcon, Download } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { ChevronDownIcon, DownloadIcon } from 'lucide-react';
 import { Select, Slider } from 'radix-ui';
 import React from 'react';
 import { CYTOSCAPE_LAYOUTS } from '@/components/cytoscape/constants';
@@ -8,7 +9,7 @@ import Switch from '@/components/Switch';
 import { useSettings } from '@/contexts/SettingsContext';
 import { t } from '@/i18n/i18n';
 
-export default function Settings() {
+const Settings: React.FC = () => {
   const {
     cytoscapeLayout,
     cytoscapeLayoutSpacing,
@@ -35,7 +36,7 @@ export default function Settings() {
             href="/api/audit/json"
             download
           >
-            <Download size={8} className="mr-1" />
+            <DownloadIcon size={8} className="mr-1" />
             <span>JSON</span>
           </a>
         </Setting>
@@ -46,7 +47,7 @@ export default function Settings() {
             href="/api/audit/xml"
             download
           >
-            <Download size={8} className="mr-1" />
+            <DownloadIcon size={8} className="mr-1" />
             <span>XML</span>
           </a>
         </Setting>
@@ -80,12 +81,12 @@ export default function Settings() {
       {/* How many sub package levels to show */}
       {!showSubPackages && (
         <>
-          <h3>{`${t('settings.subPackageDepth')}: ${subPackageDepth}/${maxSubPackageDepth}`}</h3>
+          <h3>{`${t('settings.subPackageDepth')}: ${subPackageDepth}`}</h3>
           <Setting>
             <Slider.Root
-              id="spacing"
+              id="subPackageDepth"
               min={1}
-              max={maxSubPackageDepth || 10}
+              max={maxSubPackageDepth}
               step={1}
               value={[subPackageDepth]}
               onValueChange={([v]) => setSubPackageDepth(Number(v.toFixed(1)))}
@@ -164,4 +165,8 @@ export default function Settings() {
       </Setting>
     </div>
   );
-}
+};
+
+export default dynamic(() => Promise.resolve(Settings), {
+  ssr: false,
+});
