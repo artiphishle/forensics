@@ -102,7 +102,7 @@ async function findFreePort(preferred?: number): Promise<number> {
 }
 
 function resolvePackageRoot(): string {
-  // bin is at <pkgRoot>/bin/myapp.ts; step up to package root
+  // bin is at <pkgRoot>/bin/pkgviz.ts; step up to package root
   const here = fileURLToPath(new URL(import.meta.url));
   return resolve(dirname(here), '..');
 }
