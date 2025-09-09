@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# package
+audit.json
+
 # Lock files
 package-lock.json
 yarn.lock

@@ -4,7 +4,8 @@
     "pkgviz": "bin/pkgviz.ts"
   },
   "files": [
-    "/bin", ".next"
+    "/bin",
+    ".next"
   ],
   "type": "module",
   "engines": {
