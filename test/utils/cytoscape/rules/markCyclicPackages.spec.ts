@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
 import { getCyclicPackageSet } from '@/utils/cytoscape/rules/markCyclicPackages';
 import { getParsedFileStructure } from '@/utils/getParsedFileStructure';
+import { buildGraph } from '@/utils/cytoscape/buildGraph';
 
 describe('[getCyclicPackageSet]', () => {
   it('Marks package cycle: A-B-A using nested directory structure', async () => {
@@ -11,7 +12,8 @@ describe('[getCyclicPackageSet]', () => {
       'examples/java/my-app'
     ));
 
-    const result = getCyclicPackageSet(await getParsedFileStructure(projectPath));
+    const files = await getParsedFileStructure(projectPath);
+    const result = getCyclicPackageSet(files, buildGraph(files));
     const cyclic = Array.from(result);
 
     expect(cyclic.length).toBe(2);
