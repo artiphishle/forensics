@@ -10,16 +10,13 @@ Visualizing and showing the dependencies of packages in your project is the firs
 
 ## Prerequisites
 
-Make sure to have PNPM & Node installed, check `package.json` for allowed versions
+Make sure to have Bun & Node installed, check `package.json` for allowed versions
 
 ## Quickstart
 
 ```bash
-# 1. Install dependencies
+# 1. Install dependencies (bun/yarn/pnpm/npm)
 bun install
-yarn install
-pnpm install
-npm install
 
 # 2. Create your .env file
 cp .env.tpl .env
@@ -27,10 +24,7 @@ cp .env.tpl .env
 # 3. Supply the project path to analyze in the .env file
 
 # 4. Run the app
-bun run dev
-yarn run dev
-pnpm run dev
-npm run dev
+bun dev
 ```
 
 ## Documentation
@@ -39,26 +33,21 @@ Find the official documentation at Github Pages here:
 
 [artiphishle.github.io/forensics-docs](https://artiphishle.github.io/forensics-docs/)
 
+## Just get the analysis
+
+Run `bunx pkgviz` from any project root (Java & TypeScript, more to follow) and a `audit.json` will be generated for you.
+
 ## Test
 
 ```bash
-# Run tests
+# Run tests (bun/yarn/pnpm/npm)
 bun run test
-yarn run test
-pnpm run test
-npm run test
 
 # Print Coverage to stdout
 bun run test:cov
-yarn run test:cov
-pnpm run test:cov
-npm run test:cov
 
 # Generate HTML Coverage to 'test/coverage/index.html'
 bun test:cov:html
-yarn test:cov:html
-pnpm test:cov:html
-npm test:cov:html
 ```
 
 ## Contributing
