@@ -1,7 +1,7 @@
-![issues](https://img.shields.io/github/issues/artiphishle/forensics?style=flat-square)
-![PRs](https://img.shields.io/github/issues-pr/artiphishle/forensics?style=flat-square)
+![issues](https://img.shields.io/github/issues/artiphishle/pkgviz?style=flat-square)
+![PRs](https://img.shields.io/github/issues-pr/artiphishle/pkgviz?style=flat-square)
 
-# Forensics
+# Package Visualizer
 
 Tool to visualize packages and their dependencies between each other. This project is inspired by [socomo](https://github.com/gdela/socomo).
 

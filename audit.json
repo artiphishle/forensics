@@ -4,8 +4,8 @@
   },
   "files": {
     "bin": {
-      "forensics.ts": {
-        "className": "forensics",
+      "pkgviz.ts": {
+        "className": "pkgviz",
         "imports": [
           {
             "name": "node:fs",
@@ -185,7 +185,7 @@
           }
         ],
         "package": "bin",
-        "path": "bin/forensics.ts"
+        "path": "bin/pkgviz.ts"
       }
     },
     "next-env.d.ts": {
@@ -209,6 +209,193 @@
       "calls": [],
       "package": "",
       "path": "next.config.ts"
+    },
+    "package": {
+      "bin": {
+        "pkgviz.ts": {
+          "className": "pkgviz",
+          "imports": [
+            {
+              "name": "node:fs",
+              "pkg": "",
+              "isIntrinsic": false
+            },
+            {
+              "name": "node:fs.promises",
+              "pkg": "node:fs",
+              "isIntrinsic": false
+            },
+            {
+              "name": "node:path",
+              "pkg": "",
+              "isIntrinsic": false
+            },
+            {
+              "name": "node:url",
+              "pkg": "",
+              "isIntrinsic": false
+            },
+            {
+              "name": "node:net",
+              "pkg": "",
+              "isIntrinsic": false
+            }
+          ],
+          "methods": [],
+          "calls": [
+            {
+              "callee": "process",
+              "method": "exit"
+            },
+            {
+              "callee": "console",
+              "method": "log"
+            },
+            {
+              "callee": "console",
+              "method": "log"
+            },
+            {
+              "callee": "net.createServer()",
+              "method": "once"
+            },
+            {
+              "callee": "net",
+              "method": "createServer"
+            },
+            {
+              "callee": "srv",
+              "method": "listen"
+            },
+            {
+              "callee": "srv",
+              "method": "close"
+            },
+            {
+              "callee": "net",
+              "method": "createServer"
+            },
+            {
+              "callee": "srv",
+              "method": "listen"
+            },
+            {
+              "callee": "srv",
+              "method": "address"
+            },
+            {
+              "callee": "srv",
+              "method": "close"
+            },
+            {
+              "callee": "Date",
+              "method": "now"
+            },
+            {
+              "callee": "Date",
+              "method": "now"
+            },
+            {
+              "callee": "res.headers",
+              "method": "get"
+            },
+            {
+              "callee": "ct",
+              "method": "includes"
+            },
+            {
+              "callee": "res",
+              "method": "json"
+            },
+            {
+              "callee": "Date",
+              "method": "now"
+            },
+            {
+              "callee": "Bun",
+              "method": "spawn"
+            },
+            {
+              "callee": "process",
+              "method": "cwd"
+            },
+            {
+              "callee": "Bun",
+              "method": "spawn"
+            },
+            {
+              "callee": "child.stdout",
+              "method": "getReader"
+            },
+            {
+              "callee": "reader",
+              "method": "read"
+            },
+            {
+              "callee": "process.stdout",
+              "method": "write"
+            },
+            {
+              "callee": "reader",
+              "method": "releaseLock"
+            },
+            {
+              "callee": "child.stderr",
+              "method": "getReader"
+            },
+            {
+              "callee": "reader",
+              "method": "read"
+            },
+            {
+              "callee": "process.stderr",
+              "method": "write"
+            },
+            {
+              "callee": "reader",
+              "method": "releaseLock"
+            },
+            {
+              "callee": "JSON",
+              "method": "stringify"
+            },
+            {
+              "callee": "JSON",
+              "method": "stringify"
+            },
+            {
+              "callee": "console",
+              "method": "log"
+            },
+            {
+              "callee": "console",
+              "method": "log"
+            },
+            {
+              "callee": "child",
+              "method": "kill"
+            },
+            {
+              "callee": "child",
+              "method": "kill"
+            },
+            {
+              "callee": "main()",
+              "method": "catch"
+            },
+            {
+              "callee": "console",
+              "method": "error"
+            },
+            {
+              "callee": "process",
+              "method": "exit"
+            }
+          ],
+          "package": "package.bin",
+          "path": "package/bin/pkgviz.ts"
+        }
+      }
     },
     "src": {
       "app": {
@@ -330,6 +517,11 @@
                     "isIntrinsic": false
                   },
                   {
+                    "name": "src.utils.cytoscape.buildGraph",
+                    "pkg": "src.utils.cytoscape",
+                    "isIntrinsic": true
+                  },
+                  {
                     "name": "src.utils.getParsedFileStructure",
                     "pkg": "src.utils",
                     "isIntrinsic": true
@@ -371,12 +563,17 @@
               "isIntrinsic": false
             },
             {
-              "name": "src.app.globals.css",
-              "pkg": "src.app",
+              "name": "next-themes",
+              "pkg": "",
+              "isIntrinsic": false
+            },
+            {
+              "name": "src.contexts.SettingsContext",
+              "pkg": "src.contexts",
               "isIntrinsic": true
             },
             {
-              "name": "src.app.providers",
+              "name": "src.app.globals.css",
               "pkg": "src.app",
               "isIntrinsic": true
             }
@@ -430,8 +627,8 @@
               "isIntrinsic": true
             },
             {
-              "name": "src.hooks.useCytoscape",
-              "pkg": "src.hooks",
+              "name": "src.components.cytoscape.hooks.useCytoscape",
+              "pkg": "src.components.cytoscape.hooks",
               "isIntrinsic": true
             }
           ],
@@ -456,25 +653,6 @@
           ],
           "package": "src.app",
           "path": "src/app/page.tsx"
-        },
-        "providers.tsx": {
-          "className": "providers.tsx",
-          "imports": [
-            {
-              "name": "next-themes",
-              "pkg": "",
-              "isIntrinsic": false
-            },
-            {
-              "name": "src.contexts.SettingsContext",
-              "pkg": "src.contexts",
-              "isIntrinsic": true
-            }
-          ],
-          "methods": [],
-          "calls": [],
-          "package": "src.app",
-          "path": "src/app/providers.tsx"
         }
       },
       "components": {
@@ -613,9 +791,19 @@
               "isIntrinsic": false
             },
             {
+              "name": "radix-ui",
+              "pkg": "",
+              "isIntrinsic": false
+            },
+            {
               "name": "react",
               "pkg": "",
               "isIntrinsic": false
+            },
+            {
+              "name": "src.components.cytoscape.constants",
+              "pkg": "src.components.cytoscape",
+              "isIntrinsic": true
             },
             {
               "name": "src.components.Setting",
@@ -636,59 +824,63 @@
               "name": "src.i18n.i18n",
               "pkg": "src.i18n",
               "isIntrinsic": true
-            },
-            {
-              "name": "radix-ui",
-              "pkg": "",
-              "isIntrinsic": false
-            },
-            {
-              "name": "src.contexts.constants",
-              "pkg": "src.contexts",
-              "isIntrinsic": true
             }
           ],
           "methods": [
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [""],
+              "parameters": [
+                ""
+              ],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [""],
+              "parameters": [
+                ""
+              ],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [""],
+              "parameters": [
+                ""
+              ],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [""],
+              "parameters": [
+                ""
+              ],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": [""],
+              "parameters": [
+                ""
+              ],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": ["layout"],
+              "parameters": [
+                "layout"
+              ],
               "visibility": "default"
             },
             {
               "name": "t",
               "returnType": "void",
-              "parameters": ["layout"],
+              "parameters": [
+                "layout"
+              ],
               "visibility": "default"
             }
           ],
@@ -775,7 +967,9 @@
             {
               "name": "setZoom",
               "returnType": "void",
-              "parameters": ["parseFloat"],
+              "parameters": [
+                "parseFloat"
+              ],
               "visibility": "default"
             }
           ],
@@ -811,6 +1005,374 @@
           ],
           "package": "src.components",
           "path": "src/components/ZoomInput.tsx"
+        },
+        "cytoscape": {
+          "constants.ts": {
+            "className": "constants",
+            "imports": [
+              {
+                "name": "cytoscape",
+                "pkg": "",
+                "isIntrinsic": false
+              }
+            ],
+            "methods": [],
+            "calls": [],
+            "package": "src.components.cytoscape",
+            "path": "src/components/cytoscape/constants.ts"
+          },
+          "hooks": {
+            "useCytoscape.ts": {
+              "className": "useCytoscape",
+              "imports": [
+                {
+                  "name": "next-themes",
+                  "pkg": "",
+                  "isIntrinsic": false
+                },
+                {
+                  "name": "react",
+                  "pkg": "",
+                  "isIntrinsic": false
+                },
+                {
+                  "name": "src.themes.basic.style",
+                  "pkg": "src.themes.basic",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.themes.basic.breadthfirst.style",
+                  "pkg": "src.themes.basic.breadthfirst",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.themes.basic.circle.style",
+                  "pkg": "src.themes.basic.circle",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.themes.basic.concentric.style",
+                  "pkg": "src.themes.basic.concentric",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.themes.basic.grid.style",
+                  "pkg": "src.themes.basic.grid",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.themes.basic.klay.style",
+                  "pkg": "src.themes.basic.klay",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "cytoscape",
+                  "pkg": "",
+                  "isIntrinsic": false
+                },
+                {
+                  "name": "src.contexts.SettingsContext",
+                  "pkg": "src.contexts",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.utils.filter.filterByPackagePrefix",
+                  "pkg": "src.utils.filter",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.utils.filter.filterVendorPackages",
+                  "pkg": "src.utils.filter",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.utils.cytoscape.hasChildren",
+                  "pkg": "src.utils.cytoscape",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.utils.filter.filterEmptyPackages",
+                  "pkg": "src.utils.filter",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.themes.constants",
+                  "pkg": "src.themes",
+                  "isIntrinsic": true
+                },
+                {
+                  "name": "src.utils.filter.filterSubPackagesFromDepth",
+                  "pkg": "src.utils.filter",
+                  "isIntrinsic": true
+                }
+              ],
+              "methods": [],
+              "calls": [
+                {
+                  "callee": "currentPackage",
+                  "method": "replace"
+                },
+                {
+                  "callee": "afterVendorPkgFilter.nodes",
+                  "method": "map"
+                },
+                {
+                  "callee": "console",
+                  "method": "log"
+                },
+                {
+                  "callee": "node.data.id",
+                  "method": "slice"
+                },
+                {
+                  "callee": "cyInstance",
+                  "method": "fit"
+                },
+                {
+                  "callee": "observer",
+                  "method": "observe"
+                },
+                {
+                  "callee": "observer",
+                  "method": "disconnect"
+                },
+                {
+                  "callee": "console",
+                  "method": "log"
+                },
+                {
+                  "callee": "cy",
+                  "method": "nodes"
+                },
+                {
+                  "callee": "cy",
+                  "method": "elements"
+                },
+                {
+                  "callee": "all",
+                  "method": "removeClass"
+                },
+                {
+                  "callee": "selectedNodes",
+                  "method": "empty"
+                },
+                {
+                  "callee": "selectedNodes",
+                  "method": "union"
+                },
+                {
+                  "callee": "selectedNodes",
+                  "method": "neighborhood"
+                },
+                {
+                  "callee": "all.difference(keep)",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "all",
+                  "method": "difference"
+                },
+                {
+                  "callee": "selectedNodes",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "selectedNodes.outgoers()",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "selectedNodes",
+                  "method": "outgoers"
+                },
+                {
+                  "callee": "selectedNodes.incomers()",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "selectedNodes",
+                  "method": "incomers"
+                },
+                {
+                  "callee": "cy",
+                  "method": "on"
+                },
+                {
+                  "callee": "cy",
+                  "method": "ready"
+                },
+                {
+                  "callee": "cy.nodes()\n        .filter(node => !!(node.data as NodeDataDefinition).isParent)",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "cy.nodes()",
+                  "method": "filter"
+                },
+                {
+                  "callee": "cy",
+                  "method": "nodes"
+                },
+                {
+                  "callee": "cy",
+                  "method": "on"
+                },
+                {
+                  "callee": "filteredElements.nodes",
+                  "method": "find"
+                },
+                {
+                  "callee": "node",
+                  "method": "data"
+                },
+                {
+                  "callee": "cy.elements()\n        .subtract(node.outgoers())\n        .subtract(node.incomers())\n        .subtract(node)",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "cy.elements()\n        .subtract(node.outgoers())\n        .subtract(node.incomers())",
+                  "method": "subtract"
+                },
+                {
+                  "callee": "cy.elements()\n        .subtract(node.outgoers())",
+                  "method": "subtract"
+                },
+                {
+                  "callee": "cy.elements()",
+                  "method": "subtract"
+                },
+                {
+                  "callee": "cy",
+                  "method": "elements"
+                },
+                {
+                  "callee": "node",
+                  "method": "outgoers"
+                },
+                {
+                  "callee": "node",
+                  "method": "incomers"
+                },
+                {
+                  "callee": "node",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "node.outgoers()",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "node",
+                  "method": "outgoers"
+                },
+                {
+                  "callee": "node.incomers()",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "node",
+                  "method": "incomers"
+                },
+                {
+                  "callee": "cy",
+                  "method": "on"
+                },
+                {
+                  "callee": "cy",
+                  "method": "on"
+                },
+                {
+                  "callee": "edge",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "edge.source()",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "edge",
+                  "method": "source"
+                },
+                {
+                  "callee": "edge.target()",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "edge",
+                  "method": "target"
+                },
+                {
+                  "callee": "cy",
+                  "method": "on"
+                },
+                {
+                  "callee": "edge",
+                  "method": "removeClass"
+                },
+                {
+                  "callee": "edge.source()",
+                  "method": "removeClass"
+                },
+                {
+                  "callee": "edge",
+                  "method": "source"
+                },
+                {
+                  "callee": "edge.target()",
+                  "method": "removeClass"
+                },
+                {
+                  "callee": "edge",
+                  "method": "target"
+                },
+                {
+                  "callee": "cy.nodes()",
+                  "method": "forEach"
+                },
+                {
+                  "callee": "cy",
+                  "method": "nodes"
+                },
+                {
+                  "callee": "filteredElements.nodes",
+                  "method": "find"
+                },
+                {
+                  "callee": "node",
+                  "method": "data"
+                },
+                {
+                  "callee": "node",
+                  "method": "addClass"
+                },
+                {
+                  "callee": "node",
+                  "method": "on"
+                },
+                {
+                  "callee": "node.id()",
+                  "method": "replace"
+                },
+                {
+                  "callee": "node",
+                  "method": "id"
+                },
+                {
+                  "callee": "cy",
+                  "method": "destroy"
+                },
+                {
+                  "callee": "cyInstance.style([...getCommonStyle(filteredElements, theme)])",
+                  "method": "update"
+                },
+                {
+                  "callee": "cyInstance",
+                  "method": "style"
+                }
+              ],
+              "package": "src.components.cytoscape.hooks",
+              "path": "src/components/cytoscape/hooks/useCytoscape.ts"
+            }
+          }
         }
       },
       "contexts": {
@@ -818,9 +1380,9 @@
           "className": "SettingsContext.tsx",
           "imports": [
             {
-              "name": "src.themes.types",
-              "pkg": "src.themes",
-              "isIntrinsic": true
+              "name": "cytoscape",
+              "pkg": "",
+              "isIntrinsic": false
             },
             {
               "name": "react",
@@ -842,377 +1404,6 @@
           "calls": [],
           "package": "src.contexts",
           "path": "src/contexts/SettingsContext.tsx"
-        },
-        "constants.ts": {
-          "className": "constants",
-          "imports": [
-            {
-              "name": "src.themes.types",
-              "pkg": "src.themes",
-              "isIntrinsic": true
-            }
-          ],
-          "methods": [],
-          "calls": [],
-          "package": "src.contexts",
-          "path": "src/contexts/constants.ts"
-        }
-      },
-      "hooks": {
-        "useCytoscape.ts": {
-          "className": "useCytoscape",
-          "imports": [
-            {
-              "name": "next-themes",
-              "pkg": "",
-              "isIntrinsic": false
-            },
-            {
-              "name": "react",
-              "pkg": "",
-              "isIntrinsic": false
-            },
-            {
-              "name": "src.themes.basic.style",
-              "pkg": "src.themes.basic",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.themes.basic.breadthfirst.style",
-              "pkg": "src.themes.basic.breadthfirst",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.themes.basic.circle.style",
-              "pkg": "src.themes.basic.circle",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.themes.basic.concentric.style",
-              "pkg": "src.themes.basic.concentric",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.themes.basic.grid.style",
-              "pkg": "src.themes.basic.grid",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.themes.basic.klay.style",
-              "pkg": "src.themes.basic.klay",
-              "isIntrinsic": true
-            },
-            {
-              "name": "cytoscape",
-              "pkg": "",
-              "isIntrinsic": false
-            },
-            {
-              "name": "src.contexts.SettingsContext",
-              "pkg": "src.contexts",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.utils.filter.filterByPackagePrefix",
-              "pkg": "src.utils.filter",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.utils.filter.filterVendorPackages",
-              "pkg": "src.utils.filter",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.utils.cytoscape.hasChildren",
-              "pkg": "src.utils.cytoscape",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.utils.filter.filterEmptyPackages",
-              "pkg": "src.utils.filter",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.themes.constants",
-              "pkg": "src.themes",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.utils.filter.filterSubPackagesFromDepth",
-              "pkg": "src.utils.filter",
-              "isIntrinsic": true
-            },
-            {
-              "name": "src.themes.types",
-              "pkg": "src.themes",
-              "isIntrinsic": true
-            }
-          ],
-          "methods": [],
-          "calls": [
-            {
-              "callee": "currentPackage",
-              "method": "replace"
-            },
-            {
-              "callee": "afterVendorPkgFilter.nodes",
-              "method": "map"
-            },
-            {
-              "callee": "console",
-              "method": "log"
-            },
-            {
-              "callee": "node.data.id",
-              "method": "slice"
-            },
-            {
-              "callee": "cyInstance",
-              "method": "fit"
-            },
-            {
-              "callee": "observer",
-              "method": "observe"
-            },
-            {
-              "callee": "observer",
-              "method": "disconnect"
-            },
-            {
-              "callee": "console",
-              "method": "log"
-            },
-            {
-              "callee": "cy",
-              "method": "nodes"
-            },
-            {
-              "callee": "cy",
-              "method": "elements"
-            },
-            {
-              "callee": "all",
-              "method": "removeClass"
-            },
-            {
-              "callee": "selectedNodes",
-              "method": "empty"
-            },
-            {
-              "callee": "selectedNodes",
-              "method": "union"
-            },
-            {
-              "callee": "selectedNodes",
-              "method": "neighborhood"
-            },
-            {
-              "callee": "all.difference(keep)",
-              "method": "addClass"
-            },
-            {
-              "callee": "all",
-              "method": "difference"
-            },
-            {
-              "callee": "selectedNodes",
-              "method": "addClass"
-            },
-            {
-              "callee": "selectedNodes.outgoers()",
-              "method": "addClass"
-            },
-            {
-              "callee": "selectedNodes",
-              "method": "outgoers"
-            },
-            {
-              "callee": "selectedNodes.incomers()",
-              "method": "addClass"
-            },
-            {
-              "callee": "selectedNodes",
-              "method": "incomers"
-            },
-            {
-              "callee": "cy",
-              "method": "on"
-            },
-            {
-              "callee": "cy",
-              "method": "ready"
-            },
-            {
-              "callee": "cy.nodes()\n        .filter(node => !!(node.data as NodeDataDefinition).isParent)",
-              "method": "addClass"
-            },
-            {
-              "callee": "cy.nodes()",
-              "method": "filter"
-            },
-            {
-              "callee": "cy",
-              "method": "nodes"
-            },
-            {
-              "callee": "cy",
-              "method": "on"
-            },
-            {
-              "callee": "filteredElements.nodes",
-              "method": "find"
-            },
-            {
-              "callee": "node",
-              "method": "data"
-            },
-            {
-              "callee": "cy.elements()\n        .subtract(node.outgoers())\n        .subtract(node.incomers())\n        .subtract(node)",
-              "method": "addClass"
-            },
-            {
-              "callee": "cy.elements()\n        .subtract(node.outgoers())\n        .subtract(node.incomers())",
-              "method": "subtract"
-            },
-            {
-              "callee": "cy.elements()\n        .subtract(node.outgoers())",
-              "method": "subtract"
-            },
-            {
-              "callee": "cy.elements()",
-              "method": "subtract"
-            },
-            {
-              "callee": "cy",
-              "method": "elements"
-            },
-            {
-              "callee": "node",
-              "method": "outgoers"
-            },
-            {
-              "callee": "node",
-              "method": "incomers"
-            },
-            {
-              "callee": "node",
-              "method": "addClass"
-            },
-            {
-              "callee": "node.outgoers()",
-              "method": "addClass"
-            },
-            {
-              "callee": "node",
-              "method": "outgoers"
-            },
-            {
-              "callee": "node.incomers()",
-              "method": "addClass"
-            },
-            {
-              "callee": "node",
-              "method": "incomers"
-            },
-            {
-              "callee": "cy",
-              "method": "on"
-            },
-            {
-              "callee": "cy",
-              "method": "on"
-            },
-            {
-              "callee": "edge",
-              "method": "addClass"
-            },
-            {
-              "callee": "edge.source()",
-              "method": "addClass"
-            },
-            {
-              "callee": "edge",
-              "method": "source"
-            },
-            {
-              "callee": "edge.target()",
-              "method": "addClass"
-            },
-            {
-              "callee": "edge",
-              "method": "target"
-            },
-            {
-              "callee": "cy",
-              "method": "on"
-            },
-            {
-              "callee": "edge",
-              "method": "removeClass"
-            },
-            {
-              "callee": "edge.source()",
-              "method": "removeClass"
-            },
-            {
-              "callee": "edge",
-              "method": "source"
-            },
-            {
-              "callee": "edge.target()",
-              "method": "removeClass"
-            },
-            {
-              "callee": "edge",
-              "method": "target"
-            },
-            {
-              "callee": "cy.nodes()",
-              "method": "forEach"
-            },
-            {
-              "callee": "cy",
-              "method": "nodes"
-            },
-            {
-              "callee": "filteredElements.nodes",
-              "method": "find"
-            },
-            {
-              "callee": "node",
-              "method": "data"
-            },
-            {
-              "callee": "node",
-              "method": "addClass"
-            },
-            {
-              "callee": "node",
-              "method": "on"
-            },
-            {
-              "callee": "node.id()",
-              "method": "replace"
-            },
-            {
-              "callee": "node",
-              "method": "id"
-            },
-            {
-              "callee": "cy",
-              "method": "destroy"
-            },
-            {
-              "callee": "cyInstance.style([...getCommonStyle(filteredElements, theme)])",
-              "method": "update"
-            },
-            {
-              "callee": "cyInstance",
-              "method": "style"
-            }
-          ],
-          "package": "src.hooks",
-          "path": "src/hooks/useCytoscape.ts"
         }
       },
       "i18n": {
@@ -1508,11 +1699,6 @@
               "isIntrinsic": false
             },
             {
-              "name": "src.themes.types",
-              "pkg": "src.themes",
-              "isIntrinsic": true
-            },
-            {
               "name": "src.themes.basic.breadthfirst.layout",
               "pkg": "src.themes.basic.breadthfirst",
               "isIntrinsic": true
@@ -1547,9 +1733,9 @@
           "className": "getLayoutStyle",
           "imports": [
             {
-              "name": "src.themes.types",
-              "pkg": "src.themes",
-              "isIntrinsic": true
+              "name": "cytoscape",
+              "pkg": "",
+              "isIntrinsic": false
             },
             {
               "name": "src.themes.basic.breadthfirst.style",
@@ -1827,11 +2013,6 @@
                 {
                   "name": "src.types.types",
                   "pkg": "src.types",
-                  "isIntrinsic": true
-                },
-                {
-                  "name": "src.utils.cytoscape.buildGraph",
-                  "pkg": "src.utils.cytoscape",
                   "isIntrinsic": true
                 }
               ],
@@ -2730,6 +2911,11 @@
               "name": "src.utils.cytoscape.rules.markCyclicPackages",
               "pkg": "src.utils.cytoscape.rules",
               "isIntrinsic": true
+            },
+            {
+              "name": "..cytoscape.buildGraph",
+              "pkg": "..cytoscape",
+              "isIntrinsic": false
             }
           ],
           "methods": [],
@@ -3298,10 +3484,14 @@
     "language": {
       "language": "typescript",
       "confidence": 0.6,
-      "indicators": ["tsconfig.json", ".ts/.tsx files", "typescript dependency"]
+      "indicators": [
+        "tsconfig.json",
+        ".ts/.tsx files",
+        "typescript dependency"
+      ]
     },
-    "projectName": "forensics",
-    "timeStart": 1757354293505,
-    "timeEnd": 1757354293601
+    "projectName": "pkgviz",
+    "timeStart": 1757425045520,
+    "timeEnd": 1757425045618
   }
 }

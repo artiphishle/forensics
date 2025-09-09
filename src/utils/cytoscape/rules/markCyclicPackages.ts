@@ -1,7 +1,5 @@
 import type { ElementsDefinition } from 'cytoscape';
-
 import type { IDirectory, IFile, TUniquePackageName } from '@/types/types';
-import { buildGraph } from '@/utils/cytoscape/buildGraph';
 
 export type ImportEvidence = {
   filePath: string; // IFile.path (relative to project)
@@ -154,12 +152,14 @@ function findOneCycleInScc(
  * High-level API: build graph via `buildGraph`, detect package cycles,
  * and attach **member evidence** (files/imports) per cycle edge.
  */
-export function getPackageCyclesWithMembers(dir: IDirectory): {
+export function getPackageCyclesWithMembers(
+  dir: IDirectory,
+  graph: ElementsDefinition
+): {
   cycles: PackageCycleDetail[];
   packageSet: Set<TUniquePackageName>;
   graph: ElementsDefinition; // for convenience (already built)
 } {
-  const graph = buildGraph(dir);
   const adj = elementsToAdj(graph);
   const sccs = tarjanSCC(adj);
   const evidence = buildEdgeEvidence(dir);
@@ -203,7 +203,7 @@ export function markCyclicPackagesWithEvidence(
   elements: ElementsDefinition,
   dir: IDirectory
 ): ElementsDefinition {
-  const { cycles, packageSet } = getPackageCyclesWithMembers(dir);
+  const { cycles, packageSet } = getPackageCyclesWithMembers(dir, elements);
 
   // pkg → list of outgoing cycle edges (evidence)
   const pkgToEdges = new Map<TUniquePackageName, CycleEdgeEvidence[]>();
@@ -238,7 +238,10 @@ export function markCyclicPackagesWithEvidence(
  * Optional: convenience that only returns the set of cyclic packages (no evidence)
  * =======================================================================================*/
 
-export function getCyclicPackageSet(dir: IDirectory): Set<TUniquePackageName> {
-  const { packageSet } = getPackageCyclesWithMembers(dir);
+export function getCyclicPackageSet(
+  dir: IDirectory,
+  graph: ElementsDefinition
+): Set<TUniquePackageName> {
+  const { packageSet } = getPackageCyclesWithMembers(dir, graph);
   return packageSet;
 }

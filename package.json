@@ -1,10 +1,10 @@
 {
-  "name": "@artiphishle/forensics",
+  "name": "pkgviz",
   "bin": {
-    "forensics": "bin/forensics.ts"
+    "pkgviz": "bin/pkgviz.ts"
   },
   "files": [
-    "/bin"
+    "/bin", ".next"
   ],
   "type": "module",
   "engines": {

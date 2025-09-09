@@ -1,6 +1,5 @@
 'use client';
-import type { CytoscapeLayout } from '@/themes/types';
-
+import type { LayoutOptions } from 'cytoscape';
 import React, { createContext, use, type PropsWithChildren } from 'react';
 import {
   getCytoscapeLayout,
@@ -32,7 +31,7 @@ export const SettingsProvider = ({ children }: PropsWithChildren) => {
     'showVendorPackages',
     getSubPackageDepth()
   );
-  const [cytoscapeLayout, setCytoscapeLayout] = useLocalStorage<CytoscapeLayout>(
+  const [cytoscapeLayout, setCytoscapeLayout] = useLocalStorage<LayoutOptions['name']>(
     'cytoscapeLayout',
     getCytoscapeLayout()
   );
@@ -74,13 +73,13 @@ export function useSettings() {
 }
 
 interface ISettingsContext {
-  readonly cytoscapeLayout: CytoscapeLayout;
+  readonly cytoscapeLayout: LayoutOptions['name'];
   readonly cytoscapeLayoutSpacing: number;
   readonly maxSubPackageDepth: number | null;
   readonly showSubPackages: boolean;
   readonly subPackageDepth: number;
   readonly showVendorPackages: boolean;
-  readonly setCytoscapeLayout: (layout: CytoscapeLayout) => void;
+  readonly setCytoscapeLayout: (layout: LayoutOptions['name']) => void;
   readonly setCytoscapeLayoutSpacing: (layoutSpacing: number) => void;
   readonly setMaxSubPackageDepth: (depth: number | null) => void;
   readonly setSubPackageDepth: (depth: number) => void;

@@ -8,6 +8,7 @@ import {
   getPackageCyclesWithMembers,
   PackageCycleDetail,
 } from '@/utils/cytoscape/rules/markCyclicPackages';
+import { buildGraph } from './cytoscape/buildGraph';
 
 /**
  * Returns audit for JSON or XML exports
@@ -23,7 +24,8 @@ export async function getAudit() {
 
   const language = await detectLanguage(projectPath);
   const files = await getParsedFileStructure();
-  const cyclicPackages = getPackageCyclesWithMembers(files).cycles;
+  const graph = buildGraph(files);
+  const cyclicPackages = getPackageCyclesWithMembers(files, graph).cycles;
 
   // 1. Build audit object
   const audit: Partial<IAudit> = {
