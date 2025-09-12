@@ -1,7 +1,6 @@
 'use server';
 import fs from 'node:fs';
 import path from 'node:path';
-import { ELanguage, ILanguageDetectionResult } from '@/app/api/fs/utils/detectLanguage.types';
 
 export async function detectLanguage(directoryPath: string): Promise<ILanguageDetectionResult> {
   // Check if directory exists
@@ -109,4 +108,17 @@ export async function isJavaRoot(directoryPath: string): Promise<boolean> {
     files.includes('build.gradle') ||
     files.includes('build.gradle.kts')
   );
+}
+
+export enum ELanguage {
+  JavaScript = 'javascript',
+  TypeScript = 'typescript',
+  Java = 'java',
+  Unknown = 'unknown',
+}
+
+export interface ILanguageDetectionResult {
+  language: ELanguage;
+  confidence: number;
+  indicators: string[];
 }

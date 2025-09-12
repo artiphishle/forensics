@@ -1,7 +1,7 @@
 /**
  * @unused This file will be useful as soon as we add Sequence Diagrams
  */
-import { parseJavaFile } from '@/app/api/fs/utils/parser/java/parseJavaFile';
+import { parseJavaFile } from '@/app/api/fs/parser/java/parseJavaFile';
 
 export function findEntryPoint(files: JavaParsedFile[]): JavaParsedFile | null {
   for (const file of files) {

@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
-import { filterByPackagePrefix } from '@/components/cytoscape/filter/filterByPackagePrefix';
+import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 
 describe('[filterByPackagePrefix]', () => {
   // Test: Filter by package prefix (currentPackage)

@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
-import { filterVendorPackages } from '@/components/cytoscape/filter/filterVendorPackages';
+import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
 import type { ElementsDefinition } from 'cytoscape';
 
 describe('[filterVendorPackages]', () => {

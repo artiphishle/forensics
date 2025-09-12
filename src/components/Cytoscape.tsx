@@ -2,17 +2,25 @@
 import type { ElementsDefinition } from 'cytoscape';
 
 import React, { useEffect, useState } from 'react';
-import { useCytoscape } from '@/components/cytoscape/hooks/useCytoscape';
+import { useCytoscape } from '@/components/useCytoscape';
+import { getJson } from '@/utils/getJson';
 import Loader from '@/components/Loader';
 import ZoomInput from '@/components/ZoomInput';
-import { getJson } from '@/components/cytoscape/utils/getJson';
 
 export function Cytoscape({ currentPackage, setCurrentPackage }: CytoscapeProps) {
   const [packageGraph, setPackageGraph] = useState<ElementsDefinition | null>(null);
   const { cyRef, cyInstance } = useCytoscape(packageGraph, currentPackage, setCurrentPackage);
+
   useEffect(() => {
-    getJson<ElementsDefinition>('/api/fs/getGraph').then(setPackageGraph);
-  }, []);
+    async function init() {
+      const graph = await getJson<ElementsDefinition>('/api/fs/getAllFilesRecursive');
+      const root = await getJson<string>('/api/fs/getRoot');
+
+      setPackageGraph(graph);
+      setCurrentPackage(root);
+    }
+    init();
+  }, [setCurrentPackage]);
 
   if (!packageGraph) return <Loader />;
 

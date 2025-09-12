@@ -1,9 +1,10 @@
+import type { IFile } from '@/app/api/fs/types';
+
+import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
+import { ELanguage } from '@/app/api/fs/utils/detectLanguage';
 import { getAudit } from '@/app/api/audit/getAudit';
-import { resolve } from 'node:path';
-import { ELanguage } from '@/app/api/fs/utils/detectLanguage.types';
-import type { IFile } from '@/app/api/fs/utils/types';
 
 describe('[getAudit]', () => {
   // Test: Audit output contains 'App.java' which is matched correctly, also audit.meta is correct

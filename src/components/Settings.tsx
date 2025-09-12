@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 import { ChevronDownIcon, DownloadIcon } from 'lucide-react';
 import { Select, Slider } from 'radix-ui';
 import React from 'react';
-import { CYTOSCAPE_LAYOUTS } from '@/components/cytoscape/constants';
 import Setting from '@/components/Setting';
 import Switch from '@/components/Switch';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -125,7 +124,7 @@ const Settings: React.FC = () => {
             >
               <Select.Viewport className="p-1">
                 <Select.Group>
-                  {CYTOSCAPE_LAYOUTS.map(layout => (
+                  {['breadthfirst', 'circle', 'concentric', 'grid', 'klay'].map(layout => (
                     <Select.Item
                       key={layout}
                       value={layout}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cytoscape } from '@/components/cytoscape/Cytoscape';
+import { Cytoscape } from '@/components/Cytoscape';
 import Settings from '@/components/Settings';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 

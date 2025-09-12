@@ -2,7 +2,7 @@ import type { ElementsDefinition, StylesheetJson } from 'cytoscape';
 
 import { getWeightBuckets } from '@/themes/getWeightBuckets';
 
-type ThemeKey = 'dark' | 'light';
+export type ThemeKey = 'dark' | 'light';
 
 const palette = {
   light: {

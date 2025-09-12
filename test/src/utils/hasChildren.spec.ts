@@ -1,4 +1,4 @@
-import { hasChildren } from '@/components/cytoscape/utils/hasChildren';
+import { hasChildren } from '@/utils/hasChildren';
 import { NodeDefinition } from 'cytoscape';
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';

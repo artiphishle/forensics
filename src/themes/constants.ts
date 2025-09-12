@@ -1,10 +1,12 @@
 import type { LayoutOptions } from 'cytoscape';
 
-import { layout as breadthfirstLayout } from '@/themes/basic/breadthfirst/layout';
-import { layout as circleLayout } from '@/themes/basic/circle/layout';
-import { layout as concentricLayout } from '@/themes/basic/concentric/layout';
-import { layout as gridLayout } from '@/themes/basic/grid/layout';
-import { layout as klayLayout } from '@/themes/basic/klay/layout';
+import {
+  breadthfirstLayout,
+  circleLayout,
+  concentricLayout,
+  gridLayout,
+  klayLayout,
+} from '@/themes';
 
 export const LAYOUTS: Record<LayoutOptions['name'], LayoutOptions> = {
   breadthfirst: breadthfirstLayout,

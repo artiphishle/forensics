@@ -1,9 +1,8 @@
 'use server';
-import type { ILanguageDetectionResult } from '@/app/api/fs/utils/detectLanguage.types';
-import type { IDirectory } from '@/app/api/fs/utils/types';
+import type { IDirectory } from '@/app/api/fs/types';
 
 import { getParsedFileStructure } from '@/app/api/fs/utils/getParsedFileStructure';
-import { detectLanguage } from '@/app/api/fs/utils/detectLanguage';
+import { detectLanguage, ILanguageDetectionResult } from '@/app/api/fs/utils/detectLanguage';
 import {
   getPackageCyclesWithMembers,
   PackageCycleDetail,

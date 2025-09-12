@@ -1,4 +1,4 @@
-import type { IDirectory, IFile } from '@/app/api/fs/utils/types';
+import type { IDirectory, IFile } from '@/app/api/fs/utils/parser/types';
 
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';

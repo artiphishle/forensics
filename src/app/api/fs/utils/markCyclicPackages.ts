@@ -1,5 +1,5 @@
-import type { IDirectory, IFile } from '@/app/api/fs/utils/types';
 import type { ElementsDefinition } from 'cytoscape';
+import type { IDirectory, IFile } from '@/app/api/fs/types';
 
 /** Collect all files from your IDirectory tree. */
 function collectFiles(root: IDirectory): IFile[] {

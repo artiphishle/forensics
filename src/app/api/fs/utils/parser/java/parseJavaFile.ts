@@ -1,6 +1,5 @@
 'use server';
-import type { IFile } from '@/app/api/fs/utils/types';
-import type { MethodCall, MethodDefinition } from '@/app/api/fs/utils/parser/types';
+import type { IFile, MethodCall, MethodDefinition } from '@/app/api/fs/types';
 
 import fs from 'node:fs';
 import path from 'node:path';

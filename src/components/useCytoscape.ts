@@ -1,12 +1,14 @@
 'use client';
 import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
-import { getStyle as getCommonStyle, getCanvasBg } from '@/themes/basic/style';
-import { getStyle as getBreadthfirstStyle } from '@/themes/basic/breadthfirst/style';
-import { getStyle as getCircleStyle } from '@/themes/basic/circle/style';
-import { getStyle as getConcentricStyle } from '@/themes/basic/concentric/style';
-import { getStyle as getGridStyle } from '@/themes/basic/grid/style';
-import { getStyle as getKlayStyle } from '@/themes/basic/klay/style';
+import { getStyle as getCommonStyle, getCanvasBg } from '@/themes/style';
+import {
+  getBreadthfirstStyle,
+  getCircleStyle,
+  getConcentricStyle,
+  getGridStyle,
+  getKlayStyle,
+} from '@/themes';
 
 import cytoscape, {
   Core,
@@ -16,16 +18,13 @@ import cytoscape, {
   type NodeDefinition,
 } from 'cytoscape';
 import { useSettings } from '@/contexts/SettingsContext';
-import { filterByPackagePrefix } from '@/components/cytoscape/filter/filterByPackagePrefix';
+import { filterByPackagePrefix } from '@/utils/filter/filterByPackagePrefix';
 // import { filterSubPackages } from '@/utils/filter/filterSubPackages';
-import { filterVendorPackages } from '@/components/cytoscape/filter/filterVendorPackages';
-import { hasChildren } from '@/components/cytoscape/utils/hasChildren';
-import { filterEmptyPackages } from '@/components/cytoscape/filter/filterEmptyPackages';
+import { filterVendorPackages } from '@/utils/filter/filterVendorPackages';
+import { hasChildren } from '@/utils/hasChildren';
+import { filterEmptyPackages } from '@/utils/filter/filterEmptyPackages';
 import { LAYOUTS } from '@/themes/constants';
-import {
-  filterSubPackagesByDepth,
-  getMaxDepth,
-} from '@/components/cytoscape/filter/filterSubPackagesFromDepth';
+import { filterSubPackagesByDepth, getMaxDepth } from '@/utils/filter/filterSubPackagesFromDepth';
 
 export function useCytoscape(
   elements: ElementsDefinition | null,
