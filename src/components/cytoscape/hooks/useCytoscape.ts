@@ -19,7 +19,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { filterByPackagePrefix } from '@/components/cytoscape/filter/filterByPackagePrefix';
 // import { filterSubPackages } from '@/utils/filter/filterSubPackages';
 import { filterVendorPackages } from '@/components/cytoscape/filter/filterVendorPackages';
-import { hasChildren } from '@/components/cytoscape/hasChildren';
+import { hasChildren } from '@/components/cytoscape/utils/hasChildren';
 import { filterEmptyPackages } from '@/components/cytoscape/filter/filterEmptyPackages';
 import { LAYOUTS } from '@/themes/constants';
 import {
@@ -78,6 +78,8 @@ export function useCytoscape(
       }),
       edges: afterVendorPkgFilter.edges,
     };
+
+    console.log(finalElements);
 
     setFilteredElements(finalElements);
     setMaxSubPackageDepth(getMaxDepth(elements));

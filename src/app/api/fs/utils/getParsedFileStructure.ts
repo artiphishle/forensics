@@ -46,16 +46,16 @@ export async function readDirRecursively(
   const entries = readdirSync(dir, { withFileTypes: true });
   const ignores = [
     '.cache',
-    'coverage',
     '.git',
     '.github',
-    'examples',
-    'packages',
-    'test',
     '.meta',
-    'node_modules',
     '.next',
     '.vscode',
+    'coverage',
+    'examples',
+    'node_modules',
+    'packages',
+    'test',
   ];
 
   for (const entry of entries) {

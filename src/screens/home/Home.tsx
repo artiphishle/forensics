@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import Breadcrumb from '@/components/Breadcrumb';
 
 export default function HomeScreen() {
-  const [currentPackage, setCurrentPackage] = useState<string>('src');
+  const [currentPackage, setCurrentPackage] = useState<string>('');
 
   return (
     <>

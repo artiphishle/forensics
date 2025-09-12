@@ -1,24 +1,6 @@
 import type { IDirectory, IFile } from '@/app/api/fs/utils/types';
 import type { ElementsDefinition } from 'cytoscape';
 
-interface ImportEvidence {
-  readonly filePath: string; // IFile.path (relative to project)
-  readonly fileClass: string; // IFile.className
-  readonly importName: string; // IJavaImport.name
-  readonly isIntrinsic?: boolean; // IJavaImport.isIntrinsic
-}
-
-export type CycleEdgeEvidence = {
-  from: TUniquePackageName;
-  to: TUniquePackageName;
-  via: ImportEvidence[]; // files in `from` that import `to`
-};
-
-export type PackageCycleDetail = {
-  packages: TUniquePackageName[]; // ordered cycle incl. closing node, e.g. ["A","B","A"]
-  edges: CycleEdgeEvidence[]; // evidence aligned with packages[i] -> packages[i+1]
-};
-
 /** Collect all files from your IDirectory tree. */
 function collectFiles(root: IDirectory): IFile[] {
   const files: IFile[] = [];
@@ -207,14 +189,19 @@ export function markCyclicPackagesWithEvidence(
 
   // pkg → list of outgoing cycle edges (evidence)
   const pkgToEdges = new Map<TUniquePackageName, CycleEdgeEvidence[]>();
+
+  // Track cycle edges by (from → to) for quick lookup when mapping Cytoscape edges
+  const cycleEdgeKeys = new Set<string>();
+
   for (const c of cycles) {
     for (const e of c.edges) {
       if (!pkgToEdges.has(e.from)) pkgToEdges.set(e.from, []);
       pkgToEdges.get(e.from)!.push(e);
+      cycleEdgeKeys.add(`${e.from}→${e.to}`);
     }
   }
 
-  const nodes = elements.nodes.map(n => {
+  const nodes = (elements.nodes ?? []).map(n => {
     const id = String(n.data.id) as TUniquePackageName;
     const isCyclic = packageSet.has(id);
     const existing = n.classes ? String(n.classes) : '';
@@ -231,7 +218,29 @@ export function markCyclicPackagesWithEvidence(
     };
   });
 
-  return { ...elements, nodes };
+  const edges = (elements.edges ?? []).map(e => {
+    const source = String(e.data.source) as TUniquePackageName;
+    const target = String(e.data.target) as TUniquePackageName;
+    const isCycleEdge = cycleEdgeKeys.has(`${source}→${target}`);
+
+    const existing = e.classes ? String(e.classes) : '';
+    const classes = isCycleEdge
+      ? existing
+        ? `${existing} packageCycle`
+        : 'packageCycle'
+      : existing;
+
+    return {
+      ...e,
+      classes,
+      data: {
+        ...e.data,
+        packageCycle: isCycleEdge,
+      },
+    };
+  });
+
+  return { ...elements, nodes, edges };
 }
 
 /**
@@ -246,3 +255,21 @@ export function getCyclicPackageSet(
 }
 
 type TUniquePackageName = string;
+
+interface ImportEvidence {
+  readonly filePath: string; // IFile.path (relative to project)
+  readonly fileClass: string; // IFile.className
+  readonly importName: string; // IJavaImport.name
+  readonly isIntrinsic?: boolean; // IJavaImport.isIntrinsic
+}
+
+interface CycleEdgeEvidence {
+  readonly from: TUniquePackageName;
+  readonly to: TUniquePackageName;
+  readonly via: ImportEvidence[]; // files in `from` that import `to`
+}
+
+export interface PackageCycleDetail {
+  readonly packages: TUniquePackageName[]; // ordered cycle incl. closing node, e.g. ["A","B","A"]
+  readonly edges: CycleEdgeEvidence[]; // evidence aligned with packages[i] -> packages[i+1]
+}

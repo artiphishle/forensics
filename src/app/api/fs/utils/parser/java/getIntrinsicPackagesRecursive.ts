@@ -1,6 +1,6 @@
 'use server';
-import { readdirSync } from 'fs';
-import { resolve, relative } from 'path';
+import { readdirSync } from 'node:fs';
+import { resolve, relative } from 'node:path';
 
 export async function getIntrinsicPackagesRecursive(
   root: string = resolve(process.env.NEXT_PUBLIC_PROJECT_PATH || ''),

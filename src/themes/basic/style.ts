@@ -154,7 +154,11 @@ export function getStyle(filteredElements: ElementsDefinition, theme: ThemeKey):
       },
     },
     {
-      selector: 'edge.errorCycling',
+      selector: 'edge.packageCycle',
+      style: { 'line-color': '#d80303', 'target-arrow-color': '#d80303' },
+    },
+    {
+      selector: 'edge.packageCycle',
       style: { 'line-color': '#d80303', 'target-arrow-color': '#d80303' },
     },
   ];

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useCytoscape } from '@/components/cytoscape/hooks/useCytoscape';
 import Loader from '@/components/Loader';
 import ZoomInput from '@/components/ZoomInput';
-import { getJson } from '@/components/cytoscape/getJson';
+import { getJson } from '@/components/cytoscape/utils/getJson';
 
 export function Cytoscape({ currentPackage, setCurrentPackage }: CytoscapeProps) {
   const [packageGraph, setPackageGraph] = useState<ElementsDefinition | null>(null);

@@ -1,22 +1,21 @@
 #!/usr/bin/env bun
-
 import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as net from 'node:net';
 
-type Opts = {
+interface Opts {
   out: string;
   open: boolean;
   serve: boolean;
   prod: boolean;
-  port?: number;
   route: string;
   waitMs: number;
   pretty: boolean;
   verbose: boolean;
-};
+  port?: number;
+}
 
 function parseArgs(argv: string[]): Opts {
   const o: Opts = {
@@ -148,10 +147,9 @@ function openBrowser(url: string) {
 
 async function main() {
   const opts = parseArgs(process.argv);
-
   const callerRoot = process.cwd(); // The project being analyzed
-  const pkgRoot = resolvePackageRoot(); // The packaged Next app root
   const port = await findFreePort(opts.port);
+  const pkgRoot = resolvePackageRoot(); // The packaged Next app root
   const nextBin = resolveNextBin(pkgRoot);
   const hasBuild = existsSync(resolve(pkgRoot, '.next'));
   const mode = opts.prod || hasBuild ? 'start' : 'dev';

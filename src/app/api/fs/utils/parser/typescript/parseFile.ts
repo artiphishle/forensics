@@ -5,7 +5,7 @@ import type {
   ImportDefinition,
 } from '@/app/api/fs/utils/parser/types';
 
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import * as ts from 'typescript';
 import { extractTypeScriptPackageFromImport } from '@/app/api/fs/utils/parser/typescript/extractTypeScriptPackageFromImport';
