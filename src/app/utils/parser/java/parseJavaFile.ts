@@ -3,8 +3,8 @@ import type { IFile, MethodCall, MethodDefinition } from '@/app/api/fs/types';
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { getIntrinsicPackagesRecursive } from '@/app/api/fs/utils/parser/java/getIntrinsicPackagesRecursive';
-import { extractJavaPackageFromImport } from '@/app/api/fs/utils/parser/java/extractJavaPackageFromImport';
+import { getIntrinsicPackagesRecursive } from '@/app/utils/parser/java/getIntrinsicPackagesRecursive';
+import { extractJavaPackageFromImport } from '@/app/utils/parser/java/extractJavaPackageFromImport';
 
 /**
  * Extracts the package declaration from Java code.

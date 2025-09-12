@@ -1,8 +1,8 @@
 'use server';
 import { NextResponse } from 'next/server';
-import { getParsedFileStructure } from '@/app/api/fs/utils/getParsedFileStructure';
-import { markCyclicPackagesWithEvidence } from '../utils/markCyclicPackages';
-import { buildGraph } from '../utils/buildGraph';
+import { getParsedFileStructure } from '@/app/utils/getParsedFileStructure';
+import { markCyclicPackagesWithEvidence } from '@/app/utils/markCyclicPackages';
+import { buildGraph } from '@/app/utils/buildGraph';
 
 export async function GET() {
   const files = await getParsedFileStructure();

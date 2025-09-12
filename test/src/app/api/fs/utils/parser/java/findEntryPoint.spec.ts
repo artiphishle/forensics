@@ -1,10 +1,10 @@
-import type { IDirectory, IFile } from '@/app/api/fs/utils/parser/types';
+import type { IDirectory, IFile } from '@/app/api/fs/types';
 
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
-import { getParsedFileStructure } from '@/app/api/fs/utils/getParsedFileStructure';
-import { findEntryPoint } from '@/app/api/fs/utils/parser/java/findEntryPoint';
+import { getParsedFileStructure } from '@/app/utils/getParsedFileStructure';
+import { findEntryPoint } from '@/app/utils/parser/java/findEntryPoint';
 
 function collectFilesFromDirectory(dir: IDirectory): IFile[] {
   const files: IFile[] = [];

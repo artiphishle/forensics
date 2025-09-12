@@ -3,7 +3,7 @@ import { expect } from '@artiphishle/testosterone/src/matchers';
 import {
   extractJavaPackageFromImport,
   extractJavaPackageFromReversedImportArray,
-} from '@/app/api/fs/utils/parser/java/extractJavaPackageFromImport';
+} from '@/app/utils/parser/java/extractJavaPackageFromImport';
 
 describe('[extractJavaPackageFromReversedImportArray]', () => {
   // Helper that resolves package from reversed import array

@@ -1,9 +1,9 @@
-import type { IDirectory } from '@/app/api/fs/utils/parser/types';
+import type { IDirectory } from '@/app/api/fs/types';
 
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
-import { getParsedFileStructure } from '@/app/api/fs/utils/getParsedFileStructure';
+import { getParsedFileStructure } from '@/app/utils/getParsedFileStructure';
 
 describe('[getParsedFileStructure]', () => {
   // Test reading a Java project structure recursively

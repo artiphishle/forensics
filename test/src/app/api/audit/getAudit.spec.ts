@@ -3,7 +3,7 @@ import type { IFile } from '@/app/api/fs/types';
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
-import { ELanguage } from '@/app/api/fs/utils/detectLanguage';
+import { ELanguage } from '@/app/utils/detectLanguage.types';
 import { getAudit } from '@/app/api/audit/getAudit';
 
 describe('[getAudit]', () => {

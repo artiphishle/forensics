@@ -1,4 +1,6 @@
 'use server';
+import { ELanguage, type ILanguageDetectionResult } from '@/app/utils/detectLanguage.types';
+
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -108,17 +110,4 @@ export async function isJavaRoot(directoryPath: string): Promise<boolean> {
     files.includes('build.gradle') ||
     files.includes('build.gradle.kts')
   );
-}
-
-export enum ELanguage {
-  JavaScript = 'javascript',
-  TypeScript = 'typescript',
-  Java = 'java',
-  Unknown = 'unknown',
-}
-
-export interface ILanguageDetectionResult {
-  language: ELanguage;
-  confidence: number;
-  indicators: string[];
 }

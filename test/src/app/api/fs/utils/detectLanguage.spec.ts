@@ -1,7 +1,8 @@
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
 import { resolve } from 'node:path';
-import { detectLanguage, ELanguage } from '@/app/api/fs/utils/detectLanguage';
+import { detectLanguage } from '@/app/utils/detectLanguage';
+import { ELanguage } from '@/app/utils/detectLanguage.types';
 
 describe('[detectLanguage]', () => {
   it('detects correct project language', async () => {

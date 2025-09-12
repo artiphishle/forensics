@@ -3,9 +3,10 @@ import type { IDirectory } from '@/app/api/fs/types';
 
 import { existsSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { detectLanguage, ELanguage } from '@/app/api/fs/utils/detectLanguage';
-import { parseJavaFile } from '@/app/api/fs/utils/parser/java/parseJavaFile';
-import { parseFile as parseTypeScriptFile } from '@/app/api/fs/utils/parser/typescript/parseFile';
+import { detectLanguage } from '@/app/utils/detectLanguage';
+import { ELanguage } from '@/app/utils/detectLanguage.types';
+import { parseJavaFile } from '@/app/utils/parser/java/parseJavaFile';
+import { parseFile as parseTypeScriptFile } from '@/app/utils/parser/typescript/parseFile';
 
 /**
  * Returns whether Java file structure is valid

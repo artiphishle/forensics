@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
-import { parseJavaFile } from '@/app/api/fs/utils/parser/java/parseJavaFile';
+import { parseJavaFile } from '@/app/utils/parser/java/parseJavaFile';
 
 describe('[parseJavaFile]', () => {
   // Test: Parse a java file correctly

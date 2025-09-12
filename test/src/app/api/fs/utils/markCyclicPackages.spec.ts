@@ -1,9 +1,9 @@
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 import { expect } from '@artiphishle/testosterone/src/matchers';
-import { getParsedFileStructure } from '@/app/api/fs/utils/getParsedFileStructure';
-import { buildGraph } from '@/app/api/fs/utils/buildGraph';
-import { getCyclicPackageSet } from '@/app/api/fs/utils/markCyclicPackages';
+import { getParsedFileStructure } from '@/app/utils/getParsedFileStructure';
+import { buildGraph } from '@/app/utils/buildGraph';
+import { getCyclicPackageSet } from '@/app/utils/markCyclicPackages';
 
 describe('[getCyclicPackageSet]', () => {
   it('Marks package cycle: A-B-A using nested directory structure', async () => {

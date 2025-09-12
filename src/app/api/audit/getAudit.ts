@@ -1,13 +1,11 @@
 'use server';
 import type { IDirectory } from '@/app/api/fs/types';
+import type { ILanguageDetectionResult } from '@/app/utils/detectLanguage.types';
 
-import { getParsedFileStructure } from '@/app/api/fs/utils/getParsedFileStructure';
-import { detectLanguage, ILanguageDetectionResult } from '@/app/api/fs/utils/detectLanguage';
-import {
-  getPackageCyclesWithMembers,
-  PackageCycleDetail,
-} from '@/app/api/fs/utils/markCyclicPackages';
-import { buildGraph } from '@/app/api/fs/utils/buildGraph';
+import { getParsedFileStructure } from '@/app/utils/getParsedFileStructure';
+import { detectLanguage } from '@/app/utils/detectLanguage';
+import { getPackageCyclesWithMembers, PackageCycleDetail } from '@/app/utils/markCyclicPackages';
+import { buildGraph } from '@/app/utils/buildGraph';
 
 /**
  * Returns audit for JSON or XML exports

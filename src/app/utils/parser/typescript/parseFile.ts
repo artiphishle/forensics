@@ -3,7 +3,7 @@ import type { IFile, MethodCall, MethodDefinition, ImportDefinition } from '@/ap
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import * as ts from 'typescript';
-import { extractTypeScriptPackageFromImport } from '@/app/api/fs/utils/parser/typescript/extractTypeScriptPackageFromImport';
+import { extractTypeScriptPackageFromImport } from '@/app/utils/parser/typescript/extractTypeScriptPackageFromImport';
 
 /**
  * Extracts import statements from TypeScript code.
